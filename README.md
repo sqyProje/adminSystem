@@ -1,4 +1,4 @@
-# mall-admin-web
+# adminSystem
 <p>
   <a href="https://github.com/macrozheng/mall"><img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/badge/%E5%90%8E%E5%8F%B0%E9%A1%B9%E7%9B%AE-mall-blue.svg" alt="后台项目"></a>
   <a href="http://qm.qq.com/cgi-bin/qm/qr?k=V6xu5c12j9qhnMUNdDRzakNxRKzOxibQ"><img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/badge/QQ%E7%BE%A4-959351312-red.svg" alt="QQ群"></a>
@@ -8,17 +8,15 @@
 
 ## 前言
 
-该项目为前后端分离项目的前端部分，后端项目`mall`地址：[传送门](https://github.com/macrozheng/mall)。
+该项目为前后端分离项目的前端部分，后端项目前端没有哦（尴尬）。
 
 ## 项目介绍
 
-`mall-admin-web`是一个电商后台管理系统的前端项目，基于Vue+Element实现。主要包括商品管理、订单管理、会员管理、促销管理、运营管理、内容管理、统计报表、财务管理、权限管理、设置等功能。
+`adminSystem`是一个OA管理系统包含权限管理、人事管理 新闻管理、会议管理、表单管理、审批管理、字典管理。
 
 ### 项目演示
 
-项目在线演示地址：[http://www.macrozheng.com/admin/](http://www.macrozheng.com/admin/)
-
-![https://github.com/macrozheng/mall/blob/master/document/resource/mall-admin.gif](https://github.com/macrozheng/mall/blob/master/document/resource/mall-admin.gif)
+项目在线演示地址：暂时还没开放，开放也是内部管理系统
 
 ### 技术选型
 
@@ -48,7 +46,4 @@ src -- 源码目录
 └── views -- 前端页面
 
 
-
-[Apache License 2.0](https://github.com/macrozheng/mall-admin-web/blob/master/LICENSE)
-
-Copyright (c) 2018-2020 macrozheng macro123
+Copyright (c) 2018-2020 sqy
