@@ -318,16 +318,23 @@ export const asyncRouterMap = [
         meta:{title:'我的审批',icon: 'product-list',noCache: true}
       },
       {
-        path: 'my_approve_fields',
+        path: 'flowInfo',
         name: 'my_approve_fields',
-        component: () => import('@/views/approve/my_approve/fields'),
+        component: () => import('@/views/approve/components/flowInfo'),
+        meta: {title: '审批'},
+        hidden: true
+      },
+      {
+        path: 'see',
+        name: 'see',
+        component: () => import('@/views/approve/components/see'),
         meta: {title: '查看'},
         hidden: true
       },
       {
         path: 'workflow',
         name: 'workflow',
-        component: () => import('@/views/approve/my_approve/workflow'),
+        component: () => import('@/views/approve/components/workflow'),
         meta: {title: '审批过程'},
         hidden: true
       },

@@ -76,8 +76,25 @@
             >挂起</el-button>
             <el-button
               size="mini"
+              v-if="scope.row.approveStepStatus==55"
+              type="info"
+              @click="handleraaFun(scope.row)"
+            >代领任务</el-button>
+            <el-button
+              size="mini"
+              v-if="scope.row.approveStepStatus==25"
+              type="warning"
+              @click="handleraaFun(scope.row)"
+            >释放任务</el-button>
+            <el-button
+              size="mini"
               type="success"
-              @click="handleEdit(scope.row)">查看</el-button>
+              v-if="scope.row.approveStepStatus==20||scope.row.approveStepStatus==25"
+              @click="handleEdit(scope.row)">审批</el-button>
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleSeek(scope.row)">查看</el-button>
             <el-button
               size="mini"
               type="primary"
@@ -125,7 +142,9 @@
           return '草稿'
         }else if(value===20){
           return '审批中'
-        }else if(value===30){
+        }else if(value===25){
+          return '任务审批中'
+        } else if(value===30){
           return '待批'
         }else if(value===40){
           return '挂起'
@@ -177,10 +196,14 @@
         this.AddEditInfo.approveStepId = row.approveStepId
       },
       handleEdit(row) {
-        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId,approveStepId:row.approveStepId,approve:'approve'}})
+        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId,approveStepId:row.approveStepId}})
+      },
+      handleSeek(row){
+        this.$router.push({name:'see',query: {u_id: row.approveId}})
+
       },
       HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.approveId,approve:'approve',}})
+        this.$router.push({name:'workflow',query: {u_id: row.approveId}})
       },
       handlerFun(row){
         if(row.approveStepStatus ===40){
@@ -192,8 +215,29 @@
               duration: 3 * 1000
             })
           })
-        }else{
+        }else if(row.approveStepStatus ===20){
           HangUp(row.approveStepId).then(res=>{
+            this.initTable();
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 3 * 1000
+            })
+          })
+        }
+      },
+      handleraaFun(row){
+        if(row.approveStepStatus ===55){
+          GetTask(row.approveStepId).then(res=>{
+            this.initTable();
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 3 * 1000
+            })
+          })
+        }else if(row.approveStepStatus ===25){
+          DisTask(row.approveStepId).then(res=>{
             this.initTable();
             Message({
               message: res.msg,

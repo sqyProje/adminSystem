@@ -61,7 +61,7 @@
           <el-button
             size="mini"
             type="success"
-            @click="handleEdit(scope.row)">查看</el-button>
+            @click="handleSeek(scope.row)">查看</el-button>
           <el-button
             size="mini"
             type="primary"
@@ -214,8 +214,8 @@
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
-      handleEdit(row) {
-        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId}})
+      handleSeek(row) {
+        this.$router.push({name:'see',query: {u_id: row.approveId}})
       },
       HandleWorkFlow(row){
         this.$router.push({name:'workflow',query: {u_id: row.approveId}})

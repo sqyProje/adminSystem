@@ -66,7 +66,7 @@
             <el-button
               size="mini"
               type="success"
-              @click="handleEdit(scope.row)">查看</el-button>
+              @click="handleSeek(scope.row)">查看</el-button>
             <el-button
               size="mini"
               type="primary"
@@ -127,6 +127,8 @@
           return '草稿'
         }else if(value===20){
           return '审批中'
+        }else if(value===25){
+          return '任务审批中'
         }else if(value===30){
           return '待批'
         }else if(value===40){
@@ -185,8 +187,8 @@
             return this.typeStateBtn='success'
           }
       },*/
-      handleEdit(row) {
-        this.$router.push({name:'my_approve_fields',query: {u_id: row.uId}})
+      handleSeek(row) {
+        this.$router.push({name:'see',query: {u_id: row.uId}})
       },
       HandleWorkFlow(row){
         this.$router.push({name:'workflow',query: {u_id: row.uId}})

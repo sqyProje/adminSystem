@@ -85,34 +85,6 @@
           </td>
         </tr>
       </table>
-      <div v-show="this.$route.query.approve">
-        <h3>审批</h3>
-        <el-form
-          :inline="false"
-          size="mini"
-          :model="AddEditInfo"
-          label-width="50px"
-          ref="AddEditInfo"
-          :rules ="rulesInfo"
-        >
-          <el-form-item label='审批' prop="approveStatus">
-            <el-select v-model="AddEditInfo.approveStatus" placeholder="审批" style="width: 100%;">
-              <el-option
-                v-for="item in stateData"
-                :label="item.display_name"
-                :value="item.id"
-                :key = "item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label='批注'>
-            <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button size="small" type="primary" @click="UpdateUser">审  批</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
       <div style="text-align: center;">
         <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
       </div>
@@ -135,24 +107,9 @@
         fileTitle:'',
         fileHref:'www.baidu.com',
         otherInfo:{},
-        stateData:[
-          { id: 60, display_name: '拒绝'},
-          { id: 70, display_name: '同意'}
-        ],
-        AddEditInfo:{
-          approveStepId:'',
-          approveStatus:'',
-          sketch:''
-        },
-        rulesInfo: {
-          approveStatus: [{required: true, trigger: 'blur', message: '请选择审批'}]
-        }
       }
     },
     created(){
-      if(this.$route.query.approveStepId){
-        this.AddEditInfo.approveStepId = this.$route.query.approveStepId
-      }
       WorkFlow(this.$route.query.u_id).then(response=>{
         this.workData= response.datas
       })
@@ -173,7 +130,6 @@
             this.fileTitle = item.fieldName
             this.fileHref = item.fieldValues
           }else{
-
             this.ProcessData.push(item)
           }
         })
@@ -182,31 +138,7 @@
     methods:{
       prev(){
         this.$router.go(-1)
-      },
-      UpdateUser(){
-      this.$refs.AddEditInfo.validate(valid => {
-      console.log( this.AddEditInfo)
-      if (valid) {
-        ToApprove(this.AddEditInfo).then(response => {
-          if (response.status === 0) {
-            this.dialogVisible = false
-            this.initTable();
-            Message({
-              message: response.msg,
-              type: 'success',
-              duration: 3 * 1000
-            })
-          }
-        })
-      }else{
-        Message({
-          message: '参数验证不合法',
-          type: 'error',
-          duration: 3 * 1000
-        })
       }
-    })
-  },
     }
   }
 
