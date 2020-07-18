@@ -178,6 +178,15 @@
         })
       })
     },
+   /* beforeRouteUpdate(to,from,next){
+      if(to.params.approveStepId){
+        document.name='审批'
+
+      }else{
+        document.name='查看'
+      }
+      next()
+    },*/
     methods:{
       prev(){
         this.$router.go(-1)

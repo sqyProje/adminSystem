@@ -7,17 +7,6 @@ import { getToken } from '@/utils/auth' // 验权
 import {getCookie} from '@/utils/support';
 import Cookies from 'js-cookie'
 const whiteList = ['/login'] // 不重定向白名单
-/*export function GetUrlRelativePath(url) {
-  var arrUrl = url.split('//')
-
-  var start = arrUrl[1].indexOf('/')
-  var relUrl = arrUrl[1].substring(start)
-
-  if (relUrl.indexOf('?') !== -1) {
-    relUrl = relUrl.split('?')[0]
-  }
-  return relUrl
-}*/
 router.beforeEach((to, from, next) => {
   NProgress.start()
 
