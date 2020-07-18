@@ -87,7 +87,6 @@
     created(){
       this.FlowGet(this.$route.query.form_id);
       this.InitFlow(this.$route.query.form_id)
-
     },
     methods: {
       UpdateFlow(){
@@ -95,6 +94,7 @@
       },
       FlowGet(flowid){
         FlowByID(flowid).then(res=>{
+          this.AddEditInfoQD.tableformid=this.$route.query.form_id
           if(res.datas===null){
             this.QDdialogVisible = true
             this.tableFieldFlag = false
@@ -123,6 +123,12 @@
                   duration: 3 * 1000
                 })
               }
+            })
+          }else{
+            Message({
+              message: '验证参数不合法',
+              type: 'error',
+              duration: 3 * 1000
             })
           }
         })
