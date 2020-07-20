@@ -102,20 +102,18 @@
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?{
-          required: true, message: domain.fieldname+'必填项', trigger: 'blur'
-        }:[]"
+            required: true, message: domain.fieldname+'必填项', trigger: 'blur'
+          }:[]"
         >
-         <!-- <div  v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt">
-            <span v-for="item  in  itemsss"  :key="item.name">{{item.name}}</span>
-          </div>-->
-            <el-select v-model="domain.fieldValue" v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt" :placeholder="domain.valimessage" style="width: 100%" >
-              <el-option
-                v-for="item in itemsss"
-                :key="item.uId"
-                :label="item.name"
-                :value="item.name">
-              </el-option>
-            </el-select>
+          <el-select v-model="domain.fieldValue"  v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt" :placeholder="domain.valimessage" style="width: 100%" >
+            <el-option
+              v-for="item in itemsss"
+              :key="item.uId"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
          <!-- <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
               v-for="item in OnlyDataMany.OnlyData"
@@ -124,7 +122,7 @@
               :value="item.name">
             </el-option>
           </el-select>-->
-        </el-form-item>
+
         <!--多选-->
         <el-form-item
           v-if="domain.fieldtype===100"
@@ -269,7 +267,6 @@
         dynamicValidateForm: {
           domains: [],
         },
-        OnlyMany:{},
         OnlyDataMany:[],
         ManyData:[],
         SexData:[],
@@ -289,8 +286,17 @@
     created(){
       GetSubInfo(this.$route.query.form_id)
         .then(response=>{
-          let i=0
           response.datas.forEach((item,index)=> {
+            if(item.isdrop===1){
+              dictionType(item.listId).then(res=>{
+                this.OnlyDataMany.push(res.datas)
+              })
+            }
+            if(item.isdrop===2){
+              dictionType(item.listId).then(res=>{
+                this.ManyData=res.datas
+              })
+            }
             this.dynamicValidateForm.domains.push({
               uId:item.uId,
               fieldname: item.fieldname,
@@ -305,25 +311,9 @@
                 this.SexData=res.datas
               })
             }
-
-            if(item.isdrop===1){
-              dictionType(item.listId).then(res=>{
-                this.OnlyDataMany.push(res.datas)
-                this.OnlyMany[index]=res.datas
-              //  this.OnlyDataMany[index] = res.datas
-              })
-            }
-            if(item.isdrop===2){
-              dictionType(item.listId).then(res=>{
-                this.ManyData=res.datas
-              })
-            }
-
           })
-          console.dir( this.OnlyDataMany)
-          /*this.OnlyDataMany.forEach((item,index)=> {
+          console.group( this.OnlyDataMany)
 
-          })*/
         })
     },
     methods:{
