@@ -21,6 +21,14 @@ export function AddFormInfo(params) {
     data: params
   })
 }
+//下级审批人
+export function GetApproveUser(params) {
+  return request({
+    url: '/sub_approve/getApproveUser',
+    method: 'post',
+    data: params
+  })
+}
 //我的审批
 export function InitMyList(params) {
   return request({
@@ -67,6 +75,13 @@ export function ToApprove(params) {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
     },
     params: params
+  })
+}
+//流程节点下级审批人
+export function GetProcessUser(params) {
+  return request({
+    url: '/process_approve/getApproveUser?approveStepId='+params,
+    method: 'post',
   })
 }
 //拿起任务

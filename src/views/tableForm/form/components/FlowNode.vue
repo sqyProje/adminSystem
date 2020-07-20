@@ -157,11 +157,13 @@
         }).then(()=> {
           FlowLineAll(qdFlowId).then(res => {
             this.edges = res.datas
+            console.log(this.edges )
+
           }).then(() => {
             var g = new dagreD3.graphlib.Graph().setGraph({});
             g.setGraph({
               rankdir: 'LR',
-              align: 'DL',
+           //   align: 'DL',
               nodesep: 80,
               edgesep: 100,
               ranksep: 100,
@@ -183,7 +185,7 @@
                 //节点标签样式
                 labelStyle: "fill:#000",
                 id: item.uId,
-                width: 80,
+                width: 100,
               })
             })
             this.edges.forEach(item => {
@@ -201,12 +203,12 @@
             let svg = d3.select('#demosvg')
             let svgGroup = svg.select('g');
             render(svgGroup, g);
-         /*   // 建立拖拽缩放
+            // 建立拖拽缩放
             let zoom = d3.zoom()
               .on("zoom", function () {
                 svgGroup.attr("transform", d3.event.transform);
               });
-            svg.call(zoom);*/
+            svg.call(zoom);
 
             //实现Tip
             const tip = d3Tip()
@@ -217,7 +219,7 @@
 
             //鼠标悬停节点事件
             svgGroup.selectAll("g.node").on('mouseover', function (v) {
-              console.log(g.node(v))
+            //  console.log(g.node(v))
               d3.select("#tooltip")
                 .attr("style", "left:" + g.node(v).x + "px" + ";top:" + g.node(v).y + "px")
                 .select("#tooltip_value")

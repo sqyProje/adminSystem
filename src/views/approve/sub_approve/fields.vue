@@ -105,14 +105,25 @@
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
         >
-          <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage">
+         <!-- <div  v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt">
+            <span v-for="item  in  itemsss"  :key="item.name">{{item.name}}</span>
+          </div>-->
+            <el-select v-model="domain.fieldValue" v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt" :placeholder="domain.valimessage" style="width: 100%" >
+              <el-option
+                v-for="item in itemsss"
+                :key="item.uId"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+         <!-- <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
-              v-for="item in OnlyData"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in OnlyDataMany.OnlyData"
+              :key="item.uId"
+              :label="item.name"
+              :value="item.name">
             </el-option>
-          </el-select>
+          </el-select>-->
         </el-form-item>
         <!--多选-->
         <el-form-item
@@ -123,12 +134,12 @@
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
         >
-          <el-select v-model="domain.fieldValue" multiple  :placeholder="domain.valimessage">
+          <el-select v-model="domain.fieldValue" multiple  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
               v-for="item in ManyData"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.uId"
+              :label="item.name"
+              :value="item.uId">
             </el-option>
           </el-select>
         </el-form-item>
@@ -214,23 +225,62 @@
         <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog
+      title="选择下一级审批人"
+      :close-on-click-modal="false"
+      :visible.sync="dialogVisible"
+      width="25%">
+      <el-form
+        :inline="false"
+        size="mini"
+        :model="AddEditInfo"
+        label-width="80px"
+        ref="AddEditInfo"
+        :rules ="rulesInfo"
+      >
+        <el-form-item label='选择用户'>
+          <el-select v-model="AddEditInfo.UserId" style="width: 100%;">
+            <el-option
+              v-for="item in ApproveUserData"
+              :label="item.realname"
+              :value="item.uId"
+              :key = "item.uId"
+            >{{item.realname}}</el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button size="small" @click="canleDialog">关 闭</el-button>
+          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
   import multiUploadImg from '@/components/Upload/multiUploadImg'
   import {dictionType} from '@/api/basic'
-  import {GetSubInfo,AddFormInfo} from '@/api/approve'
+  import {GetSubInfo,AddFormInfo,GetApproveUser} from '@/api/approve'
 
   export default {
     data(){
       return {
+        picPreviewInfo:'',
         dynamicValidateForm: {
           domains: [],
         },
-        OnlyData:[],
+        OnlyMany:{},
+        OnlyDataMany:[],
         ManyData:[],
-        SexData:[]
+        SexData:[],
+        dialogVisible: false,
+        AddEditInfo:{
+          UserId:''
+        },
+        ApproveUserData:[],
+        rulesInfo: {
+          UserId: [{required: true, trigger: 'blur', message: '请选择用户'}],
+        }
       }
     },
     components:{
@@ -239,6 +289,7 @@
     created(){
       GetSubInfo(this.$route.query.form_id)
         .then(response=>{
+          let i=0
           response.datas.forEach((item,index)=> {
             this.dynamicValidateForm.domains.push({
               uId:item.uId,
@@ -254,20 +305,32 @@
                 this.SexData=res.datas
               })
             }
+
             if(item.isdrop===1){
               dictionType(item.listId).then(res=>{
-                this.OnlyData=res.datas
+                this.OnlyDataMany.push(res.datas)
+                this.OnlyMany[index]=res.datas
+              //  this.OnlyDataMany[index] = res.datas
               })
             }
             if(item.isdrop===2){
               dictionType(item.listId).then(res=>{
-                this.OnlyData=res.ManyData
+                this.ManyData=res.datas
               })
             }
+
           })
+          console.dir( this.OnlyDataMany)
+          /*this.OnlyDataMany.forEach((item,index)=> {
+
+          })*/
         })
     },
     methods:{
+      picPreview(value){
+        this.picPreviewInfo += value+','
+        console.log( this.picPreviewInfo);
+      },
       prev(){
         this.$router.go(-1)
       },
@@ -282,19 +345,12 @@
             tableFieldValue:item.fieldValue
           })
         })
-        console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
-              AddFormInfo(data).then(res => {
-                if (res.status === 0) {
-                  Message({
-                  message: res.msg,
-                  type: 'success',
-                  duration: 3 * 1000
-                })
-            }
+            GetApproveUser(data).then(response=>{
+              this.ApproveUserData = response.datas
+              this.dialogVisible = true
             })
-
           } else {
             Message({
               message: '参数验证不合法',
@@ -307,6 +363,39 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      UpdateUser(){
+        const data={
+          tableFormId:this.$route.query.form_id,
+          approveUserId:this.AddEditInfo.UserId,
+          tableFieldSubModels:[]
+        }
+        this.dynamicValidateForm.domains.forEach((item,index)=>{
+          data.tableFieldSubModels.push({
+            tableFieldId:item.uId,
+            tableFieldValue:item.fieldValue
+          })
+        })
+        this.$refs.AddEditInfo.validate(valid => {
+          AddFormInfo(data).then(res => {
+            if (res.status === 0) {
+              this.dialogVisible = false
+              Message({
+                message: res.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }
+          })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+      },
+      canleDialog(){
+        this.dialogVisible = false
+        this.$refs.AddEditInfo.resetFields();
+        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
     }
   }

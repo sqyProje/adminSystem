@@ -30,9 +30,17 @@
         prop="work"
         label="工作">
       </el-table-column>
+      <!--<el-table-column
+        prop="workPhone"
+        label="单位电话">
+      </el-table-column>-->
       <el-table-column
         prop="nowaddress"
         label="现住址">
+      </el-table-column>
+      <el-table-column
+        prop="sort"
+        label="排序">
       </el-table-column>
       <el-table-column
         prop="createdate"
@@ -80,6 +88,12 @@
         <el-form-item label ='工作' prop="work">
           <el-input v-model="AddEditInfo.work"></el-input>
         </el-form-item>
+        <el-form-item label ='单位电话'>
+          <el-input v-model="AddEditInfo.workPhone"></el-input>
+        </el-form-item>
+        <el-form-item label ='排序' prop="sort">
+          <el-input type="number" :min="0" v-model="AddEditInfo.sort"></el-input>
+        </el-form-item>
         <el-form-item label ='现住址' prop="nowaddress">
           <el-input type="textarea" v-model="AddEditInfo.nowaddress"></el-input>
         </el-form-item>
@@ -121,6 +135,7 @@
           relation: [{ required: true,trigger: 'blur',message: '请输入关系'}],
           phone:[{required: true, trigger: 'blur',validator:checkphone,message: '请输入合法手机号'}],
           work: [{ required: true,trigger: 'blur',message: '请输入工作'}],
+          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
           nowaddress:[{required: true, trigger: 'blur', message: '请输入现住址'}],
         }
       }

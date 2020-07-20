@@ -283,11 +283,14 @@
         this.dialogTitle = '编辑'
         GetFlowNodeInfo(row.uId).then(response=>{
           this.AddEditInfo = response.datas
-          if(this.AddEditInfo.approvenodetype===10){
+          if(this.AddEditInfo.approvenodetype===10||this.AddEditInfo.approvenodetype===30){
             this.userFlag=false
             this.approveFlag=true
-          }else{
+          }else if(this.AddEditInfo.approvenodetype===20){
             this.userFlag=true
+            this.approveFlag=false
+          }else if(this.AddEditInfo.approvenodetype===1){
+            this.userFlag=false
             this.approveFlag=false
           }
 
@@ -369,13 +372,19 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       approveChange(value){
+        console.log(value)
         if(value===20 ){
           this.userFlag=true
           this.approveFlag=false
           this.AddEditInfo.approveroleid=''
-        }else{
+        }else if(value===10 ||value===30){
           this.approveFlag=true
           this.userFlag=false
+          this.AddEditInfo.userid=''
+        }else if(value===1){
+          this.approveFlag=false
+          this.userFlag=false
+          this.AddEditInfo.approveroleid=''
           this.AddEditInfo.userid=''
         }
       }

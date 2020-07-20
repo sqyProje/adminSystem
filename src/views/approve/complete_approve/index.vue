@@ -40,8 +40,14 @@
       <el-table-column label="表单名称" prop="approveName" align="center"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" round class='label-btn' :type="scope.row.approveStatus==20 ? 'warning' : 'success'">
-            {{scope.row.approveStatus ? "审批中" :"带领任务"}}
+          <el-button
+            :class="
+                {'label-1': scope.row.approveStatus == 20,
+                 'label-2': scope.row.approveStatus == 60}"
+            size="mini"
+            round
+            style="padding: 5px 12px;">
+            {{scope.row.approveStatus | formatState}}
           </el-button>
         </template>
       </el-table-column>
@@ -51,13 +57,7 @@
       <el-table-column label="审批人" prop="approveUserName" align="center"></el-table-column>
       <el-table-column label="操作" fixed="right"  width="400" align="center">
         <template slot-scope="scope">
-          <!--<el-button
-            size="mini"
-            :type="scope.row.approveStatus==20 ? 'info' : 'warning'"
-            @click="handlerFun(scope.row)"
-          >
-            {{scope.row.approveStatus ? "挂起" :"任务"}}
-          </el-button>-->
+
           <el-button
             size="mini"
             type="success"
@@ -66,11 +66,6 @@
             size="mini"
             type="primary"
             @click="HandleWorkFlow(scope.row)">审批过程</el-button>
-          <!--<el-button
-            size="mini"
-            type="warning"
-            @click="handleApprove(scope.row)"
-          >去审批</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -153,6 +148,31 @@
     created(){
       this.initTable();
     },
+    filters:{
+      formatState(value){
+        if(value===10){
+          return '草稿'
+        }else if(value===20){
+          return '审批中'
+        }else if(value===25){
+          return '任务审批中'
+        }else if(value===30){
+          return '待批'
+        }else if(value===40){
+          return '挂起'
+        }else if(value===50){
+          return '任务'
+        }else if(value===60){
+          return '拒绝'
+        }else if(value===70){
+          return '同意'
+        }else if(value===80){
+          return '抄送'
+        }else if(value===90){
+          return '完成审批'
+        }
+      }
+    },
     methods: {
       onSearchList() {
         this.initTable()
@@ -233,6 +253,34 @@
       }
     }
   }
-
 </script>
 
+<style>
+  .label-1{
+    color: #c53535;
+  }
+  .label-2{
+    color: #FF9900;
+  }
+  .label-3{
+    color: #909399;
+  }
+  .label-4{
+    color: #f56c6c;
+  }
+  .label-5{
+    color: #e6a23c;
+  }
+  .label-6{
+    color: #67c23a;
+  }
+  .label-7{
+    color: #67c23a;
+  }
+  .label-8{
+    color: #67c23a;
+  }
+  .label-9{
+    color: #67c23a;
+  }
+</style>

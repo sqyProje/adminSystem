@@ -95,6 +95,16 @@
           ref="AddEditInfo"
           :rules ="rulesInfo"
         >
+          <el-form-item label='用户' v-show="UserFlag">
+            <el-select v-model="AddEditInfo.approveUserId"style="width: 100%;">
+              <el-option
+                v-for="item in ApproveUserData"
+                :label="item.realname"
+                :value="item.uId"
+                :key = "item.uId"
+              >{{item.realname}}</el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label='审批' prop="approveStatus">
             <el-select v-model="AddEditInfo.approveStatus" placeholder="审批" style="width: 100%;">
               <el-option
@@ -122,11 +132,13 @@
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
   import logo from '@/assets/images/logo.png'
-  import {GetMyInfo,WorkFlow,ToApprove} from '@/api/approve'
+  import {GetMyInfo,WorkFlow,ToApprove,GetProcessUser} from '@/api/approve'
 
   export default {
     data(){
       return {
+        UserFlag:false,
+        ApproveUserData:[],
         logo:logo,
         workData:[],
         ProcessData:[],
@@ -141,6 +153,7 @@
         ],
         AddEditInfo:{
           approveStepId:'',
+          approveUserId:'',
           approveStatus:'',
           sketch:''
         },
@@ -153,6 +166,12 @@
       if(this.$route.query.approveStepId){
         this.AddEditInfo.approveStepId = this.$route.query.approveStepId
       }
+      GetProcessUser(this.$route.query.approveStepId).then(res=>{
+        this.ApproveUserData = res.datas!=null ? res.datas :[]
+        if(this.ApproveUserData.length>0){
+          this.UserFlag = true
+        }
+      })
       WorkFlow(this.$route.query.u_id).then(response=>{
         this.workData= response.datas
       })
@@ -192,28 +211,58 @@
         this.$router.go(-1)
       },
       UpdateUser(){
-      this.$refs.AddEditInfo.validate(valid => {
-      console.log( this.AddEditInfo)
-      if (valid) {
-        ToApprove(this.AddEditInfo).then(response => {
-          if (response.status === 0) {
-            this.dialogVisible = false
-            this.initTable();
+      if(this.ApproveUserData.length > 0){
+        if(this.AddEditInfo.approveUserId<0){
+          Message({
+            message: '请选择用户',
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }else{
+          this.$refs.AddEditInfo.validate(valid => {
+            if (valid) {
+              console.log( this.AddEditInfo)
+              ToApprove(this.AddEditInfo).then(response => {
+                if (response.status === 0) {
+                  Message({
+                    message: response.msg,
+                    type: 'success',
+                    duration: 3 * 1000
+                  })
+                }
+              })
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
+          })
+        }
+      }else{
+        this.$refs.AddEditInfo.validate(valid => {
+          if (valid) {
+            console.log( this.AddEditInfo)
+            ToApprove(this.AddEditInfo).then(response => {
+              if (response.status === 0) {
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+              }
+            })
+          }else{
             Message({
-              message: response.msg,
-              type: 'success',
+              message: '参数验证不合法',
+              type: 'error',
               duration: 3 * 1000
             })
           }
         })
-      }else{
-        Message({
-          message: '参数验证不合法',
-          type: 'error',
-          duration: 3 * 1000
-        })
       }
-    })
+
   },
     }
   }

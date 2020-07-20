@@ -13,9 +13,25 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="人员性质" prop="property">
-            <el-input v-model="AddEditInfo.property"></el-input>
+            <el-select
+              v-model="AddEditInfo.property"
+              placeholder="人员性质"
+              @change="propertyChange"
+              style="width: 100%;">
+              <el-option
+                v-for="item in propertyData"
+                :label="item.enumValue"
+                :value="item.enumKey"
+                :key = "item.enumKey"
+              >{{item.enumValue}}</el-option>
+            </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row  v-show="propertyFlag">
+        <el-form-item label="编内所在单位">
+          <el-input v-model="AddEditInfo.procecompany"></el-input>
+        </el-form-item>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
@@ -25,17 +41,34 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="政治面貌" prop="politics">
-            <el-select v-model="AddEditInfo.politics" placeholder="状态" style="width: 100%;">
+            <el-select
+              @change="politicsChange"
+              v-model="AddEditInfo.politics"
+              placeholder="状态"
+              style="width: 100%;">
               <el-option
                 v-for="item in politicsData"
-                :label="item.name"
-                :value="item.id"
-                :key = "item.id"
-              >{{item.name}}</el-option>
+                :label="item.enumValue"
+                :value="item.enumKey"
+                :key = "item.enumKey"
+              >{{item.enumValue}}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="20" v-show="politicsFlag">
+        <el-col :span="12">
+          <el-form-item label="入党时间">
+            <el-date-picker type="date" v-model="AddEditInfo.partyDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="党内职务">
+            <el-input v-model="AddEditInfo.partyDuty"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="电子邮箱" prop="email">
@@ -56,11 +89,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="手续所在单位" prop="procecompany">
-            <el-input v-model="AddEditInfo.procecompany"></el-input>
+          <el-form-item label="银行（工资）卡号">
+            <el-input v-model="AddEditInfo.payCard"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="开户行">
+        <el-input v-model="AddEditInfo.openBank"></el-input>
+      </el-form-item>
       <el-form-item label="离职/退休/停止原因" prop="dimissionreason">
         <el-input type="textarea" v-model="AddEditInfo.dimissionreason"></el-input>
       </el-form-item>
@@ -136,6 +172,7 @@
 <script>
   import {Message,MessageBox} from 'element-ui'
   import {validmobile,validEmail} from '@/utils/validate'
+  import {enumeration} from '@/api/basic'
   import {GetEmployeeInfo,EditEmployeeInfo} from '@/api/personnel'
   export default {
     data() {
@@ -154,6 +191,8 @@
         }
       };
       return {
+        propertyFlag:false,
+        politicsFlag:false,
         AddEditInfo: {
           alleducation: "",
           allfinishdate: "",
@@ -173,8 +212,13 @@
           number: "",
           phone: "",
           politics: "",
+          partyDate:"",
+          partyDuty:"",
           procecompany: "",
-          property: ""
+          property: "",
+          openBank:"",
+          payCard:""
+
         },
         rulesInfo: {
           number: [{ required: true,trigger: 'blur',message: '请输入编号'}],
@@ -184,7 +228,6 @@
           politics:[{ required: true,trigger: 'blur',message: '请输入政治面貌'}],
           evaluate:[{ required: true,trigger: 'blur',message: '请输入评价'}],
           jobdate:[{ required: true,trigger: 'blur',message: '请输入参加工作时间'}],
-          procecompany:[{ required: true,trigger: 'blur',message: '请输入手续所在单位'}],
           alleducation:[{ required: true,trigger: 'blur',message: '请输入全日制学历'}],
           allfinishdate:[{ required: true,trigger: 'blur',message: '请输入全日制毕业时间'}],
           alluniversity:[{ required: true,trigger: 'blur',message: '请输入全日制毕业院校'}],
@@ -197,20 +240,28 @@
           dimissionreason:[{ required: true,trigger: 'blur',message: '请输入离职/退休/停止原因'}],
           email: [{required: true, trigger: 'blur', validator: checkmail}]
         },
-        politicsData:[
-          { id: 0, name: '群众'},
-          { id: 1, name: '团员'},
-          { id: 2, name: '党员'}
-        ],
+        //政治面貌，人员性质
+        politicsData:[],
+        propertyData:[]
       };
     },
     mounted(){
+      enumeration('/approveEnum/getPropertyEnums').then(res=>{
+        this.propertyData = res.datas
+      })
+      enumeration('/approveEnum/getPoliticsEnums').then(res=>{
+        this.politicsData = res.datas
+      })
       this.getInfo(this.$route.query.uId)
+
     },
     methods: {
       getInfo(uId){
         GetEmployeeInfo(uId).then(response=>{
           this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas
+          if(this.AddEditInfo.property==10){
+            this.propertyFlag=true
+          }
         })
       },
       UpdateUser() {
@@ -230,7 +281,25 @@
 
           }
         })
-      }
+      },
+      propertyChange(value){
+        if(value===10){
+          this.propertyFlag= true
+        }else{
+          this.propertyFlag= false
+          this.AddEditInfo.procecompany = ''
+        }
+      },
+      politicsChange(value){
+        if(value===30){
+          this.politicsFlag= true
+        }else{
+          this.politicsFlag= false
+          this.AddEditInfo.partyDate=""
+          this.AddEditInfo.partyDuty = ''
+        }
+      },
+
     }
   };
 </script>
