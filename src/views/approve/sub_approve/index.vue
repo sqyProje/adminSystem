@@ -5,9 +5,11 @@
         <div slot="header" class="clearfix">
           <span>{{item.name}}</span>
         </div>
-        <div style="margin-bottom:50px;"  class="clearfix"
-          v-for = 'itemChild in item.tableFormSubModels' :key="itemChild.uId" >
-          <el-col :span="2" class="text-center">
+        <div style="margin-bottom:50px;"  class="clearfix">
+          <el-col
+            :span="2" class="text-center"
+            v-for = 'itemChild in item.tableFormSubModels'
+            :key="itemChild.uId">
             <el-tooltip placement="top">
               <div slot="content">
                {{itemChild.name}}

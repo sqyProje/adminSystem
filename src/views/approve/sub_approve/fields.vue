@@ -98,31 +98,24 @@
         </el-form-item>
         <!--单选框-->
         <el-form-item
-          v-if="domain.fieldtype===90"
+          v-for="(firstItem,firstIndex) in OnlyDataMany"
+          :key="firstIndex"
+          v-if="domain.fieldtype===90 && domain.listId===firstItem.dId"
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?{
             required: true, message: domain.fieldname+'必填项', trigger: 'blur'
           }:[]"
         >
-          <el-select v-model="domain.fieldValue"  v-for="(itemsss,ttt) in OnlyDataMany" :key="ttt" :placeholder="domain.valimessage" style="width: 100%" >
+          <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
-              v-for="item in itemsss"
+              v-for="item in firstItem.ItemData"
               :key="item.uId"
               :label="item.name"
               :value="item.name">
             </el-option>
           </el-select>
         </el-form-item>
-         <!-- <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
-            <el-option
-              v-for="item in OnlyDataMany.OnlyData"
-              :key="item.uId"
-              :label="item.name"
-              :value="item.name">
-            </el-option>
-          </el-select>-->
-
         <!--多选-->
         <el-form-item
           v-if="domain.fieldtype===100"
@@ -180,14 +173,14 @@
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?
-      { required: true, message: '请输入邮箱地址', trigger: 'blur' }:[]"
+      { required: true, message: '请选择性别', trigger: 'blur' }:[]"
         >
-          <el-select v-model="domain.fieldValue" placeholder="请选择">
+          <el-select v-model="domain.fieldValue" placeholder="请选择" style="width: 100%;">
             <el-option
               v-for="item in SexData"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.uId"
+              :label="item.name"
+              :value="item.name">
             </el-option>
           </el-select>
         </el-form-item>
@@ -219,6 +212,7 @@
         </el-form-item>
       </div>
       <el-form-item>
+        <el-button type="warning" @click="prev()">返回</el-button>
         <el-button type="primary" @click="submitForm()">提交</el-button>
         <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
       </el-form-item>
@@ -289,7 +283,7 @@
           response.datas.forEach((item,index)=> {
             if(item.isdrop===1){
               dictionType(item.listId).then(res=>{
-                this.OnlyDataMany.push(res.datas)
+                this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
               })
             }
             if(item.isdrop===2){
@@ -303,6 +297,7 @@
               fieldtype: item.fieldtype,
               valimessage: item.valimessage,
               ismust:item.ismust,
+              listId:item.listId,
               fieldValue:''
             })
             //性别
@@ -324,6 +319,8 @@
       prev(){
         this.$router.go(-1)
       },
+
+      //提交审批
       submitForm() {
         const data={
           tableFormId:this.$route.query.form_id,
@@ -339,7 +336,27 @@
           if (valid) {
             GetApproveUser(data).then(response=>{
               this.ApproveUserData = response.datas
-              this.dialogVisible = true
+              if(this.ApproveUserData===null){
+                this.dialogVisible = false
+                AddFormInfo(data).then(res => {
+                  if (res.status === 0) {
+                    this.dialogVisible = false
+                    Message({
+                      message: res.msg,
+                      type: 'success',
+                      duration: 3 * 1000
+                    })
+                  }
+                })
+                  .catch(error => {
+                    console.log(error);
+                  });
+
+              }else{
+                this.dialogVisible = true
+                this.UpdateUser()
+              }
+
             })
           } else {
             Message({
