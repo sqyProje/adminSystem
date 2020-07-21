@@ -55,7 +55,8 @@
         <el-table-column label="发起人" prop="startUserName" align="center"></el-table-column>
         <el-table-column label="状态" prop="approvestatus" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" round style="padding: 5px 12px;">{{scope.row.approvestatus | formatState}}</el-button>
+
+            <div v-html=" $options.filters.formatState(scope.row.approvestatus)"></div>
           </template>
         </el-table-column>
         <el-table-column label="结束时间" prop="enddate" align="center"></el-table-column>
@@ -124,25 +125,25 @@
     filters:{
       formatState(value){
         if(value===10){
-          return '草稿'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>草稿</el-button>"
         }else if(value===20){
-          return '审批中'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #FF9900; padding: 5px 12px;'>审批中</el-button>"
         }else if(value===25){
-          return '任务审批中'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #909399; padding: 5px 12px;'>任务审批中</el-button>"
         }else if(value===30){
-          return '待批'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #32f50a; padding: 5px 12px;'>待批</el-button>"
         }else if(value===40){
-          return '挂起'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #193dc2; padding: 5px 12px;'>挂起</el-button>"
         }else if(value===50){
-          return '任务'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #8156c2; padding: 5px 12px;'>任务</el-button>"
         }else if(value===60){
-          return '拒绝'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c199c2; padding: 5px 12px;'>拒绝</el-button>"
         }else if(value===70){
-          return '同意'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c2077a; padding: 5px 12px;'>同意</el-button>"
         }else if(value===80){
-          return '抄送'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #193dc2; padding: 5px 12px;'>抄送</el-button>"
         }else if(value===90){
-          return '完成审批'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: rgba(194,75,77,0.67); padding: 5px 12px;'>完成审批</el-button>"
         }
       }
     },

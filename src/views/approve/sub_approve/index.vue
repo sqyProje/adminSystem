@@ -15,7 +15,7 @@
                {{itemChild.name}}
               </div>
               <div class="icon-item" @click="handleViewOrder(itemChild.uId)">
-                <img :src="itemChild.picUrl  ? itemChild.picUrl : defaultImg"/>
+                <img :src="itemChild.picpath  ? itemChild.picpath : logo"/>
                 <span>{{itemChild.name}} </span>
               </div>
             </el-tooltip>
@@ -27,12 +27,12 @@
 </template>
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
-  import defaultImg from '@/assets/images/defalutimg.png'
+  import logo from '@/assets/images/logo.png'
   import {InitSubList} from '@/api/approve'
   export default {
     data() {
       return {
-        defaultImg:defaultImg,
+        logo:logo,
         ListQuerys:[]
       }
     },

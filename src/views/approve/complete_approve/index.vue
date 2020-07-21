@@ -40,15 +40,7 @@
       <el-table-column label="表单名称" prop="approveName" align="center"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          <el-button
-            :class="
-                {'label-1': scope.row.approveStatus == 20,
-                 'label-2': scope.row.approveStatus == 60}"
-            size="mini"
-            round
-            style="padding: 5px 12px;">
-            {{scope.row.approveStatus | formatState}}
-          </el-button>
+          <div v-html=" $options.filters.formatState(scope.row.approveStatus)"></div>
         </template>
       </el-table-column>
       <el-table-column label="审批创建时间" prop="approveCreateDate" align="center"></el-table-column>
@@ -151,25 +143,25 @@
     filters:{
       formatState(value){
         if(value===10){
-          return '草稿'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>草稿</el-button>"
         }else if(value===20){
-          return '审批中'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #FF9900; padding: 5px 12px;'>审批中</el-button>"
         }else if(value===25){
-          return '任务审批中'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #909399; padding: 5px 12px;'>任务审批中</el-button>"
         }else if(value===30){
-          return '待批'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #32f50a; padding: 5px 12px;'>待批</el-button>"
         }else if(value===40){
-          return '挂起'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #193dc2; padding: 5px 12px;'>挂起</el-button>"
         }else if(value===50){
-          return '任务'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #8156c2; padding: 5px 12px;'>任务</el-button>"
         }else if(value===60){
-          return '拒绝'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c199c2; padding: 5px 12px;'>拒绝</el-button>"
         }else if(value===70){
-          return '同意'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c2077a; padding: 5px 12px;'>同意</el-button>"
         }else if(value===80){
-          return '抄送'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #193dc2; padding: 5px 12px;'>抄送</el-button>"
         }else if(value===90){
-          return '完成审批'
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: rgba(194,75,77,0.67); padding: 5px 12px;'>完成审批</el-button>"
         }
       }
     },
@@ -254,33 +246,3 @@
     }
   }
 </script>
-
-<style>
-  .label-1{
-    color: #c53535;
-  }
-  .label-2{
-    color: #FF9900;
-  }
-  .label-3{
-    color: #909399;
-  }
-  .label-4{
-    color: #f56c6c;
-  }
-  .label-5{
-    color: #e6a23c;
-  }
-  .label-6{
-    color: #67c23a;
-  }
-  .label-7{
-    color: #67c23a;
-  }
-  .label-8{
-    color: #67c23a;
-  }
-  .label-9{
-    color: #67c23a;
-  }
-</style>

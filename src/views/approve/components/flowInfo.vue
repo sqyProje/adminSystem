@@ -44,7 +44,7 @@
       <table class='progress-table' cellspacing="0" cellpadding="0" >
         <tr v-for="item in workData">
           <td class="fieldName">
-            {{item.courseName}} ({{item.courseStatus}})
+            {{item.courseName}}
           </td>
           <td >
             <table class='progress-man' cellspacing="0" cellpadding="0" >
@@ -61,7 +61,7 @@
                       <div slot="error" class="image-slot">
                         <el-image :src=logo></el-image>
                       </div>
-                    </el-image>{{itemchild.courseUserName}}
+                    </el-image>{{itemchild.courseUserName}}({{itemchild.courseStatus}})
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     {{itemchild.courseSketch}}
                    &nbsp;&nbsp;&nbsp;&nbsp;

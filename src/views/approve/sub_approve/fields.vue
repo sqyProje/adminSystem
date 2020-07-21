@@ -118,7 +118,9 @@
         </el-form-item>
         <!--多选-->
         <el-form-item
-          v-if="domain.fieldtype===100"
+          v-for="(ManyItem,ManyIndex) in ManyData"
+          :key="ManyIndex"
+          v-if="domain.fieldtype===100  && domain.listId===ManyItem.dId"
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?{
@@ -127,7 +129,7 @@
         >
           <el-select v-model="domain.fieldValue" multiple  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
-              v-for="item in ManyData"
+              v-for="item in ManyItem.ItemData"
               :key="item.uId"
               :label="item.name"
               :value="item.uId">
@@ -288,7 +290,7 @@
             }
             if(item.isdrop===2){
               dictionType(item.listId).then(res=>{
-                this.ManyData=res.datas
+                this.ManyData.push({ItemData:res.datas,dId:item.listId})
               })
             }
             this.dynamicValidateForm.domains.push({

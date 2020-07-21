@@ -2,7 +2,7 @@
 <div class="app-container stepComponent" >
   <div class="approvalProcess" >
     <el-steps :active = workData.length  direction="vertical" >
-      <el-step :title="item.courseName+'('+item.courseStatus+')'"  v-for="(item,index) in workData" :key="index">
+      <el-step :title="item.courseName"  v-for="(item,index) in workData" :key="index">
         <template slot="description" >
           <div class="step-row" v-for="child in item.approveStepCourseModels">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content">
@@ -20,7 +20,7 @@
                       <div slot="error" class="image-slot">
                         <el-image :src=logo></el-image>
                       </div>
-                    </el-image><span style="color:#219AFF">{{child.courseUserName}}</span></div>
+                    </el-image><span style="color:#219AFF">{{child.courseUserName}}({{child.courseStatus}})</span></div>
                     <div >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
                     <div class="demo-image__error">签名：
                       <el-image
@@ -38,7 +38,7 @@
         </template>
       </el-step>
     </el-steps>
-    <el-button style="margin-top: 12px;" type="primary" size="medium" @click="prev">返回</el-button>
+    <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
   </div>
 
 </div>
