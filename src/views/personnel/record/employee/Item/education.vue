@@ -249,6 +249,7 @@
       },
       canleDialog(){
         this.dialogVisible = false
+        this.picString = ''
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
