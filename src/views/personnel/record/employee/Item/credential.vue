@@ -77,12 +77,6 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='图集'>
-          <multiUploadImg
-            @imgUrl="picPreview"
-            :picArray="picString"
-          ></multiUploadImg>
-        </el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label ='证书类型'  prop="type">
@@ -158,19 +152,24 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label ='证书年审情况'>
+        <el-form-item label ='执业情况'><!--证书年审情况-->
           <el-input type="textarea" v-model="AddEditInfo.annualcase"></el-input>
         </el-form-item>
-        <el-form-item label ='证书使用情况'>
+        <el-form-item label ='执业情况'><!--证书使用情况-->
           <el-input type="textarea" v-model="AddEditInfo.usecase"></el-input>
         </el-form-item>
         <el-form-item label ='证书变更情况'>
           <el-input type="textarea" v-model="AddEditInfo.changecase"></el-input>
         </el-form-item>
-        <el-form-item label ='证书现存位置'>
+        <el-form-item label ='执业地点'><!--证书现存位置-->
           <el-input v-model="AddEditInfo.registerorganization"></el-input>
         </el-form-item>
-
+        <el-form-item label ='图集'>
+          <multiUploadImg
+            @imgUrl="picPreview"
+            :picArray="picString"
+          ></multiUploadImg>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>

@@ -42,9 +42,9 @@
         <el-col :span="12">
           <el-form-item label="政治面貌" prop="politics">
             <el-select
-              @change="politicsChange"
               v-model="AddEditInfo.politics"
               placeholder="状态"
+              @change="politicsChange"
               style="width: 100%;">
               <el-option
                 v-for="item in politicsData"
@@ -103,7 +103,7 @@
       <el-form-item label="家庭地址" prop="familyaddress">
         <el-input v-model="AddEditInfo.familyaddress"></el-input>
       </el-form-item>
-      <el-form-item label="评价" prop="evaluate">
+      <el-form-item label="特长" prop="evaluate">
         <el-input type="textarea" v-model="AddEditInfo.evaluate"></el-input>
       </el-form-item>
     </div>
@@ -137,7 +137,7 @@
       </el-row>
     </div>
     <div class="header">
-      <span>全日制教育信息</span>
+      <span>在职教育信息</span>
     </div>
     <div>
       <el-row :gutter="20">

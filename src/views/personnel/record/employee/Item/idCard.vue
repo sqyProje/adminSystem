@@ -7,7 +7,7 @@
       </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="农历出生日期" prop="lunarbirthdate">
+      <el-form-item label="生日信息" prop="lunarbirthdate">
         <el-date-picker type="date" v-model="AddEditInfo.lunarbirthdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
@@ -19,7 +19,7 @@
       </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="阳历出生日期">
+      <el-form-item label="出生年月">
         <el-input v-model="AddEditInfo.birthdate" :disabled="true"></el-input>
       </el-form-item>
     </el-col>
@@ -67,10 +67,10 @@
       </el-form-item>
     </el-col>
   </el-row>
-  <el-form-item label="身份证正面" prop="frontpath">
+  <el-form-item label="身份证人像面" prop="frontpath">
     <singleUpload  v-model="AddEditInfo.frontpath" @input="frontPicFun"></singleUpload>
   </el-form-item>
-  <el-form-item label="身份证反面" prop="versopath">
+  <el-form-item label="身份证国徽面" prop="versopath">
     <singleUpload  v-model="AddEditInfo.versopath" @input="versoPicFun"></singleUpload>
   </el-form-item>
   <el-form-item size="large">

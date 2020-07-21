@@ -61,7 +61,7 @@
       :title="dialogTitle"
       :close-on-click-modal="false"
       :visible.sync="dialogVisible"
-      width="23%">
+      width="35%">
       <el-form
         :inline="false"
         size="mini"
@@ -98,6 +98,12 @@
             >{{item.display_name}}</el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label ='图集'>
+          <multiUploadImg
+            @imgUrl="picPreview"
+            :picArray="picString"
+          ></multiUploadImg>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
@@ -108,20 +114,25 @@
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
+  import multiUploadImg from '@/components/Upload/multiUploadImg'
   import {EduList,AddEdu,GetEdu,EditEdu,DeleteEdu} from '@/api/personnel'
   export default {
     data(){
       return{
         tableData:[],
+        picString:"",
+        picPreviewInfo:'',
         dialogTitle:'',
         dialogVisible: false,
         AddEditInfo:{
           employeeid:'',
-          name:'',
           startdate:'',
           enddate:'',
           school:'',
           content:'',
+          name:'',
+          processcase:'',
+          picPaths:'',
           state:''
         },
         stateData:[
@@ -138,6 +149,9 @@
     },
     mounted(){
       this.initList(this.$route.query.uId)
+    },
+    components:{
+      multiUploadImg
     },
     methods:{
       initList(uId){
@@ -158,11 +172,15 @@
         this.dialogTitle = '编辑'
         GetEdu(row.uId).then(response=>{
           this.AddEditInfo = response.datas
+          this.picString = response.datas.picPaths;
+          this.picPreviewInfo = response.datas.picPaths+','
+          console.log( this.picPreviewInfo)
         })
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
+            this.AddEditInfo.picPaths = this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
             if (this.dialogTitle === '添加') {
               AddEdu(this.AddEditInfo)
                 .then(response => {
@@ -233,7 +251,11 @@
         this.dialogVisible = false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
-      }
+      },
+      picPreview(value){
+        this.picPreviewInfo += value+','
+        console.log( this.picPreviewInfo);
+      },
     }
   }
 
