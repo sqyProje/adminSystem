@@ -3,7 +3,7 @@
     <el-upload
       class="upload-demo"
       name="fileName"
-      action="http://192.168.1.7:8088/file/getPicPath"
+      :action="urlSign"
       list-type="picture-card"
       :limit="1"
       accept="image/jpeg,image/png"
@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+  import {DeleteFileUrl} from '@/api/basic'
   export default {
     name: 'singleUpload',
     data(){
@@ -36,8 +37,14 @@
       }
     },
     props: {
-      value: String,
-      default:''
+      value:{
+        type:String,
+        default:''
+      } ,
+      urlSign:{
+        type:String,
+        default:'http://192.168.1.7:8088/file/getPicPath'
+      }
     },
     watch:{
       'value'(){
@@ -59,6 +66,7 @@
         }
       }
     },
+
     methods: {
       beforeAvatarUpload(file){
         const isJPG = file.type === 'image/jpeg';
@@ -74,7 +82,10 @@
         return (isJPG  || isPNG) && isLt1M;
       },
       handleRemove(file, fileList) {
-        this.$emit('input', '')
+        DeleteFileUrl(file.url).then(res=>{
+          this.$message.warning(res.msg);
+          this.$emit('input', '')
+        })
       },
       handlePreview(file) {
         this.dialogVisible = true;

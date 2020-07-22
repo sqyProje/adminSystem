@@ -163,6 +163,12 @@
               >{{item.display_name}}</el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label ='签名'>
+            <singleUpload
+              v-model="userInfo.picSignatureUrl"
+              urlSign="http://192.168.1.7:8088/file/getSignaturePath"
+              @input="SignpicFun"></singleUpload>
+          </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
@@ -247,6 +253,7 @@
           email:'',
           departid:'',
           picpath:'',
+          picSignatureUrl:'',
           state:''
         },
         stateData:[
@@ -312,6 +319,10 @@
       picFun(data){
         this.userInfo.picpath = data
       },
+      SignpicFun(data){
+        this.userInfo.picSignatureUrl = data
+
+      },
       addUserDialog(){
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '添加'
@@ -345,7 +356,7 @@
                   this.dialogVisible = false
                   this.initTable();
                   this.mineStatus=''
-                  this.$store.commit('SET_AVATAR',this.userInfo.picpath)
+                //  this.$store.commit('SET_AVATAR',this.userInfo.picpath)
                   Message({
                     message: response.msg,
                     type: 'success',

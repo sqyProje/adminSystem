@@ -9,7 +9,7 @@ import VCharts from 'v-charts'
 import Vue2OrgTree from 'vue2-org-tree';
 import VueTinymce from "@packy-tang/vue-tinymce"
 import '@/styles/index.scss' // global css
-
+import '@/styles/btn.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'

@@ -34,7 +34,6 @@ export function DeleteInfo(params) {
   })
 }
 //diction type parentId
-
 export function dictionType(params) {
   return request({
     url: '/diction/findByParentId?parentId='+params,
@@ -46,5 +45,12 @@ export function enumeration(urlInfo) {
   return request({
     url: urlInfo,
     method: 'get',
+  })
+}
+//删除文件
+export function DeleteFileUrl(filePath) {
+  return request({
+    url: '/file/deleteFile?filePath='+filePath,
+    method: 'post',
   })
 }
