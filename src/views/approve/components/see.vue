@@ -68,7 +68,7 @@
                     <el-image
                       v-if="itemchild.picsignatureUrl.length != 0"
                       style="
-                        width: 30px; height: 30px;
+                        width: 100px; height: 30px;
                         background-color:#e1e1e1;
                         vertical-align: middle;
                         text-align:center;margin-right: 10px;  "
