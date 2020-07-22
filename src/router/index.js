@@ -246,52 +246,6 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/activiti',
-    name: 'activiti',
-    component: Layout,
-    redirect: '/activiti/form',
-    meta: {title: '工作流管理', icon: 'product'},
-    children: [
-      {
-        path: 'act_form_type',
-        name: 'act_form_type',
-        component: () => import('@/views/activiti/act_form_type/act_form_type'),
-        meta: {title: '流程表单分类', icon: 'product-list',noCache: true}
-      },
-      {
-        path: 'act_model',
-        name: 'act_model',
-        component: () => import('@/views/activiti/act_model/act_model'),
-        meta: {title: '流程模型管理', icon: 'product-list',noCache: true}
-      },
-      {
-        path: 'act_deploy',
-        name: 'act_deploy',
-        component: () => import('@/views/activiti/act_deploy/act_deploy'),
-        meta: {title: '流程定义管理', icon: 'product-list',noCache: true}
-      },
-      {
-        path: 'form',
-        name: 'form',
-        component: () => import('@/views/activiti/form/form'),
-        meta: {title: '表单管理', icon: 'product-list',noCache: true}
-      },
-      {
-        path: 'fields',
-        name: 'fields',
-        component: () => import('@/views/activiti/form/fields/fields'),
-        meta: {title: '字段管理'},
-        hidden: true
-      },
-      {
-        path: 'act_manage',
-        name: 'act_manage',
-        component: () => import('@/views/activiti/act_manage/act_manage'),
-        meta: {title: '流程管理', icon: 'product-list',noCache: true}
-      }
-    ]
-  },
-  {
     path:'/approve',
     component:Layout,
     redirect:'/approve/sub_approve',

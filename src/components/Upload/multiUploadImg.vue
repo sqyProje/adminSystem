@@ -80,7 +80,11 @@
   }
 </script>
 <style>
-
+  .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
+    width:110px;
+    height:110px;
+    line-height:110px;
+  }
 </style>
 
 

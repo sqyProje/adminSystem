@@ -210,7 +210,10 @@
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
         >
-          <el-input v-model="domain.fieldValue" :placeholder="domain.valimessage"></el-input>
+          <multiUploadFile
+            @file-url="FilePreview"
+            :picArray="[]">
+          </multiUploadFile>
         </el-form-item>
       </div>
       <el-form-item>
@@ -253,12 +256,14 @@
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
   import multiUploadImg from '@/components/Upload/multiUploadImg'
+  import multiUploadFile from '@/components/Upload/multiUploadFile'
   import {dictionType} from '@/api/basic'
   import {GetSubInfo,AddFormInfo,GetApproveUser} from '@/api/approve'
 
   export default {
     data(){
       return {
+        FileArray:[],
         picPreviewInfo:'',
         dynamicValidateForm: {
           domains: [],
@@ -277,7 +282,7 @@
       }
     },
     components:{
-      multiUploadImg
+      multiUploadImg,multiUploadFile
     },
     created(){
       GetSubInfo(this.$route.query.form_id)
@@ -309,14 +314,26 @@
               })
             }
           })
-          console.group( this.OnlyDataMany)
 
         })
     },
     methods:{
+      FilePreview(value){
+        this.dynamicValidateForm.domains.forEach((item,index)=>{
+          if(item.fieldtype === 160){
+            item.fieldValue = value
+          }
+        })
+      },
       picPreview(value){
         this.picPreviewInfo += value+','
-        console.log( this.picPreviewInfo);
+        this.dynamicValidateForm.domains.forEach((item,index)=>{
+          if(item.fieldtype === 150){
+            item.fieldValue += value+','
+            console.log(item.fieldValue)
+          }
+        })
+
       },
       prev(){
         this.$router.go(-1)
@@ -329,11 +346,19 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          data.tableFieldSubModels.push({
-            tableFieldId:item.uId,
-            tableFieldValue:item.fieldValue
-          })
+          if(item.fieldtype === 150){
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:item.fieldValue.substring(0, item.fieldValue.length - 1)
+            })
+          }else{
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:item.fieldValue
+            })
+          }
         })
+        console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
             GetApproveUser(data).then(response=>{
@@ -380,10 +405,17 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          data.tableFieldSubModels.push({
-            tableFieldId:item.uId,
-            tableFieldValue:item.fieldValue
-          })
+          if(item.fieldtype === 150){
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:item.fieldValue.substring(0, item.fieldValue.length - 1)
+            })
+          }else{
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:item.fieldValue
+            })
+          }
         })
         this.$refs.AddEditInfo.validate(valid => {
           AddFormInfo(data).then(res => {

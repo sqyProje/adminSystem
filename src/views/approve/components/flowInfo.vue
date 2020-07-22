@@ -64,7 +64,7 @@
                     </el-image>{{itemchild.courseUserName}}({{itemchild.courseStatus}})
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     {{itemchild.courseSketch}}
-                   &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
                     <el-image
                       v-if="itemchild.picsignatureUrl.length != 0"
                       style="

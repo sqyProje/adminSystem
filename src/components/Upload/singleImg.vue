@@ -1,11 +1,11 @@
 <template> 
   <div>
     <el-upload
-      class="upload-demo"
+      :class="{hide:hideUpload}"
       name="fileName"
       :action="urlSign"
       list-type="picture-card"
-      :limit="1"
+      :limit="limitCount"
       accept="image/jpeg,image/png"
       :multiple="false"
       :file-list="fileList"
@@ -15,7 +15,7 @@
       :on-exceed="handleExceed"
       :on-preview="handlePreview">
       <i class="el-icon-plus"></i>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
+      <div slot="tip" >只能上传jpg/png文件，且不超过1MB</div>
     </el-upload>
     <el-dialog
       :visible.sync="dialogVisible"
@@ -31,6 +31,8 @@
     name: 'singleUpload',
     data(){
       return {
+        hideUpload:false,
+        limitCount:1,
         dialogVisible: false,
         fileList:[],
         dialogImageUrl: '',
@@ -63,6 +65,7 @@
               url: item
             }
           });
+          this.hideUpload = this.fileList.length > 0
         }
       }
     },
@@ -83,6 +86,7 @@
       },
       handleRemove(file, fileList) {
         DeleteFileUrl(file.url).then(res=>{
+          this.hideUpload = false
           this.$message.warning(res.msg);
           this.$emit('input', '')
         })
@@ -96,13 +100,22 @@
       },
       handleUploadSuccess(res, file) {
         this.fileList=[{name: file.name, url: res.datas}];
+        //this.hideUpload = this.fileList.length >= this.limitCount;
+        this.hideUpload = false
         this.$emit('input', res.datas)
       }
     }
   }
 </script>
 <style>
-
+   .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
+    width:110px;
+    height:110px;
+    line-height:110px;
+  }
+  .hide .el-upload--picture-card {
+    display: none;
+  }
 </style>
 
 

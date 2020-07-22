@@ -1,24 +1,24 @@
 <template> 
   <div>
     <el-upload
-      class="upload-demo"
+      :class="{hide:hideUpload}"
       name="fileName"
       :multiple='false'
-      :limit="1"
-      action="http://192.168.1.7:8088/file/getFileContractPath"
+      :limit="limitCount"
+      action="http://192.168.1.7:8088/file/getFilePath"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       :on-success="handleSuccess"
+      :on-remove="handleRemove"
       :before-upload="beforeUploadFile"
       :file-list="fileList">
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传支持zip，rar，pdf，doc文件，且不超过20Mb</div>
-      <div slot="tip" class="el-upload__tip">只能上传一份文件</div>
+      <div slot="tip" class="el-upload__tip">只能上传一份文件且支持zip，rar，pdf，doc文件，大小不超过20Mb</div>
     </el-upload>
   </div>
 </template>
 <script>
-
+  import {DeleteFileUrl} from '@/api/basic'
   export default {
     name: 'multiUpload',
     props: {
@@ -35,6 +35,8 @@
     },
     data() {
       return {
+        hideUpload:false,
+        limitCount:1,
         fileList: [],
       };
     },
@@ -49,8 +51,8 @@
     },
     methods: {
       handleSuccess(response, file, fileList) {
-        console.log(response.datas.filePath)
-        this.fileList.push({name: response.datas.fileName,url: response.datas.filepath})
+        this.hideUpload = true
+        this.fileList.push({name: response.datas.fileName,url: response.datas.filePath})
         this.$emit('file-url',response.datas.filePath)
         this.$message.success('文件上传成功');
       },
@@ -72,6 +74,14 @@
           this.$message.warning('文件大小不得超过20M');
         }
       },
+      handleRemove(file, fileList) {
+        DeleteFileUrl( file.url).then(res=>{
+          this.hideUpload = false
+          this.$message.warning(res.msg);
+          this.fileList = []
+          this.$emit('file-url','')
+        })
+      },
       handleExceed (files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，请删除后继续上传`)
       },
@@ -83,7 +93,9 @@
   }
 </script>
 <style>
-
+  .hide .el-upload--text {
+    display: none;
+  }
 </style>
 
 
