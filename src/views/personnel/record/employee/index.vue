@@ -64,7 +64,7 @@
         <el-table-column label="岗位名称" prop="stationname"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="260">
+        <el-table-column label="操作" fixed="right"  width="360">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -75,6 +75,10 @@
               type="success"
               v-if="hasPerm('employee:edit')"
               @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleStation(scope.row)">岗位调动</el-button>
             <el-button
               size="mini"
               type="danger"
@@ -162,6 +166,9 @@
             >{{item.name}}</el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label ='调动原因' v-show="sketchFlag">
+          <el-input v-model="AddEditInfo.sketch"></el-input>
+        </el-form-item>
         <el-form-item label ='任职时间'  prop="officedate">
           <el-date-picker
             style="width: 100%;"
@@ -188,7 +195,16 @@
           <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
         </span>
     </el-dialog>
-
+    <el-dialog
+      title="岗位调动信息"
+      :close-on-click-modal="false"
+      :visible.sync="stationFlag"
+      width="70%">
+      <stationmove :employeeIds ='employeeId'></stationmove>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" type="warning" @click="canleDialogFlag">关  闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -197,6 +213,7 @@
   ,GetDepartInfoArray,GetStationDrop,GetDutyInfoArray} from '@/api/personnel'
   import singleUpload from '@/components/Upload/singleImg'
   import SearchTree from '@/components/LeftSearchTree/searchtree'
+  import stationmove from './Item/stationmove'
   const defaultListQuery = {
     realName: '',
     departId:'',
@@ -212,6 +229,9 @@
         total: null,
         dialogTitle:'',
         dialogVisible: false,
+        stationFlag:false,
+        employeeId:'',
+        sketchFlag:false,
         AddEditInfo:{
           uId:'',
           picpath:'',
@@ -219,6 +239,7 @@
           departname:'',
           departid:'',
           stationname:'',
+          sketch:'',
           stationid:'',
           dutyname:'',
           dutyid:'',
@@ -249,7 +270,7 @@
       }
     } ,
     components:{
-      singleUpload,SearchTree
+      singleUpload,SearchTree,stationmove
     },
     created(){
       this.initTable();
@@ -274,6 +295,11 @@
         GetDutyInfoArray().then(response=>{
           this.dutyData.push(response.datas[0])
         })
+      },
+      handleStation(row){
+        this.stationFlag = true
+        this.employeeId =row.uId
+
       },
       onSearchList() {
         this.initTable()
@@ -310,6 +336,7 @@
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
+        this.sketchFlag = false
         this.dialogTitle = '编辑'
         GetEmployee(row.uId).then(response=>{
           this.AddEditInfo = response.datas
@@ -390,12 +417,21 @@
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
+      canleDialogFlag(){
+        this.stationFlag = false
+      },
       handleViewOrder(row){
         this.$router.push({name:'detail',query: {uId: row.uId}})
       },
       stationTrigger(val){
         this.AddEditInfo.stationname = val ? this.stationData.find(ele => ele.uId === val).name : ''
-        this.AddEditInfo.stationid = val
+      //  this.AddEditInfo.stationid = val
+        if(this.AddEditInfo.stationid !==val ){
+          this.sketchFlag = true
+          this.AddEditInfo.stationid = val
+        }else{
+          this.sketchFlag = false
+        }
       },
       departNodeClick(val){
         this.AddEditInfo.departid = val.uId
