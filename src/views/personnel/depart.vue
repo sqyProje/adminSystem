@@ -140,6 +140,7 @@
     export default {
       data(){
         return {
+          listLoading:false,
           listQuery: Object.assign({}, defaultListQuery),
           tableData:[],
           total: null,
@@ -168,17 +169,22 @@
       components:{
         SearchTree
       },
-      created(){
+      mounted(){
         this.initTable();
-        GetDepartInfoArray().then(response=>{
-          response.datas.forEach(item=>{
-            this.leftTreeData.push(item)
-          })
-        })
+        this.leftTree()
       },
       methods: {
         onSearchList() {
           this.initTable()
+        },
+        leftTree(){
+          const NewTree =[]
+          GetDepartInfoArray().then(response=>{
+            response.datas.forEach((item,index)=>{
+              NewTree.push(item)
+            })
+            this.leftTreeData = NewTree
+          })
         },
         initTable() {
           this.listLoading = true
@@ -231,6 +237,7 @@
                     this.dialogVisible = false
                     if (response.status === 0) {
                       this.initTable();
+                      this.leftTree()
                       Message({
                         message: response.msg,
                         type: 'success',
@@ -246,6 +253,7 @@
                   if (response.status === 0) {
                     this.dialogVisible = false
                     this.initTable();
+                    this.leftTree()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -257,6 +265,7 @@
                     console.log(error);
                   });
               }
+
             }else{
               Message({
                 message: '参数验证不合法',

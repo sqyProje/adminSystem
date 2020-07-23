@@ -182,25 +182,24 @@
     },
     created(){
       this.initTable();
-    //  this.GetDutyLeft()
-      GetDutyInfoArray().then(response=>{
-        response.datas.forEach(item=>{
-          this.leftTreeData.push(item)
-        })
-        this.TreeDataOrg=response.datas[0]
-      })
+      this.leftTree()
+
+      //  this.GetDutyLeft()
+
     },
-   /* watch:{
-      tableData:{
-        handler(news,olds){
-          console.log(news,olds)
-          this.$options.methods.GetDutyLeft()
-        }
-      }
-    },*/
     methods: {
       onSearchList() {
         this.initTable()
+      },
+      leftTree() {
+        const NewTree = []
+        GetDutyInfoArray().then(response=>{
+          response.datas.forEach(item=>{
+            NewTree.push(item)
+          })
+          this.leftTreeData=NewTree
+          this.TreeDataOrg=response.datas[0]
+        })
       },
       initTable() {
         this.listLoading = true
@@ -253,6 +252,7 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
+                    this.leftTree()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -268,6 +268,7 @@
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
+                  this.leftTree()
                   Message({
                     message: response.msg,
                     type: 'success',

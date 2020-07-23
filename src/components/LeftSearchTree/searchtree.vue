@@ -50,9 +50,13 @@
         filterText(val){
           this.$refs.leftTree.filter(val)
         },
+        toChildTree(val) {
+          console.log(val)
+          this.menuInfoArray[0].childMenu=this.toChildTree
+
+        }
       },
       mounted(){
-        this.menuInfoArray[0].childMenu=this.toChildTree
       },
 
       methods:{

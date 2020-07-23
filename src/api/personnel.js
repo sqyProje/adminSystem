@@ -159,6 +159,20 @@ export function DeleteEmployee(params) {
     method: 'post'
   })
 }
+//岗位调动
+export function StationMoveList(params) {
+  return request({
+    url: '/stationMove/list',
+    method: 'get',
+    params: params
+  })
+}
+export function DeleteStationMove(params) {
+  return request({
+    url: '/stationMove/deletes?array='+params,
+    method: 'post'
+  })
+}
 //员工详情
 export function GetEmployeeInfo(params) {
   return request({
