@@ -12,6 +12,7 @@ const service = axios.create({
 
 service.interceptors.request.use(config => {
   if (store.getters.token) {
+    console.log(config.headers)
     config.headers['Authorization'] = localStorage.getItem('loginToken') // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   return config
@@ -24,10 +25,26 @@ service.interceptors.request.use(config => {
 // respone响应拦截器
 service.interceptors.response.use(
   response => {
-  /**
+    console.log(response)
+    if(response.data.type === 'application/vnd.ms-excel'){
+      const content = response.data;
+      const disposition =decodeURI(response.headers['content-disposition'].split('=')[1]);
+      let url = window.URL.createObjectURL(new Blob([content]));
+      let link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;
+      link.setAttribute("download", disposition);
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(link.href);
+      document.body.removeChild(link)
+      return
+    }
+    /**
   * code为非200是抛错 可结合自己业务进行修改*/
     const res = response.data
-    if(response.headers.authorization) {
+    if(response.headers.authorization)
+    {
       store.commit('SET_TOKEN', response.headers.authorization)
       localStorage.setItem('loginToken',response.headers.authorization)
     }
@@ -43,7 +60,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error.response.data.message || error.response.data.msg)// for debug
+   // console.log(error.response.data.message || error.response.data.msg)// for debug
     if(error.response.data.status === 1005){
       MessageBox.confirm(error.response.data.msg, '确定登出', {
         confirmButtonText: '重新登录',
