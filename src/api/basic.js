@@ -54,3 +54,17 @@ export function DeleteFileUrl(filePath) {
     method: 'post',
   })
 }
+//文件excel下载
+export function importExcel(res) {
+  const content = res.data;
+  const disposition =decodeURI(res.headers['content-disposition'].split('=')[1]);
+  let url = window.URL.createObjectURL(new Blob([content]));
+  let link = document.createElement("a");
+  link.style.display = "none";
+  link.href = url;
+  link.setAttribute("download", disposition);
+  document.body.appendChild(link);
+  link.click();
+  window.URL.revokeObjectURL(link.href);
+  document.body.removeChild(link)
+}

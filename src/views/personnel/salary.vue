@@ -39,7 +39,7 @@
               @click="handleAdd">
               导入</el-button>
             <el-button
-              type="primary"
+              type="warning"
               size="small"
               @click="ExportFun">
               导出模板</el-button>

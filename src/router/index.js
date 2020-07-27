@@ -148,7 +148,13 @@ export const asyncRouterMap = [
           hidden: true
         },
         ]
-      }
+      },
+      {
+        path: 'salary',
+        name: 'salary',
+        component: () => import('@/views/personnel/salary'),
+        meta: {title: '部门管理', icon: 'product-list',noCache: true}
+      },
     ]
   },
   {

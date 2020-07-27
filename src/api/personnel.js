@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 /*部门管理*/
 
 export function DepartList(params) {
@@ -358,5 +359,57 @@ export function ContractPathInfo(params) {
       'Content-type': 'multipart/form-data'
     },
     data: params
+  })
+}
+//薪资管理
+export function SalaryList(params) {
+  return request({
+    url: '/salary/list',
+    method: 'get',
+    params: params
+  })
+}
+export function ExportModel() {
+  return request({
+    url: '/salary/exportModel',
+    method: 'get',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    responseType: 'blob',
+  })
+}
+/*{
+      payDate:params.payData,
+      name:params.name,
+      sketch:params.sketch,
+      file:params.file
+    }*/
+export function ExcelImport(params) {
+  return request({
+    url: '/salary/excelImport',
+    method: 'post',
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+    data:params
+  })
+}
+export function PayName() {
+  return request({
+    url: '/payName/drop',
+    method: 'get',
+  })
+}
+//导出工资报表
+export function ExportDatas(params) {
+  return request({
+    url:'/salary/exportDatas',
+    method:'get',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    params:params,
+    responseType: 'blob',
   })
 }
