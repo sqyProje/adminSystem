@@ -166,6 +166,21 @@
             >{{item.name}}</el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label ="关联用户">
+          <el-select
+            filterable
+            clearable
+            v-model="AddEditInfo.userId"
+            placeholder="关联用户"
+            style="width: 100%;">
+            <el-option
+              v-for="item in userIdData"
+              :label="item.realname +'（'+item.phone+'）'"
+              :value="item.uId"
+              :key = "item.uId"
+            >{{item.realname}}（{{item.phone}}）</el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label ='调动原因' v-show="sketchFlag">
           <el-input v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
@@ -211,6 +226,7 @@
   import {Message,MessageBox} from 'element-ui'
   import {EmployeeList,AddEmployee,GetEmployee,EditEmployee,DeleteEmployee
   ,GetDepartInfoArray,GetStationDrop,GetDutyInfoArray} from '@/api/personnel'
+  import {userDrop} from '@/api/menu-pers'
   import singleUpload from '@/components/Upload/singleImg'
   import SearchTree from '@/components/LeftSearchTree/searchtree'
   import stationmove from './Item/stationmove'
@@ -254,6 +270,7 @@
         departData:[],
         dutyData:[],
         stationData:[],
+        userIdData:[],
         defaultProps: {
           children: 'childMenu',
           label: 'name'
@@ -278,6 +295,9 @@
       this.dutyFu()
       GetStationDrop().then(response=>{
         this.stationData = response.datas
+      })
+      userDrop().then(response=>{
+        this.userIdData = response.datas
       })
     },
     methods: {
