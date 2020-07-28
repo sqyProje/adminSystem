@@ -45,7 +45,7 @@
       } ,
       urlSign:{
         type:String,
-        default:'http://192.168.1.7:8088/file/getPicPath'
+        default:'http://192.168.1.10:8088/file/getPicPath'
       }
     },
     watch:{

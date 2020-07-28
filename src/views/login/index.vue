@@ -221,7 +221,7 @@
         },
         sendAuthCode:true,
         auth_time:0,
-        imgCode:'http://192.168.1.7:8088/sys/getValidateCode',
+        imgCode:'http://192.168.1.10:8088/sys/getValidateCode',
         login_center_bg
       }
     },

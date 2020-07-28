@@ -413,3 +413,93 @@ export function ExportDatas(params) {
     responseType: 'blob',
   })
 }
+//福利管理
+export function WealNameList(params) {
+  return request({
+    url: '/wealName/list',
+    method: 'get',
+    params: params
+  })
+}
+
+export function AddWealName(params) {
+  return request({
+    url: '/wealName/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetWealName(params) {
+  return request({
+    url: '/wealName/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditWealName(params) {
+  return request({
+    url: '/wealName/edit',
+    method: 'post',
+    data: params
+  })
+}
+export function DeleteWealName(params) {
+  return request({
+    url: '/wealName/deletes?array='+params,
+    method: 'post'
+  })
+}
+
+export function wealName() {
+  return request({
+    url: '/wealName/drop',
+    method: 'get',
+  })
+}
+export function WealList(params) {
+  return request({
+    url: '/weal/list',
+    method: 'get',
+    params: params
+  })
+}
+
+export function AddWeal(params) {
+  return request({
+    url: '/weal/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetWeal(params) {
+  return request({
+    url: '/weal/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditWeal(params) {
+  return request({
+    url: '/weal/edit',
+    method: 'post',
+    data: params
+  })
+}
+export function DeleteWeal(params) {
+  return request({
+    url: '/weal/deletes?array='+params,
+    method: 'post'
+  })
+}
+export function departEmployee(params) {
+  return request({
+    url: '/depart/departEmployeeTree',
+    method: 'get',
+  })
+}
+
+export function wealExcel(params) {
+  return request({
+    url: 'wealExcel/export?wealNameId='+params,
+    method: 'post',
+    responseType: 'blob',
+  })
+}

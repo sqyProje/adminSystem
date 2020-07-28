@@ -24,38 +24,14 @@ service.interceptors.request.use(config => {
 // respone响应拦截器
 service.interceptors.response.use(
   response => {
+    console.log(response)
     const res = response.data
-    /*if(response.data.type === 'application/vnd.ms-excel'){
-      const content = response.data;
-      const disposition =decodeURI(response.headers['content-disposition'].split('=')[1]);
-      let url = window.URL.createObjectURL(new Blob([content]));
-      let link = document.createElement("a");
-      link.style.display = "none";
-      link.href = url;
-      link.setAttribute("download", disposition);
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(link.href);
-      document.body.removeChild(link)
-      return
-    }*/
-    /*if (res.status !== 0) {
-      Message({
-        message: res.msg,
-        type: 'error',
-        duration: 3 * 1000
-      })
-      return Promise.reject('error')
-    } else {
-      return response.data
-    }*/
     if(response.headers.authorization)
     {
       store.commit('SET_TOKEN', response.headers.authorization)
       localStorage.setItem('loginToken',response.headers.authorization)
     }
     if(response.status !== 200){
-      console.log(response)
       Message({
         message: res.msg,
         type: 'error',
@@ -65,7 +41,17 @@ service.interceptors.response.use(
     }else if(response.data.type === 'application/vnd.ms-excel'){
       return response
     }else{
-      return response.data
+      if(res.status !==0){
+        Message({
+          message: res.msg,
+          type: 'error',
+          duration: 3 * 1000
+        })
+        return Promise.reject('error')
+      }else{
+        return response.data
+
+      }
     }
   },
   error => {

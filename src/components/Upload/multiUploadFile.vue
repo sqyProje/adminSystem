@@ -5,7 +5,7 @@
       name="fileName"
       :multiple='false'
       :limit="limitCount"
-      action="http://192.168.1.7:8088/file/getFilePath"
+      action="http://192.168.1.10:8088/file/getFilePath"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       :on-success="handleSuccess"

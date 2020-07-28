@@ -166,7 +166,7 @@
           <el-form-item label ='签名'>
             <singleUpload
               v-model="userInfo.picSignatureUrl"
-              urlSign="http://192.168.1.7:8088/file/getSignaturePath"
+              urlSign="http://192.168.1.10:8088/file/getSignaturePath"
               @input="SignpicFun"></singleUpload>
           </el-form-item>
         </el-form>

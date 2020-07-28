@@ -153,7 +153,28 @@ export const asyncRouterMap = [
         path: 'salary',
         name: 'salary',
         component: () => import('@/views/personnel/salary'),
-        meta: {title: '部门管理', icon: 'product-list',noCache: true}
+        meta: {title: '薪资管理', icon: 'product-list',noCache: true}
+      },
+      {
+        path: 'e_weal',
+        name: 'e_weal',
+        component: ()=> import('@/views/personnel/e_weal/index'),
+        meta: {title: '福利管理',  icon: 'product-list',noCache: true},
+        redirect:'/personnel/e_weal/weal',
+        children:[
+          {
+            path: 'wealName',
+            name: 'wealName',
+            component: () => import('@/views/personnel/e_weal/weal/wealName'),
+            meta: {title: '福利表管理',noCache: true},
+          },
+          {
+            path: 'weal',
+            name: 'weal',
+            component: () => import('@/views/personnel/e_weal/weal/index'),
+            meta: {title: '福利管理',noCache: true},
+          },
+        ]
       },
     ]
   },
