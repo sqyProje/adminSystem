@@ -44,25 +44,14 @@
       default:''
     }
   },
-  computed: {
-
-  },
   watch: {
     curValue(newValue) {
       this.value = newValue
-      console.log(this.value)
+   //   console.log(this.value)
     },
     value(newValue) {
       this.$emit('input', newValue)
     }
-  },
-  mounted() {
-  },
-  beforeDestroy() {
-
-  },
-  methods: {
-
   }
   }
 </script>
