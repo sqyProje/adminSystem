@@ -1,14 +1,6 @@
 <template>
 <el-form ref="AddEditInfo" :model="AddEditInfo" :rules="rulesInfo" label-width="150px" size="mini">
-  <el-form-item label="附件" prop="filepath">
-    <multiUploadFile
-      @imgUrl="picPreview"
-      :picArray="picArray">
-    </multiUploadFile>
-    <a :href="AddEditInfo.filepath" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileName}}</a>
-  </el-form-item>
-
-  <el-row :gutter="20">
+    <el-row :gutter="20">
     <el-col :span="12">
       <el-form-item label="合同编号" prop="number">
         <el-input v-model="AddEditInfo.number"></el-input>
@@ -85,6 +77,13 @@
       </el-form-item>
     </el-col>
   </el-row>
+  <el-form-item label="附件" prop="filepath">
+    <multiUploadFile
+      @imgUrl="picPreview"
+      :picArray="picArray">
+    </multiUploadFile>
+    <a :href="AddEditInfo.filepath" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileName}}</a>
+  </el-form-item>
   <el-form-item size="large">
     <el-button type="primary" @click="UpdateUser">提交</el-button>
   </el-form-item>

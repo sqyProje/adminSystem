@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+
+    <search-tree
+      :toChildId="listQuery.departname"
+      :toChildTree=" departData"
+      @childFnToParent="childFnInfo"
+    ></search-tree>
+    <el-col :span="21">
+      <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
           <el-select v-model="listQuery.payNameId" placeholder="工资表单">
@@ -59,10 +66,6 @@
         size  = "small"
         border
       >
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
         <el-table-column label="部门" prop="departname"></el-table-column>
         <el-table-column label="姓名" prop="realname"></el-table-column>
         <el-table-column label="岗位工资" prop="stationPay"></el-table-column>
@@ -95,7 +98,7 @@
         </el-pagination>
       </div>
     </div>
-
+    </el-col>
     <el-dialog
       title="导入工资表"
       :close-on-click-modal="false"
@@ -163,10 +166,9 @@
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
-  import Vue from 'vue'
-
+  import SearchTree from '@/components/LeftSearchTree/searchtree'
   import {importExcel} from '@/api/basic'
-  import {SalaryList,ExportModel,ExcelImport,PayName,ExportDatas} from '@/api/personnel'
+  import {SalaryList,ExportModel,ExcelImport,PayName,ExportDatas,GetDepartInfoArray} from '@/api/personnel'
   const defaultListQuery = {
     payNameId:'',
     payDate:'',
@@ -184,6 +186,7 @@
         total: null,
         File:'',
         payData:[],
+        departData:[],
         dialogVisible: false,
         AddEditInfo:{
           payDate:'',
@@ -204,11 +207,22 @@
     } ,
     created(){
       this.initTable();
+      this.departFu();
       PayName().then(res=>{
         this.payData=res.datas
       })
     },
+    components:{
+      SearchTree
+    },
     methods: {
+      departFu(){
+        GetDepartInfoArray().then(response=>{
+          response.datas.forEach(item=>{
+            this.departData.push(item)
+          })
+        })
+      },
       onSearchList() {
         this.initTable()
       },
@@ -295,6 +309,10 @@
         }).catch((error) => {
           console.log(error)
         })
+      },
+      childFnInfo(payload){
+        this.listQuery.departName = payload
+        this.initTable(this.listQuery);
       }
 
     }

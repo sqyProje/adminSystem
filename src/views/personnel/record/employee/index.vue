@@ -42,6 +42,11 @@
               v-if="hasPerm('employee:add')"
               @click="handleAdd">
               添加</el-button>
+            <el-button
+              type="warning"
+              size="small"
+              @click="ExportFun">
+              导出</el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -220,12 +225,32 @@
         <el-button size="small" type="warning" @click="canleDialogFlag">关  闭</el-button>
       </span>
     </el-dialog>
+    <!--导出 弹出框-->
+    <el-dialog
+      title="导出"
+      :close-on-click-modal="false"
+      :visible.sync="dialogExcelVisible"
+      width="23%">
+      <el-select v-model="wealName" placeholder="请选择岗位名称" style="width:100%">
+        <el-option
+          v-for="item in stationData"
+          :key="item.uId"
+          :value="item.uId"
+          :label="item.name"
+        ></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" type="" @click="dialogExcelVisible=false">取 消</el-button>
+        <el-button size="small" type="primary" @click="UpdateExcelUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
+  import {importExcel} from '@/api/basic'
   import {EmployeeList,AddEmployee,GetEmployee,EditEmployee,DeleteEmployee
-  ,GetDepartInfoArray,GetStationDrop,GetDutyInfoArray} from '@/api/personnel'
+  ,GetDepartInfoArray,GetStationDrop,GetDutyInfoArray,excelByDuty} from '@/api/personnel'
   import {userDrop} from '@/api/menu-pers'
   import singleUpload from '@/components/Upload/singleImg'
   import SearchTree from '@/components/LeftSearchTree/searchtree'
@@ -245,6 +270,7 @@
         total: null,
         dialogTitle:'',
         dialogVisible: false,
+        dialogExcelVisible:false,
         stationFlag:false,
         employeeId:'',
         sketchFlag:false,
@@ -283,7 +309,7 @@
           officedate:[{ required: true,trigger: 'blur',message: '请选择任职时间'}],
           jobstate:[{required: true, trigger: 'blur', message: '请选择在职状态'}],
         },
-
+        wealName:'',
       }
     } ,
     components:{
@@ -464,7 +490,25 @@
       childFnInfo(payload){
         this.listQuery.departId = payload
         this.initTable(this.listQuery);
-      }
+      },
+      /*导出*/
+      ExportFun(){
+        this.dialogExcelVisible = true
+      },
+      UpdateExcelUser(){
+        if(this.wealName!==''){
+          excelByDuty(this.wealName).then(res=>{
+            importExcel(res)
+            this.dialogExcelVisible = false
+          })
+        }else{
+          Message({
+            message: '请先选择表单名称',
+            type: 'success',
+            duration: 3 * 1000
+          })
+        }
+      },
     }
   }
 

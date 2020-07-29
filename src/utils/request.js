@@ -24,7 +24,6 @@ service.interceptors.request.use(config => {
 // respone响应拦截器
 service.interceptors.response.use(
   response => {
-    console.log(response)
     const res = response.data
     if(response.headers.authorization)
     {

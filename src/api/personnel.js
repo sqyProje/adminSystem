@@ -160,6 +160,15 @@ export function DeleteEmployee(params) {
     method: 'post'
   })
 }
+
+export function excelByDuty(params) {
+  return request({
+    url: '/employee/excelByDuty?stationId='+params,
+    method: 'post',
+    responseType: 'blob',
+  })
+}
+
 //岗位调动
 export function StationMoveList(params) {
   return request({

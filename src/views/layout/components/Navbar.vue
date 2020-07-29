@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+   <!-- <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>-->
     <breadcrumb></breadcrumb>
     <div class="right-menu">
       <template v-if="device!=='mobile'">

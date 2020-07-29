@@ -25,7 +25,8 @@ Vue.use(VCharts)
 Vue.use(VueTinymce)
 Vue.prototype.$MessageBox = MessageBox;
 Vue.prototype.$Message = Message;
-Vue.config.productionTip = false
+Vue.config.productionTip = false // true 生产环境 false阻止vue在启动时生成生成提示 开发环境
+Vue.prototype.baseURL = process.env.BASE_API
 Vue.prototype.hasPerm = hasPermission
 
 new Vue({

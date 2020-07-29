@@ -108,6 +108,52 @@
       </el-form-item>
     </div>
     <div class="header">
+      <span>职称/执业</span>
+    </div>
+    <div>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="职称级别">
+            <el-input v-model="AddEditInfo.titleLevel"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="职称取得时间">
+            <el-date-picker type="date" v-model="AddEditInfo.titleGetDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="职称专业">
+            <el-input v-model="AddEditInfo.titleProfession"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="执业类别">
+            <el-input v-model="AddEditInfo.operationType"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="执业资格">
+            <el-input v-model="AddEditInfo.operationState"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="执业专业">
+            <el-input v-model="AddEditInfo.operationProfession"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="执业取得时间">
+            <el-date-picker type="date" v-model="AddEditInfo.operaionDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="header">
       <span>全日制教育信息</span>
     </div>
     <div>
@@ -217,7 +263,14 @@
           procecompany: "",
           property: "",
           openBank:"",
-          payCard:""
+          payCard:"",
+          titleLevel:"",
+          titleProfession:"",
+          titleGetDate:"",
+          operationType:"",
+          operationState:"",
+          operationProfession:"",
+          operationDate:""
 
         },
         rulesInfo: {

@@ -3,7 +3,7 @@
     <el-upload
       :class="{hide:hideUpload}"
       name="fileName"
-      :action="urlSign"
+      :action="this.baseURL+urlSign"
       list-type="picture-card"
       :limit="limitCount"
       accept="image/jpeg,image/png"
@@ -45,7 +45,7 @@
       } ,
       urlSign:{
         type:String,
-        default:'http://192.168.1.10:8088/file/getPicPath'
+        default: '/file/getPicPath'
       }
     },
     watch:{

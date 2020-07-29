@@ -3,7 +3,7 @@
     <el-upload
       class="upload-demo"
       name="fileName"
-      action="http://192.168.1.10:8088/file/getPicPath"
+      :action="this.baseURL+'/file/getPicPath'"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :before-remove="beforeRemove"

@@ -36,7 +36,6 @@
               @click="ExportFun">
               导出</el-button>
           </el-form-item>
-
         </el-col>
       </el-form>
       <el-table
@@ -130,9 +129,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button size="small" type="" @click="canleDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
-        </span>
+        <el-button size="small" type="" @click="canleDialog">取 消</el-button>
+        <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
+      </span>
     </el-dialog>
     <!--选择员工-->
     <el-dialog
@@ -153,6 +152,25 @@
           <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenu">确 定</el-button>
         </span>
+    </el-dialog>
+    <!--导出 弹出框-->
+    <el-dialog
+      title="导出"
+      :close-on-click-modal="false"
+      :visible.sync="dialogExcelVisible"
+      width="23%">
+        <el-select v-model="wealName" placeholder="请选择表单名称" style="width:100%">
+          <el-option
+            v-for="item in wealNameData"
+            :key="item.uId"
+            :value="item.uId"
+            :label="item.name"
+          ></el-option>
+        </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" type="" @click="dialogExcelVisible=false">取 消</el-button>
+        <el-button size="small" type="primary" @click="UpdateExcelUser">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -175,6 +193,7 @@
         listLoading:false,
         dialogTitle:'',
         dialogVisible: false,
+        dialogExcelVisible:false,
         wealNameData:[],
         AddEditInfo:{
           employeeIds:[],
@@ -194,6 +213,7 @@
           sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
           state:[{ required: true,trigger: 'blur',message: '请选择状态'}]
         },
+        wealName:'',
         RoleDialogVisible:false,
         roleData:[],
         resourceCheckedKey:[],
@@ -214,7 +234,17 @@
         if(value===10){
           return '编内'
         }else if(value===20){
-          return '编外'
+          return '借调'
+        }else if(value===30){
+          return '合同'
+        }else if(value===40){
+          return '临时'
+        }else if(value===50){
+          return '返聘'
+        }else if(value===60){
+          return '外聘'
+        }else if(value===70){
+          return '编内'
         }
       }
     },
@@ -339,9 +369,13 @@
         this.mineStatus=''
       },
       ExportFun(){
-        if(this.listQuery.wealNameId!==''){
-          wealExcel(this.listQuery.wealNameId).then(res=>{
+        this.dialogExcelVisible = true
+      },
+      UpdateExcelUser(){
+        if(this.wealName!==''){
+          wealExcel(this.wealName).then(res=>{
             importExcel(res)
+            this.dialogExcelVisible = false
           })
         }else{
           Message({
@@ -350,7 +384,6 @@
             duration: 3 * 1000
           })
         }
-
       },
       //选择用户
       userRole(){
