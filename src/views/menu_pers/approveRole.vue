@@ -223,8 +223,7 @@
           this.dialogVisible = !this.dialogVisible
           this.dialogTitle = '添加'
           Object.keys(this.roleInfo).forEach(key => this.roleInfo[key]= '');
-          this.roleInfo.state=0
-          this.roleInfo.issystem=0
+          this.roleInfo.state=1
         },
         UpdateUser(){
           this.$refs.roleInfo.validate(valid => {

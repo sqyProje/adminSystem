@@ -26,7 +26,7 @@
         images_upload_handler: (blobInfo, success, failure) => {
           let formData = new FormData();
           formData.append('folder', 'editor/img');
-          formData.append('upfile', blobInfo.blob(), blobInfo.filename());
+          formData.append('fileName', blobInfo.blob(), blobInfo.filename());
           uploadfile(formData).then(response => {
             let fileArr = response.datas;
             success(fileArr);

@@ -414,7 +414,7 @@ export function PayName() {
 export function ExportDatas(params) {
   return request({
     url:'/salary/exportDatas',
-    method:'get',
+    method:'post',
     headers: {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
     },
