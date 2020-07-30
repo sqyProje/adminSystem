@@ -9,12 +9,12 @@
           <el-input v-model="listQuery.maxPeople" placeholder="容纳人数"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.type" placeholder="会议室类型" style="width: 100%;">
+          <el-select v-model="listQuery.type" placeholder="会议类型">
             <el-option
-              v-for="item in TypeData"
+              v-for="item in stateData"
               :label="item.name"
-              :value="item.uId"
-              :key = "item.uId"
+              :value="item.id"
+              :key = "item.id"
             >{{item.name}}</el-option>
           </el-select>
         </el-form-item>

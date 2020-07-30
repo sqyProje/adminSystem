@@ -5,7 +5,7 @@
       name="fileName"
       :multiple='false'
       :limit="limitCount"
-      :action=this.baseURL+"/file/getFilePath"
+      :action=" this.baseURL+'/file/getFilePath'"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       :on-success="handleSuccess"
@@ -53,7 +53,7 @@
       handleSuccess(response, file, fileList) {
         this.hideUpload = true
         this.fileList.push({name: response.datas.fileName,url: response.datas.filePath})
-        this.$emit('file-url',response.datas.filePath)
+        this.$emit('file-url',decodeURIComponent(response.datas.filePath))
         this.$message.success('文件上传成功');
       },
       // 文件状态改变时的钩子

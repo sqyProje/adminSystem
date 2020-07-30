@@ -51,7 +51,7 @@
           this.$refs.leftTree.filter(val)
         },
         toChildTree(val) {
-          console.log(val)
+      //    console.log(val)
           this.menuInfoArray[0].childMenu=this.toChildTree
 
         }
@@ -61,7 +61,8 @@
 
       methods:{
         handleNodeClickDepart(val){
-          this.$emit('childFnToParent',val.uId)
+         // console.log(val)
+          this.$emit('childFnToParent',{uId:val.uId,Name:val.name})
         },
         filterNode(value,data){
           if (!value) return true;

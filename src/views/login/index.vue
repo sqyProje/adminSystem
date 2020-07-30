@@ -16,7 +16,7 @@
               p-id="3418" fill="#409EFF"></path>
           </svg>
         </div>
-        <h2 class="login-title color-main">OA管理系统</h2>
+        <h2 class="login-title color-main">汝州市骨科医院OA</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"

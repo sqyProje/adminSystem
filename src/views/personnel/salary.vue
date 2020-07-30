@@ -93,7 +93,7 @@
           layout="total, sizes,prev, pager, next,jumper"
           :current-page.sync="listQuery.pageNum"
           :page-size="listQuery.pageSize"
-          :page-sizes="[100,200,300]"
+          :page-sizes="[10,100,200,300]"
           :total="total">
         </el-pagination>
       </div>
@@ -140,14 +140,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label ='表单名称'  prop="name">
-          <el-select v-model="AddEditInfo.name" placeholder="工资表单" style="width:100%">
-            <el-option
-              v-for="item in payData"
-              :key="item.uId"
-              :value="item.uId"
-              :label="item.name"
-            ></el-option>
-          </el-select>
+          <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='工资备注'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
@@ -311,7 +304,11 @@
         })
       },
       childFnInfo(payload){
-        this.listQuery.departName = payload
+        if(payload.Name ==='全部'){
+          this.listQuery.departName = ''
+        }else{
+          this.listQuery.departName = payload.Name
+        }
         this.initTable(this.listQuery);
       }
 

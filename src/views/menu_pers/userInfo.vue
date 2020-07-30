@@ -356,6 +356,7 @@
                   this.dialogVisible = false
                   this.initTable();
                   this.mineStatus=''
+                 /*if(this.userInfo.uId ==)*/
                 //  this.$store.commit('SET_AVATAR',this.userInfo.picpath)
                   Message({
                     message: response.msg,
@@ -468,7 +469,7 @@
         this.userInfo.departid = val.uId
       },
       childFnInfo(payload){
-        this.listQuery.departid = payload
+        this.listQuery.departid = payload.uId
         this.initTable(this.listQuery);
       }
     }

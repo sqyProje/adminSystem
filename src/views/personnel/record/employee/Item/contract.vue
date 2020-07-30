@@ -79,9 +79,10 @@
   </el-row>
   <el-form-item label="附件" prop="filepath">
     <multiUploadFile
-      @imgUrl="picPreview"
+      @file-url="picPreview"
       :picArray="picArray">
     </multiUploadFile>
+    <el-input v-model="AddEditInfo.filepath" type="hidden"></el-input>
     <a :href="AddEditInfo.filepath" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileName}}</a>
   </el-form-item>
   <el-form-item size="large">

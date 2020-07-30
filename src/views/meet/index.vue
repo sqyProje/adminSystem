@@ -16,7 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-date-picker type="datetime"  placeholder="开始时间" v-model="listQuery.startDate" value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date"  placeholder="发布时间" v-model="listQuery.startDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -60,6 +60,7 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column label="发布时间" prop="publishdate"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
         <el-table-column label="操作" fixed="right"  width="260">
@@ -144,7 +145,7 @@
         <el-form-item label ='简介'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
-        <el-form-item label ='用户ids'>
+        <el-form-item label ='选择用户'>
           <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
         </el-form-item>
         <el-row :gutter="10">
@@ -200,7 +201,7 @@
         </span>
     </el-dialog>
     <el-dialog
-      title="角色权限"
+      title="选择用户"
       :close-on-click-modal="false"
       :visible.sync="RoleDialogVisible"
       width="33%">

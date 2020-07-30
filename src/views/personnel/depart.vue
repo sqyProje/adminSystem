@@ -307,7 +307,7 @@
           this.mineStatus=''
         },
         childFnInfo(payload){
-          this.listQuery.parentId = payload
+          this.listQuery.parentId = payload.uId
           this.initTable(this.listQuery);
         }
       }

@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'SysOA',
+      title: '汝州市骨科医院OA',
       logo: logo
     }
   }
@@ -68,7 +68,7 @@ export default {
       color: #fff;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 16px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }

@@ -1,13 +1,17 @@
 <template>
-      <el-tabs tab-position="left" class="conedu">
-        <el-tab-pane label="员工详情"><manInfo style="width: 800px"></manInfo></el-tab-pane>
-        <el-tab-pane label="身份证信息"><idCard style="width: 800px;"></idCard></el-tab-pane>
-        <el-tab-pane label="教育培训情况"><education style="width: 1200px;"></education></el-tab-pane>
-        <el-tab-pane label="家庭成员"><family style="width: 1200px;"></family></el-tab-pane>
-        <el-tab-pane label="证书证件"><credential style="width: 1200px;"></credential></el-tab-pane>
-        <el-tab-pane label="工作履历"><job style="width: 1200px;"></job></el-tab-pane>
-        <el-tab-pane label="员工合同"><contract style="width: 800px;"></contract></el-tab-pane>
-      </el-tabs>
+  <div>
+    <div class="conedu" style="text-align: left;color: #f1c40f;font-size: 14px;" @click="prev">返回上一级</div>
+    <el-tabs tab-position="left" class="conedu">
+      <el-tab-pane label="员工详情"><manInfo style="width: 800px"></manInfo></el-tab-pane>
+      <el-tab-pane label="身份证信息"><idCard style="width: 800px;"></idCard></el-tab-pane>
+      <el-tab-pane label="教育培训情况"><education style="width: 1200px;"></education></el-tab-pane>
+      <el-tab-pane label="家庭成员"><family style="width: 1200px;"></family></el-tab-pane>
+      <el-tab-pane label="证书证件"><credential style="width: 1200px;"></credential></el-tab-pane>
+      <el-tab-pane label="工作履历"><job style="width: 1200px;"></job></el-tab-pane>
+      <el-tab-pane label="员工合同"><contract style="width: 800px;"></contract></el-tab-pane>
+    </el-tabs>
+  </div>
+
 </template>
 <script type="text/ecmascript-6">
   import manInfo from './Item/manInfo'
@@ -20,7 +24,12 @@
   export default {
     components:{
       manInfo,idCard,education,family,job,credential,contract
-    }
+    },
+    methods:{
+      prev(){
+        this.$router.push({name:'employee'})
+      }
+  }
   }
 </script>
 

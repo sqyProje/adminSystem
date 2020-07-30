@@ -162,7 +162,7 @@
           <el-input type="textarea" v-model="AddEditInfo.changecase"></el-input>
         </el-form-item>
         <el-form-item label ='执业地点'><!--证书现存位置-->
-          <el-input v-model="AddEditInfo.registerorganization"></el-input>
+          <el-input v-model="AddEditInfo.extantaddress"></el-input>
         </el-form-item>
         <el-form-item label ='图集'>
           <multiUploadImg

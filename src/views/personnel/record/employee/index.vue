@@ -488,7 +488,7 @@
         this.AddEditInfo.dutyname = val.name
       },
       childFnInfo(payload){
-        this.listQuery.departId = payload
+        this.listQuery.departId = payload.uId
         this.initTable(this.listQuery);
       },
       /*导出*/

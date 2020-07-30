@@ -6,10 +6,24 @@
           <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.toLike" placeholder="点赞数"></el-input>
+          <el-select v-model="listQuery.iscarousel" placeholder="是否轮播" style="width: 100%;">
+            <el-option
+              v-for="item in stateData"
+              :label="item.name"
+              :value="item.id"
+              :key = "item.id"
+            >{{item.name}}</el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.toBrowse" placeholder="浏览量"></el-input>
+          <el-select v-model="listQuery.state" placeholder="状态" style="width: 100%;">
+            <el-option
+              v-for="item in stateData"
+              :label="item.display_name"
+              :value="item.id"
+              :key = "item.id"
+            >{{item.display_name}}</el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -191,8 +205,8 @@
   import Editor from '@/components/Tinymce/Editor'
   const defaultListQuery = {
     title: '',
-    toLike:'',
-    toBrowse:'',
+    state:'',
+    iscarousel:'',
     pageNum:1,
     pageSize:10
   }
