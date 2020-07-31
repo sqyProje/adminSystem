@@ -43,21 +43,20 @@ export const constantRouterMap = [
       meta: {title: '首页', icon: 'home',affix: true}
     }]
   },
-  /*{
-    path: '/menu_pers',
-    component: Layout,
-    redirect: '/menu_pers/loginUser',
-    hidden:true,
-    children: [{
-      path: 'loginUser',
-      name: '个人信息',
-      component: () => import('@/views/menu_pers/loginUser'),
-      meta: {title: '个人信息', icon: 'home'}
-    }]
-  }*/
 ]
 
 export const asyncRouterMap = [
+  /*{
+    path: '',
+    component: Layout,
+    meta: {title: '通讯录', icon: 'product'},
+    children:[{
+      path: '/address',
+      name: 'addressBook',
+      component: () => import('@/views/address/index'),
+      meta: {title: '通讯录', icon: 'home',}
+    }]
+  },*/
   {
     path: '/menu_pers',
     component: Layout,

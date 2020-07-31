@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="conedu" style="text-align: left;color: #f1c40f;font-size: 14px;" @click="prev">返回上一级</div>
+    <div class="conedu" style="text-align: left;color: #f1c40f;font-size: 14px;cursor: pointer" @click="prev">返回上一级</div>
     <el-tabs tab-position="left" class="conedu">
       <el-tab-pane label="员工详情"><manInfo style="width: 800px"></manInfo></el-tab-pane>
       <el-tab-pane label="身份证信息"><idCard style="width: 800px;"></idCard></el-tab-pane>

@@ -7,8 +7,25 @@
       </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="生日信息" prop="lunarbirthdate">
-        <el-date-picker type="date" v-model="AddEditInfo.lunarbirthdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+      <el-form-item label="生日信息" prop="lunarbirthdate"><!--@blur="blurFun"-->
+        <el-input readonly="readonly" v-model="AddEditInfo.lunarbirthdate"  @focus="focusFun"></el-input>
+        <div class="main"  v-show="dataFlag">
+          <el-card class="box-card">
+          <div class="choose_year">
+            <div class="icon" @click="chooseYears(-1)"><i class="el-icon-d-arrow-left"></i></div>
+            <div class="icon" @click="chooseMonth(-1)"><i class="el-icon-arrow-left"></i></div>
+            <div class="date">{{year}}.{{month.toString().padStart(2, '0')}}</div>
+            <div class="icon" @click="chooseMonth(1)"><i class="el-icon-arrow-right"></i></div>
+            <div class="icon" @click="chooseYears(1)"><i class="el-icon-d-arrow-right"></i></div>
+          </div>
+          <div class="days_area">
+            <div class="day week" v-for="week in weeks" :key="week">{{week}}</div>
+            <div class="day"  v-for="(day, index) in days" :key="index" :class="day.gregorian === today ? 'choose_day' : ''">
+              <p>{{day.gregorian}}</p><!-- v-html="day.lunar"-->
+              <span @click.prevent="chooseThisDay($event,day.gregorian,day.lunar)">{{day.lunar}}</span>
+            </div>
+          </div></el-card>
+        </div>
       </el-form-item>
     </el-col>
   </el-row>
@@ -85,6 +102,12 @@
   export default {
     data() {
       return {
+        year: 0,
+        month: 0,
+        today: 0,
+        days: [],
+        weeks: ['一', '二', '三', '四', '五', '六', '日'],
+        dataFlag:false,
         AddEditInfo: {
           employeeUId: "",
           idcard: "",
@@ -104,8 +127,7 @@
           idcard: [
             { required: true,trigger: 'blur',message: '请输入身份证号'},
             { validator: this.validID, trigger: 'blur' }],
-          property:[{ required: true,trigger: 'blur',message: '请选择农历生日'}],
-          lunarbirthdate:[{ required: true,trigger: 'blur',message: '请输入家庭住址'}],
+          lunarbirthdate:[{ required: true,trigger: 'blur',message: '请选择农历生日'}],
           censusaddress:[{ required: true,trigger: 'blur',message: '请输入户籍地址'}],
           indate:[{ required: true,trigger: 'blur',message: '请输入有效期'}],
           frontpath:[{ required: true,trigger: 'blur',message: '请上传身份证正面'}],
@@ -124,6 +146,13 @@
     },
     mounted(){
       this.getInfo(this.$route.query.uId)
+
+      const now = new Date()
+      this.year = now.getFullYear()
+      this.month = now.getMonth() + 1
+      this.today = now.getDate()
+      this.getDays()
+
     },
     methods: {
       frontPicFun(data){
@@ -136,6 +165,14 @@
         GetIdCardInfo(uId).then(response=>{
           this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas
         })
+      },
+      focusFun(){
+        this.dataFlag = true
+      },
+      blurFun(){
+        setTimeout(()=>{
+          this.dataFlag = false
+        },500)
       },
       UpdateUser() {
         this.AddEditInfo.employeeUId=this.$route.query.uId
@@ -196,15 +233,189 @@
         this.AddEditInfo.sex = sex;
         this.AddEditInfo.age = age;
         this.AddEditInfo.birthdate = birth;
+      },
+      getDays () { // 获取当前月份所有公历日期及其农历日期
+
+        console.log(this.year,this.month)
+        this.days = []
+        const day = new Date()
+        day.setFullYear(this.year, this.month - 1, 1) // 此处较之前调整，获取当月第一天
+        const month = new Date()
+        month.setFullYear(this.year, this.month, 0) // 此处较之前调整，获取当月
+        for (let i = 1; i < day.getDay(); i++) { // 当月第一天距离所在周周一的空白占位
+          this.days.push({ gregorian: '', lunar: '' })
+        }
+        for (let i = 1; i <= month.getDate(); i++) { // 获取当月天数填充日历
+          this.days.push({ gregorian: i, lunar: this.getLunarDay(this.year, this.month, i) })
+        }
+      },
+      chooseYears (state) { // 改变年份
+        this.year += state
+        this.today = 1
+        this.getDays()
+      },
+      chooseMonth (state) { // 改变月份
+        this.month += state
+        this.today = 1
+        if (this.month < 1) {
+          this.month = 12
+          this.chooseYears(-1)
+        } else if (this.month > 12) {
+          this.month = 1
+          this.chooseYears(1)
+        } else {
+          this.getDays()
+        }
+      },
+      chooseThisDay (e,day,old) { // 选择某天，主要是考虑可以当时间选择器用
+        console.log(e)
+        this.AddEditInfo.lunarbirthdate = e.target.innerText
+        this.dataFlag = false
+       /* if (day > 0) {
+          this.today = day
+        }*/
+      },
+      getLunarDay (solarYear, solarMonth, solarDay) { // 拷贝别人又自己调整过的获取农历日期的代码，想要原来的代码估计百度一下就有了
+        const madd = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+        const numString = '一二三四五六七八九十'
+        const monString = '正二三四五六七八九十冬腊'
+        const CalendarData = [0xA4B, 0x5164B, 0x6A5, 0x6D4, 0x415B5, 0x2B6, 0x957, 0x2092F, 0x497, 0x60C96, 0xD4A, 0xEA5, 0x50DA9, 0x5AD, 0x2B6, 0x3126E, 0x92E, 0x7192D, 0xC95, 0xD4A, 0x61B4A, 0xB55, 0x56A, 0x4155B, 0x25D, 0x92D, 0x2192B, 0xA95, 0x71695, 0x6CA, 0xB55, 0x50AB5, 0x4DA, 0xA5B, 0x30A57, 0x52B, 0x8152A, 0xE95, 0x6AA, 0x615AA, 0xAB5, 0x4B6, 0x414AE, 0xA57, 0x526, 0x31D26, 0xD95, 0x70B55, 0x56A, 0x96D, 0x5095D, 0x4AD, 0xA4D, 0x41A4D, 0xD25, 0x81AA5, 0xB54, 0xB6A, 0x612DA, 0x95B, 0x49B, 0x41497, 0xA4B, 0xA164B, 0x6A5, 0x6D4, 0x615B4, 0xAB6, 0x957, 0x5092F, 0x497, 0x64B, 0x30D4A, 0xEA5, 0x80D65, 0x5AC, 0xAB6, 0x5126D, 0x92E, 0xC96, 0x41A95, 0xD4A, 0xDA5, 0x20B55, 0x56A, 0x7155B, 0x25D, 0x92D, 0x5192B, 0xA95, 0xB4A, 0x416AA, 0xAD5, 0x90AB5, 0x4BA, 0xA5B, 0x60A57, 0x52B, 0xA93, 0x40E95]
+        if (!(solarYear < 1921 || solarYear > 2999)) { // 注意看此处限定了年份，设置自己需要的范围即可
+          solarMonth = (parseInt(solarMonth) > 0) ? (solarMonth - 1) : 11
+          const timeArr = [solarYear, solarMonth, solarDay]
+          let TheDate = (timeArr.length !== 3) ? new Date() : new Date(timeArr[0], timeArr[1], timeArr[2])
+          let total, m, n, k
+          let isEnd = false
+          let theDateYear = TheDate.getFullYear()
+          total = (theDateYear - 1921) * 365 + Math.floor((theDateYear - 1921) / 4) + madd[TheDate.getMonth()] + TheDate.getDate() - 38
+          if (theDateYear % 4 === 0 && TheDate.getMonth() > 1) {
+            total++
+          }
+          for (m = 0; ; m++) {
+            k = (CalendarData[m] < 0xfff) ? 11 : 12
+            for (n = k; n >= 0; n--) {
+              if (total <= this.getBit(CalendarData[m], n)) {
+                isEnd = true
+                break
+              }
+              total = total - this.getBit(CalendarData[m], n)
+            }
+            if (isEnd) {
+              break
+            }
+          }
+          let cMonth, cDay ,cYear;
+           cYear = 1921 + m
+          cMonth = k - n + 1
+          cDay = total
+          if (k === 12) {
+            if (cMonth === Math.floor(CalendarData[m] / 0x10000) + 1) {
+              cMonth = 1 - cMonth
+            }
+            if (cMonth > Math.floor(CalendarData[m] / 0x10000) + 1) {
+              cMonth--
+            }
+          }
+          let cDayStr = numString.charAt(cDay - 1)
+          let run = ''
+           if (cMonth < 1) {
+            run = '(闰)'
+          }
+          if (cDay % 10 !== 0 || cDay === 10) {
+            cDayStr = numString.charAt((cDay - 1) % 10)
+          }
+         cDay= cDay === 1 ?  monString.charAt(cMonth - 1) + '月' : (cDay < 11 ? '初' : (cDay < 20 ? '十' : (cDay < 30 ? '廿' : '三十'))) + cDayStr
+          //return cDay
+           return cDay= cYear +"年"+monString.charAt(cMonth - 1)+"月"+cDay
+         // return cDay = "<span class='hiddenClass' >"+cYear +"年</span><span class='hiddenClass'> "+monString.charAt(cMonth - 1) +"月</span><span>"+cDay+"</span>"
+        }
+      },
+      getBit (m, n) { // 也是拷贝的，不是很明白这段代码干嘛的，不过很明显是处理二进制数据的
+        return 29 + ((m >> n) & 1)
       }
+
     }
   };
 </script>
 <style>
-  .header{
-    padding-bottom: 10px;
-
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eeeeee;
+  .hiddenClass{
+    display: inline-block;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+  .el-card .el-card__body{
+    padding: 10px;
   }
 </style>
+<style lang="scss" scoped>
+
+  .main{
+    width: 400px;
+    position: absolute;
+    left:0 ;
+    top:30px;
+    z-index: 100;
+    .choose_year{
+      display: flex;
+      margin-top: 6px;
+      .icon{
+        width: 20px;
+        height: 20px;
+        line-height:20px;
+        text-align: center;
+      }
+      .date{
+        width: 80%;
+        text-align: center;
+        height: 8px;
+        line-height: 8px;
+        font-size: 10px;
+      }
+    }
+    .days_area{
+      display: flex;
+      flex-wrap: wrap;
+      .day{
+        width: 52px;
+        text-align: center;
+        padding: 1px 0;
+        margin: 1px;
+        line-height: 0;
+        p{
+          margin: 0;
+          font-size: 13px;
+          width:100%;
+          height: 20px;
+
+          line-height: 20px;
+
+        }
+        span{
+          font-size: 12px;
+          cursor: pointer;
+          height: 24px;
+          line-height: 14px;
+          color: #999;
+        }
+      }
+      .week{
+        background-color: dodgerblue;
+        color: #fff;
+        font-weight: bold;
+        height: 18px;
+        line-height: 15px;
+        margin-top: 5px;
+      }
+      .choose_day{
+        background-color: dodgerblue;
+        color: #fff;
+        font-weight: bold;
+        span{
+          color: #fff;
+        }
+      }
+    }
+  }
+</style>
+
