@@ -43,6 +43,7 @@ function hasPermission(menus, route) {
       }
       return true;
     }else {
+      route.sort = 0;
       if (route.hidden !== undefined && route.hidden === true) {
         return true;
       } else {
@@ -54,30 +55,26 @@ function hasPermission(menus, route) {
   }
 }
 
-//根据路由名称获取菜单
-/*function getMenu(name, menus) {
-  for (let i = 0; i < menus.length; i++) {
-    let arrayMenu=[]
-    arrayMenu.push(menus[i]);
-    if(menus[i].childMenu) {
-      for (let j = 0; j < menus[i].childMenu.length; j++) {
-        arrayMenu.push(menus[i].childMenu[j])
-        for (let i = 0; i < arrayMenu.length; i++) {
-          let menu = arrayMenu[i];
-          if (name===menu.en_name) {
-            return menu;
-          }
-        }
-      }
-    }else{
-      let menu = menus[i];
-      if (name===menu.en_name) {
-        return menu;
-      }
+//升序比较函数
+function compare(p){
+  return function(m,n){
+    let a = m[p];
+    let b = n[p];
+    return a - b;
+  }
+}
+
+//对菜单进行排序
+function sortRouters(accessedRouters) {
+  for (let i = 0; i < accessedRouters.length; i++) {
+    let router = accessedRouters[i];
+    if(router.children && router.children.length > 0){
+      router.children.sort(compare("sort"));
+      sortRouters(router.children)
     }
   }
-  return null;
-}*/
+  accessedRouters.sort(compare("sort"));
+}
 function getMenu(name, menus) {
   for (let i = 0; i < menus.length; i++) {
     let menu = menus[i];
@@ -136,6 +133,8 @@ const permission = {
           }
           return false;
         });
+        //对菜单进行排序
+        sortRouters(accessedRouters);
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })

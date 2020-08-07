@@ -1,129 +1,140 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="listQuery.sketch" placeholder="岗位职责"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
-          <el-button
-            type="warning"
-            @click="handleResetSearch()"
-            size="small">
-            重置
-          </el-button>
-        </el-form-item>
-        <el-col>
-          <el-form-item>
-            <el-button
-              type="success"
-              size="small"
-              v-if="hasPerm('station:add')"
-              @click="handleAdd">
-              添加</el-button>
-          </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+            <el-form-item>
+              <el-input v-model="listQuery.realName" placeholder="姓名"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-select
+                v-model="listQuery.departName"
+                placeholder="请选择部门"
+                style="width: 100%"
+              >
+                <el-option value="1" style="height: auto">
+                  <el-tree
+                    :data="departData"
+                    node-key="uId"
+                    @node-click="departNodeClick"
+                    :props="defaultProps">
+                  </el-tree>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select
+                v-model="listQuery.dutyName"
+                placeholder="请选择职务"
+                style="width: 100%"
+              >
+                <el-option value="2" style="height: auto">
+                  <el-tree
+                    :data="dutyData"
+                    node-key="uId"
+                    @node-click="dutyNodeClick"
+                    :props="defaultProps">
+                  </el-tree>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select
+                v-model="listQuery.stationName"
+                placeholder="请选择岗位名称"
+                style="width: 100%;">
+                <el-option
+                  v-for="item in stationData"
+                  :label="item.name"
+                  :value="item.uId"
+                  :key = "item.uId"
+                >{{item.name}}</el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="listQuery.shortPhone" placeholder="短号"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="listQuery.phone" placeholder="手机号"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
+              <el-button
+                type="warning"
+                @click="handleResetSearch()"
+                size="small">
+                重置
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <div class="grid-content" v-show="tableDataCheckFlag">
+            <el-table
+              :data="tableDataCheck"
+              v-loading="listLoadingCheck"
+              size  = "small"
+              border
+            >
+              <el-table-column label="姓名" prop="realname"></el-table-column>
+              <el-table-column label="职务" prop="duty"></el-table-column>
+              <el-table-column label="岗位" prop="station"></el-table-column>
+              <el-table-column label="短号" prop="shortPhone"></el-table-column>
+              <el-table-column label="电话" prop="phone"></el-table-column>
+              <el-table-column label="邮箱" prop="email"></el-table-column>
+            </el-table>
+            <div class="pagination-container">
+              <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                layout="total, sizes,prev, pager, next,jumper"
+                :current-page.sync="listQuery.pageNum"
+                :page-size="listQuery.pageSize"
+                :page-sizes="[10,20,30]"
+                :total="total">
+              </el-pagination>
+            </div>
+          </div>
         </el-col>
-      </el-form>
-      <el-table
-        :data="tableData"
-        v-loading="listLoading"
-        row-key="uId"
-        :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
-        size  = "small"
-        border
-      >
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="岗位职责" prop="sketch"></el-table-column>
-        <el-table-column label="状态">
-          <template slot-scope="scope">
-            <el-button size="mini" round class='label-btn' :type="scope.row.state ? 'warning' : 'success'">
-              {{scope.row.state ? "禁用" :"启用"}}
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" prop="createdate"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="260">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="success"
-              v-if="hasPerm('station:edit')"
-              @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              v-if="hasPerm('station:deletes')"
-              @click="handleDelete(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="pagination-container">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          layout="total, sizes,prev, pager, next,jumper"
-          :current-page.sync="listQuery.pageNum"
-          :page-size="listQuery.pageSize"
-          :page-sizes="[10,20,30]"
-          :total="total">
-        </el-pagination>
-      </div>
+        <el-col :span="24"  v-show="!tableDataCheckFlag">
+          <div class="grid-content">
+            <el-table
+              :data="tableData"
+              v-loading="listLoading"
+              row-key="id"
+              default-expand-all="true"
+              :tree-props="{children:'children',hasChildren:'hasChildren'}"
+              size  = "small"
+              border
+            >
+              <el-table-column label="部门/姓名" prop="name"></el-table-column>
+              <el-table-column label="职务" prop="duty"></el-table-column>
+              <el-table-column label="岗位" prop="station"></el-table-column>
+              <el-table-column label="短号" prop="shortPhone"></el-table-column>
+              <el-table-column label="电话" prop="phone"></el-table-column>
+              <el-table-column label="邮箱" prop="email"></el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+      </el-row>
     </div>
-
-    <el-dialog
-      :title="dialogTitle"
-      :close-on-click-modal="false"
-      :visible.sync="dialogVisible"
-      width="23%">
-      <el-form
-        :inline="false"
-        size="mini"
-        :model="AddEditInfo"
-        label-width="80px"
-        ref="AddEditInfo"
-        :rules ="rulesInfo"
-      >
-        <el-form-item label ='名称'  prop="name">
-          <el-input v-model="AddEditInfo.name"></el-input>
-        </el-form-item>
-        <el-form-item label ='岗位职责' prop="sketch">
-          <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
-        </el-form-item>
-        <el-form-item label='状态'>
-          <el-select v-model="AddEditInfo.state" placeholder="状态" style="width: 100%;">
-            <el-option
-              v-for="item in stateData"
-              :label="item.display_name"
-              :value="item.id"
-              :key = "item.id"
-            >{{item.display_name}}</el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-          <el-button size="small" type="" @click="canleDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
-        </span>
-    </el-dialog>
-
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
-  import {StationList,AddStation,GetStation,EditStation,DeleteStation} from '@/api/personnel'
+  import {addressList,addressCheckList} from '@/api/address'
+  import {GetDepartInfoArray,GetStationDrop,GetDutyInfoArray} from '@/api/personnel'
+
   const defaultListQuery = {
-    name: '',
-    sketch:'',
+    realName: '',
+    departId:'',
+    dutyId:'',
+    stationId:'',
+    departName:'',
+    dutyName:'',
+    stationName:'',
+    phone:'',
+    shortPhone:'',
     pageNum:1,
     pageSize:10
   }
@@ -131,38 +142,89 @@
     data(){
       return {
         listQuery: Object.assign({}, defaultListQuery),
-        tableData:[],
+        tableDataCheck:[],
         total: null,
-        dialogTitle:'',
-        dialogVisible: false,
-        AddEditInfo:{
-          uId:'',
-          name:'',
-          sketch:'',
-          state:'',
+        listLoading:false,
+        tableData:[],
+        listLoadingCheck:false,
+        i:0,
+        tableDataCheckFlag:false,
+        departData:[],
+        dutyData:[],
+        stationData:[],
+        defaultProps: {
+          children: 'childMenu',
+          label: 'name'
         },
-        stateData:[
-          { id: 0, display_name: '启用'},
-          { id: 1, display_name: '禁用'}
-        ],
-        rulesInfo: {
-          name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
-          sketch:[{required: true, trigger: 'blur', message: '请输入岗位职责'}],
-        }
       }
     } ,
     created(){
-      this.initTable();
+      GetDutyInfoArray().then(response=>{
+        this.dutyData.push(response.datas[0])
+      })
+      GetDepartInfoArray().then(response=>{
+        response.datas.forEach(item=>{
+          this.departData.push(item)
+        })
+      })
+      GetStationDrop().then(response=>{
+        this.stationData = response.datas
+      })
+      this.initTableCheck();
+      this.initTable()
     },
     methods: {
       onSearchList() {
-        this.initTable()
+        this.initTableCheck()
+        this.tableDataCheckFlag = true
       },
       initTable() {
         this.listLoading = true
-        StationList(this.listQuery).then(response => {
+        addressList().then(response => {
           this.listLoading = false
-          this.tableData = response.datas.list
+          response.datas.forEach((res,key)=>{
+            this.tableData.push({id:this.i++,name:res.name,children:[]})
+            res.employees.forEach((child)=>{
+              this.tableData[key].children.push({
+                id:child.uId,
+                name:child.realname,
+                email:child.email,
+                duty:child.duty,
+                phone:child.phone,
+                picPath:child.picPath,
+                shortPhone:child.shortPhone,
+                selected:child.selected
+              })
+            })
+            res.childMenu.forEach((child,two)=>{
+              console.log(two)
+              this.tableData[key].children.push({id:this.i++,name:child.name,children:[]})
+              child.employees.forEach((three)=>{
+                this.tableData[key].children[two].children.push({
+                  id:three.uId,
+                  name:three.realname,
+                  email:three.email,
+                  duty:three.duty,
+                  phone:three.phone,
+                  picPath:three.picPath,
+                  shortPhone:three.shortPhone,
+                  selected:three.selected
+                })
+              })
+            })
+          })
+          console.log(this.tableData)
+
+        })
+          .catch(error => {
+            console.log(error);
+          });
+      },
+      initTableCheck() {
+        this.listLoadingCheck = true
+        addressCheckList(this.listQuery).then(response => {
+          this.listLoadingCheck = false
+          this.tableDataCheck = response.datas.list
           this.total = response.datas.total
         })
           .catch(error => {
@@ -171,104 +233,27 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
-        this.initTable();
+        this.tableDataCheckFlag = false
+        this.initTableCheck();
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
-        this.initTable();
+        this.initTableCheck();
       },
       handleCurrentChange(val) {
         this.listQuery.pageNum = val;
-        this.initTable();
+        this.initTableCheck();
       },
-      handleAdd(row){
-        this.dialogVisible = !this.dialogVisible
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
-        this.dialogTitle = '添加'
-        this.AddEditInfo.state=0
+      departNodeClick(val){
+        this.listQuery.departId = val.uId
+        this.listQuery.departName = val.name
       },
-      handleEdit(row) {
-        this.dialogVisible = !this.dialogVisible
-        this.dialogTitle = '编辑'
-        GetStation(row.uId).then(response=>{
-          this.AddEditInfo = response.datas
-        })
+      dutyNodeClick(val){
+        this.listQuery.dutyId = val.uId
+        this.listQuery.dutyName = val.name
       },
-      UpdateUser(){
-        this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            if (this.dialogTitle === '添加') {
-              AddStation(this.AddEditInfo)
-                .then(response => {
-                  this.dialogVisible = false
-                  if (response.status === 0) {
-                    this.initTable();
-                    Message({
-                      message: response.msg,
-                      type: 'success',
-                      duration: 3 * 1000
-                    })
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
-                });
-            } else {
-              EditStation(this.AddEditInfo).then(response => {
-                if (response.status === 0) {
-                  this.dialogVisible = false
-                  this.initTable();
-                  Message({
-                    message: response.msg,
-                    type: 'success',
-                    duration: 3 * 1000
-                  })
-                }
-              })
-                .catch(error => {
-                  console.log(error);
-                });
-            }
-          }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
-          }
-        })
-      },
-      handleDelete(row) {
-        MessageBox.confirm('此操作将删除数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          DeleteStation(row.uId)
-            .then(response => {
-              Message({
-                message: response.msg,
-                type: 'success',
-                duration: 3 * 1000
-              })
-              this.initTable()
-            })
-            .catch(error=>{console.log(error)})
-        }).catch(() => {
-          Message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
 
-      },
-      canleDialog(){
-        this.dialogVisible = false
-        this.$refs.AddEditInfo.resetFields();
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
-      }
     }
   }
 

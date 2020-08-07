@@ -13,7 +13,7 @@
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
       <sidebar-item
-        v-for="child in item.children"
+        v-for="(child ,index) in item.children"
         :key="child.path"
         :is-nest="true"
         :item="child"

@@ -390,6 +390,7 @@
         this.RoleDialogVisible = true
         departEmployee().then(response=>{
           response.datas.forEach((res,key)=>{
+            console.log(response.datas)
             this.roleData.push({id:key,name:res.name,children:[]})
             res.employee.forEach((child)=>{
               this.roleData[key].children.push({id:child.uId,name:child.realname,selected:child.selected,})

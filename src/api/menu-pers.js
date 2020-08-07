@@ -119,7 +119,7 @@ export function UploadRoleMenu(roleId,perIds) {
 }
 /*菜单权限*/
 
-export function MenuList(params) {
+export function MenuLists(params) {
   return request({
     url: '/menu/list',
     method: 'get',
