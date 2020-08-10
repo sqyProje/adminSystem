@@ -353,7 +353,7 @@
       userRole(){
         this.RoleDialogVisible = true
         GetFlowUserDrop().then(response=>{
-          response.datas.forEach((res,key)=>{
+          /*response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})
             res.user.forEach((child)=>{
               this.roleData[key].children.push({id:child.uId,name:child.realname,selected:child.selected,})
@@ -364,7 +364,9 @@
                 this.roleData[key].children[two].children.push({id:three.uId,name:three.realname,selected:three.selected})
               })
             })
-          })
+          })*/
+          this.roleData = response.datas
+          this.parseJson(this.roleData)
           this.resourceCheckedKey = this.AddEditInfo.usersView.split(',')
 
           this.findAllChildren(this.roleData,this.resourceCheckedKey)
@@ -409,7 +411,28 @@
       handleFlow (index, row){
         this.$router.push({name:'qdFlow',query: {form_id: row.uId}})
       },
-
+      parseJson(arr){
+        var key = 'children'
+        arr = arr.slice()
+        function toParse(arr) {
+          arr.forEach(function (item) {
+            if (item.childMenu && Array.isArray(item.childMenu)) {
+              item[key] = item.childMenu
+              toParse(item[key])
+            }
+            if (item.user && Array.isArray(item.user)) {
+              item.user.forEach(function (child) {
+                item[key] .push( {id:child.uId,name:child.realname,selected:child.selected,})
+                toParse(item[key])
+              })
+            }
+            delete item.user
+            delete item.childMenu
+          })
+          return arr
+        }
+        return toParse(arr)
+      }
     }
   }
 
