@@ -388,6 +388,7 @@
           this.resourceCheckedKey = this.AddEditInfo.reportUserIds.split(',')
           this.findAllChildren(this.roleData,this.resourceCheckedKey)
           this.$nextTick(()=>{
+
             this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
           })
 
