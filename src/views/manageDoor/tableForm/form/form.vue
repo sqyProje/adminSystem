@@ -377,9 +377,9 @@
       },
       UpdateRoleMenu(){
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
-        checkedKeys =  checkedKeys.filter((value)=>{
+        /*checkedKeys =  checkedKeys.filter((value)=>{
           return value.length >= 3
-        })
+        })*/
         this.AddEditInfo.usersView = checkedKeys.toString()
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]
@@ -415,8 +415,9 @@
         var key = 'children'
         arr = arr.slice()
         function toParse(arr) {
-          arr.forEach(function (item) {
+          arr.forEach(function (item,index) {
             if (item.childMenu && Array.isArray(item.childMenu)) {
+             // this.roleData[key].children.push({id:child.uId,name:child.realname,selected:child.selected,})
               item[key] = item.childMenu
               toParse(item[key])
             }
@@ -429,6 +430,7 @@
             delete item.user
             delete item.childMenu
           })
+          console.log(arr)
           return arr
         }
         return toParse(arr)

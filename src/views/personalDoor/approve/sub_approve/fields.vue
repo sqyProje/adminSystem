@@ -292,6 +292,7 @@
               dictionType(item.listId).then(res=>{
                 this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
               })
+              console.log(this.OnlyDataMany)
             }
             if(item.isdrop===2){
               dictionType(item.listId).then(res=>{

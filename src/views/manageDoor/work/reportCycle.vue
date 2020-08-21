@@ -386,7 +386,7 @@
           this.roleData = response.datas
           this.parseJson(this.roleData)
           this.resourceCheckedKey = this.AddEditInfo.reportUserIds.split(',')
-          this.findAllChildren(this.roleData,this.resourceCheckedKey)
+          //this.findAllChildren( this.parseJson(this.roleData),this.resourceCheckedKey)
           this.$nextTick(()=>{
             this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
           })
@@ -396,10 +396,11 @@
       UpdateRoleMenu(){
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
         checkedKeys =  checkedKeys.filter((value)=>{
-          return value.length >= 3
+          return value !== undefined
         })
+        console.log(checkedKeys)
         this.AddEditInfo.reportUserIds = checkedKeys.toString()
-        console.log(this.AddEditInfo.reportUserIds)
+
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]
         this.roleData = []
@@ -417,7 +418,7 @@
           this.parseJson(this.roleDataTo)
           this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
 
-          this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
+        //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
           this.$nextTick(()=>{
             this.$refs.roleDataTo.setCheckedKeys(this.resourceCheckedKeyTo)
           })
@@ -427,7 +428,7 @@
       UpdateRoleMenuTo(){
         let checkedKeys = this.$refs.roleDataTo.getCheckedKeys();
         checkedKeys =  checkedKeys.filter((value)=>{
-          return value.length >= 3
+          return value !== undefined
         })
         this.AddEditInfo.toreportUserIds = checkedKeys.toString()
         console.log(this.AddEditInfo.toreportUserIds)
