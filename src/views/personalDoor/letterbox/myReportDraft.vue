@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="my-Report">
-      <div class="ToReport-title">汇报给我的</div>
+      <div class="ToReport-title">我的汇报草稿</div>
       <el-table  :data="myReport" style="width: 100%">
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createDate" label="日期"></el-table-column>
@@ -18,7 +18,7 @@
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
-import {reportMe} from '@/api/personalDoor'
+import {myReportDraft} from '@/api/personalDoor'
 export default {
   data() {
     return {
@@ -26,12 +26,14 @@ export default {
     };
   },
   created(){
-    reportMe().then(res=>{
+    myReportDraft().then(res=>{
       this.myReport= res.datas.list
     })
   },
   methods: {
-
+handleClick1(row){
+  this.$router.push({name:'bianjihuibao',query: {uId:row.uId}})
+}
   },
 };
 </script>

@@ -1,8 +1,11 @@
 <template>
   <div>
+    <!-- 我汇报的 -->
     <div class="my-Report">
-      <div class="ToReport-title">汇报给我的</div>
-      <el-table  :data="myReport" style="width: 100%">
+      <el-button type="primary" @click="newanonletters" v-if="tuoqian.bool==false" plain icon="el-icon-plus">去汇报</el-button>
+      <el-button type="primary" @click="newanonletters" v-if="tuoqian.bool==true" plain icon="el-icon-plus">去汇报!已经拖欠{{tuoqian.days}}天</el-button>
+      <div class="ToReport-title">我汇报的</div>
+      <el-table :data="myReport" style="width: 100%">
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createDate" label="日期"></el-table-column>
         <el-table-column prop="toReportRealName" label="收件人"></el-table-column>
@@ -18,20 +21,30 @@
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
-import {reportMe} from '@/api/personalDoor'
+import {myReport,defaultReport} from '@/api/personalDoor'
 export default {
   data() {
     return {
+      tuoqian:[],
       myReport: [],
     };
   },
   created(){
-    reportMe().then(res=>{
-      this.myReport= res.datas.list
+    myReport().then(res=>{
+      this.myReport=res.datas.list
+    }),
+    defaultReport().then(res=>{
+        this.tuoqian=res.datas
     })
   },
   methods: {
-
+    // 草稿箱
+    handleClick1(row) {
+      this.$router.push({name:'bianjihuibao',query: {uId:row.uId}})
+    },
+    newanonletters(){
+      this.$router.push({name:'gohuibao',query: {}})
+    }
   },
 };
 </script>

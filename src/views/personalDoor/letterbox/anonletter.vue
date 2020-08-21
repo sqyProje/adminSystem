@@ -1,172 +1,121 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="字典名称"></el-input>
+  <div>
+    <!-- 我汇报的 -->
+    <div class="sousuo">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="活动时间">
+          <el-col>
+            <el-date-picker
+              type="date"
+              placeholder="选择日期"
+              v-model="formInline.date1"
+              style="width: 100%;"
+            ></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="审批人">
+          <el-input v-model="formInline.title1" placeholder="审批人"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.isAnonym" placeholder="是否匿名" style="width: 100%;">
-            <el-option
-              v-for="item in stateData"
-              :label="item.display_name"
-              :value="item.id"
-              :key = "item.id"
-            >{{item.display_name}}</el-option>
-          </el-select>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
-          <el-button
-            type="warning"
-            @click="handleResetSearch()"
-            size="small">
-            重置
-          </el-button>
-        </el-form-item>
+        <el-button type="primary" @click="newanonletters" plain icon="el-icon-plus">发起新的匿名信</el-button>
       </el-form>
-      <el-table
-        :data="tableData"
-        v-loading="listLoading"
-        size  = "small"
-        border
-      >
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="描述" prop="sketch"></el-table-column>
-        <el-table-column label="排序" prop="sort"></el-table-column>
-        <el-table-column label="创建时间" prop="createdate"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="260">
+    </div>
+    <div class="my-Report">
+      
+      <el-table  :data="myReport" style="width: 100%">
+        <el-table-column prop="title" label="标题"></el-table-column>
+        <el-table-column prop="createdate" label="日期"></el-table-column>
+        <el-table-column prop="realname" label="姓名"></el-table-column>
+        <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button @click="handleClick1(scope.row)" type="text" size="small">打开</el-button>
             <el-button
-              size="mini"
-              type="success"
-              @click="handleEdit(scope.row)">查看</el-button>
+              @click.native.prevent="deleteRow(scope.$index, tableData)"
+              type="text"
+              size="small"
+              style="color:red"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="pagination-container">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          layout="total, sizes,prev, pager, next,jumper"
-          :current-page.sync="listQuery.pageNum"
-          :page-size="listQuery.pageSize"
-          :page-sizes="[10,20,30]"
-          :total="total">
-        </el-pagination>
-      </div>
     </div>
-
-    <el-dialog
-      :title="dialogTitle"
-      :close-on-click-modal="false"
-      :visible.sync="dialogVisible"
-      width="23%">
-      <el-form
-        :inline="false"
-        size="mini"
-        :model="AddEditInfo"
-        label-width="80px"
-        ref="AddEditInfo"
-        :rules ="rulesInfo"
-      >
-        <el-form-item label ='标题'>
-          <el-input v-model="AddEditInfo.title"></el-input>
-        </el-form-item>
-        <el-form-item label ='发起人'>
-          <el-input v-model="AddEditInfo.realname"></el-input>
-        </el-form-item>
-        <el-form-item label ='创建时间'>
-          <el-input v-model="AddEditInfo.createdate"></el-input>
-        </el-form-item>
-        <el-form-item label ='内容详情'>
-          <Editor :curValue="AddEditInfo.content" v-if="dialogVisible" @input="newContent"></Editor>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
-<script type="text/ecmascript-6">
-  import {Message,MessageBox} from 'element-ui'
-  import {letterBoxList,letterBoxCheck} from '@/api/address'
-  import Editor from '@/components/Tinymce/Editor'
-  const defaultListQuery = {
-    title: '',
-    isAnonym:'',
-    pageNum:1,
-    pageSize:10
-  }
-  export default {
-    data(){
-      return {
-        listQuery: Object.assign({}, defaultListQuery),
-        tableData:[],
-        total: null,
-        stateData:[
-          { id: 0, display_name: '否'},
-          { id: 1, display_name: '是'}
-        ],
-        dialogTitle:'',
-        dialogVisible: false,
-        AddEditInfo:{
-          title:'',
-          realname:'',
-          content:'',
-          createdate:'',
+<script>
+import { Message, MessageBox, Row } from "element-ui";
+import {ToReport,DraftEditor,ReportList,myLetter} from '@/api/personalDoor'
+export default {
+  data() {
+    return {
+      formInline: {
+        title1: "",
+        date1: "",
+      },
+      myReport: [
+      ],
+    };
+  },
+  methods: {
+    //新的匿名信
+    newanonletters(row) {
+      this.$router.push({ name: "newanonletter", query: {} });
+    },
+    // 打开匿名信详情
+    handleClick1(row){
+      this.$router.push({ name: "anonletterDetails", query: {uId:row.uId} });
+    },
+    // 删除
+    deleteRow(index, rows) {
+      rows.splice(index, 1);
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
         }
-      }
-    } ,
-    components:{
-      Editor
+      });
     },
-    created(){
-      this.initTable();
-    },
-    methods: {
-      onSearchList() {
-        this.initTable()
-      },
-      initTable() {
-        this.listLoading = true
-        letterBoxList(this.listQuery).then(response => {
-          this.listLoading = false
-          this.tableData = response.datas.list
-          this.total = response.datas.total
-        })
-          .catch(error => {
-            console.log(error);
-          });
-      },
-      handleResetSearch() {
-        this.listQuery = Object.assign({}, defaultListQuery);
-        this.initTable();
-      },
-      handleSizeChange(val) {
-        this.listQuery.pageNum = 1;
-        this.listQuery.pageSize = val;
-        this.initTable();
-      },
-      handleCurrentChange(val) {
-        this.listQuery.pageNum = val;
-        this.initTable();
-      },
-      handleEdit(row) {
-        this.dialogVisible = !this.dialogVisible
-        letterBoxCheck(row.uId).then(response=>{
-          this.AddEditInfo = response.datas
-        })
-      },
-      newContent(val){
-        this.AddEditInfo.content= val
-      }
-    }
+    
+  },
+  created(){
+     myLetter().then(res=>{
+      this.myReport = res.datas.list
+    })
   }
-
+};
 </script>
+
+<style scoped>
+
+
+.my-Report {
+  width: 80%;
+  height: 760px;
+  border: 5px solid #f5f5f5;
+  border-radius: 5px 5px 0px 0px;
+  margin: 0 auto;
+}
+.el-table .warning-row {
+  background: #dde5f2;
+}
+.sousuo {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+.bom-box {
+  text-align: center;
+  font-size: 12px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #f5f5f5;
+}
+</style>
+
 

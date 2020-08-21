@@ -1,10 +1,12 @@
-import { login, logout, getLeftMenuInfo,getLoginUserInfo } from '@/api/login'
+import { login, logout, getLeftMenuInfo,getLoginUserInfo,shiftToken } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
 
 const user = {
   state: {
+    // 获取token
     token: localStorage.getItem('loginToken'),
+    // token: localStorage.getItem('tokenPc'),
     //token: Cookies.get('authorization'),
     name: '',
     avatar: '',
@@ -38,6 +40,11 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password,userInfo.code).then(response => {
+          
+          shiftToken().then(response=>{
+            console.log(response);
+           localStorage.setItem("tokenPc",response.datas)
+          })
           resolve()
         }).catch(error => {
           reject(error)
@@ -67,6 +74,8 @@ const user = {
     GetLoginUserInfo({commit, state}) {
       return new Promise((resolve, reject) => {
         getLoginUserInfo().then(response => {
+          // console.log(response.datas.uId);
+           localStorage.setItem("uid",response.datas.uId)
           const data =response.datas
           commit('SET_NAME', data.realname)
           commit('SET_AVATAR', data.picpath) //上线请打开注释

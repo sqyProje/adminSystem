@@ -226,10 +226,9 @@
           state:'',
         },
         TypeData:[],
-        stateData:[
-          { id: 0, display_name: '不开放',name:'线下'},
-          { id: 1, display_name: '开放',name:'线上'}
-        ],
+      
+      
+      
         rulesInfo: {
           name:[{required: true, trigger: 'blur', message: '请输入名称'}],
           maxpeople: [{ required: true,trigger: 'blur',message: '请输入容纳人数'}],
