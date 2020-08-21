@@ -31,7 +31,9 @@ export default {
     })
   },
   methods: {
-
+    handleClick1(){
+      this.$router.push({name:'bianjihuibao',query: {uId:row.uId}})
+    }
   },
 };
 </script>
