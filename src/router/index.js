@@ -210,13 +210,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/personalDoor/letterbox/worksummarys'),
             meta: {title: '工作汇报',noCache: true},
           },
-          {
-            path: 'editMyWorkSummary',
-            name: 'editMyWorkSummary',
-            component: () => import('@/views/personalDoor/letterbox/editMyWorkSummary'),
-            meta: {title: '编辑工作汇报'},
-            hidden: true
-          },
+          // {
+          //   path: 'editMyWorkSummary',
+          //   name: 'editMyWorkSummary',
+          //   component: () => import('@/views/personalDoor/letterbox/editMyWorkSummary'),
+          //   meta: {title: '编辑工作汇报'},
+          //   hidden: true
+          // },
           {
             path:'newanonletter',
             name:'newanonletter',

@@ -5,15 +5,9 @@
       <el-form-item label="主题" prop="theme">
         <el-input v-model="ruleForm"></el-input>
       </el-form-item>
-      <el-form-item label="内容" prop="substance">
-        <quill-editor
-          class="fuwenbenbianji"
-          v-model="neirong.content"
-          :options="editorOption"
-          ref="QuillEditor"
-        ></quill-editor>
+      <el-form-item label="内容详情" prop="substance">
+        <Editor :curValue="neirong.content" @input="newContent"></Editor>
       </el-form-item>
-
       <el-form-item label="收件人" prop="name">
         <el-autocomplete
           popper-class="my-autocomplete"
@@ -33,19 +27,20 @@
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
+import Editor from "@/components/Tinymce/Editor";
 import {
   ToReport,
   DraftEditor,
   getToReport,
   addReport,
   editReport,
-  editReports
+  editReports,
 } from "@/api/personalDoor";
-import { quillEditor, } from "vue-quill-editor";
+
 export default {
   data() {
     return {
-      ruleForm:{},
+      ruleForm: {},
       state1: "",
       state2: "",
       tableData: [],
@@ -57,19 +52,21 @@ export default {
           ],
         },
       },
-      neirong:[]
+      neirong: [],
     };
   },
-  created() {
-  },
+   components:{
+      Editor
+    },
+  created() {},
   mounted() {
     this.editReport1(this.$route.query.uId);
   },
   methods: {
-     editReport1(uId) {
+    editReport1(uId) {
       editReport(uId).then((res) => {
         this.neirong = res.datas;
-         this.ruleForm = res.datas.title;
+        this.ruleForm = res.datas.title;
         //  console.log(res.datas.title);
       });
     },
@@ -96,12 +93,11 @@ export default {
         content: this.neirong.content,
         toReportId: this.state2,
         state: 0,
-        uId:this.neirong.uId
+        uId: this.neirong.uId,
       };
-      var ss = JSON.stringify(ruleFormss);
       this.$refs.ruleForm.validate((valid) => {
-        editReports(ss).then((response) => {
-            this.$router.back(-1)
+        editReports(ruleFormss).then((response) => {
+          this.$router.back(-1);
         });
       });
     },
@@ -112,17 +108,18 @@ export default {
         content: this.neirong.content,
         toReportId: this.state2,
         state: 1,
-        uId:this.neirong.uId
+        uId: this.neirong.uId,
       };
-      var ss = JSON.stringify(ruleFormss);
       this.$refs.ruleForm.validate((valid) => {
-        editReports(ss).then((response) => {
-            this.$router.back(-1)
+        editReports(ruleFormss).then((response) => {
+          this.$router.back(-1);
         });
       });
     },
   },
-  
+  newContent(val) {
+    this.neirong.content = val;
+  },
 };
 </script>
 

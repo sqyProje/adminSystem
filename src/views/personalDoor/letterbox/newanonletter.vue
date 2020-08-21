@@ -8,9 +8,8 @@
         <el-form-item style="width: 700px" label="主题" prop="theme">
           <el-input v-model="ruleForm.theme"></el-input>
         </el-form-item>
-
-        <el-form-item label="内容" style="width: 700px;" prop="substance">
-          <el-input type="textarea" :rows="14" :max-rows="15" v-model="ruleForm.substance"></el-input>
+        <el-form-item style="width: 700px" label="内容" prop="substance">
+          <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
         </el-form-item>
 
         <el-form-item>
@@ -25,8 +24,7 @@
 <script >
 // import {  MessageBox,} from "element-ui";
 import { toLetter } from "@/api/personalDoor";
-import axios from "axios";
-import qs from "qs";
+import Editor from "@/components/Tinymce/Editor";
 export default {
   data() {
     return {
@@ -35,7 +33,7 @@ export default {
         substance: "",
         theme: "",
       },
-      token:""
+      token: "",
     };
   },
   methods: {
@@ -45,17 +43,22 @@ export default {
         title: this.ruleForm.theme,
         isanonym: this.isanonym,
       };
-      var ss = JSON.stringify(ruleFormss);
-      this.$refs.ruleForm.validate(valid => {
-          toLetter(ss)
-            .then(response=>{
-              this.$router.back(-1)
-            })
-      })
+     
+      this.$refs.ruleForm.validate((valid) => {
+        toLetter(ruleFormss).then((response) => {
+          this.$router.back(-1);
+        });
+      });
     },
     resetForm() {
       this.$router.back(-1);
     },
+    newContent(val) {
+      this.ruleForm.substance = val;
+    },
+  },
+  components: {
+    Editor,
   },
 };
 </script>

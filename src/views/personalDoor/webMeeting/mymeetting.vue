@@ -52,9 +52,6 @@
   </div>
 </template>
 <script>
-var myDate = new Date();
-var mytime = myDate.toLocaleTimeString(); //获取当前时间
-console.log(mytime);
 import { MylistMemories } from "@/api/personalDoor";
 export default {
   data() {

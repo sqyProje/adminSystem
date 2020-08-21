@@ -37,52 +37,39 @@
           <div class="name-size" v-for="(item,i) in name" :key="i">{{item.userRealName}}</div>
         </div>
       </div>
-      <!--
-      <span class="huiyi-content">{{tableData.content}}</span>-->
       <div class="font-color">会议介绍:</div>
-      <quill-editor
-        class="fuwenbenbianji"
-        v-model="tableData.content"
-        :options="editorOption"
-        ref="QuillEditor"
-      >{{tableData.content}}</quill-editor>
+          <Editor :curValue="tableData.content"  @input="newContent"></Editor>
     </div>
   </div>
 </template>
 <script>
 import { MylistMemoriesList } from "@/api/personalDoor";
-import { quillEditor } from "vue-quill-editor";
+import Editor from '@/components/Tinymce/Editor'
 export default {
-  components: {
-    quillEditor,
-  },
+  components:{
+      Editor
+    },
   data() {
     return {
       tableData: {
-        title: "",
-        state: "",
-        updatedate: "",
-        enddate: "",
-        meetingroomname: "",
-        content: "",
+       
       },
       name: [],
-         editorOption: {
-          modules: {
-            toolbar: [
-              ["bold", "italic", "underline", "strike"], // toggled buttons
-              ["blockquote", "code-block"],
-            ],
-          },
-        },
     };
   },
+  components:{
+      Editor
+    },
   computed() {},
   created() {},
   mounted() {
     this.MyList(this.$route.query.uId);
   },
   methods: {
+    newContent(val){
+//         console.log(val)
+        this.tableData.content= val
+      },
     fanhui(){
        this.$router.back(-1)
     },

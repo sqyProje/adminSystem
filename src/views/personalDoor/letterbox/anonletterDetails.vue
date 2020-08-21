@@ -1,6 +1,6 @@
 
 <template>
-<!-- 匿名信详情 -->
+  <!-- 匿名信详情 -->
   <div class="root-box">
     <div class="title-box">
       <el-button type="info" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
@@ -12,25 +12,32 @@
       <div class="Information-style">收件人:{{neirong.realname}}</div>
       <div class="Information-style">时间:{{neirong.createdate}}</div>
     </div>
-    <div class="neirong-box">
-      &nbsp; &nbsp; &nbsp; &nbsp;
-      {{neirong.content}}
-    </div>
+
+   
+      <Editor :curValue="neirong.content" @input="newContent"></Editor>
+
     <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
 <script >
 import { Message, MessageBox } from "element-ui";
 import { details } from "@/api/personalDoor";
+import Editor from "@/components/Tinymce/Editor";
 export default {
   data() {
     return {
-      neirong:[]
+      neirong: [],
     };
+  },
+  components: {
+    Editor,
   },
   methods: {
     goBack() {
       this.$router.back(-1);
+    },
+    newContent(val) {
+      this.neirong.content = val;
     },
     details1(uId) {
       details(uId).then((res) => {

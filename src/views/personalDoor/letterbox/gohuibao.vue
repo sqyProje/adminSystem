@@ -6,13 +6,8 @@
         <el-input v-model="ruleForm.theme"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="substance">
-        <quill-editor
-          class="fuwenbenbianji"
-          v-model="tableData.content"
-          :options="editorOption"
-          ref="QuillEditor"
-        ></quill-editor>
-      </el-form-item>
+          <Editor :curValue="tableData.content" @input="newContent"></Editor>
+        </el-form-item>
 
       <el-form-item label="收件人" prop="name">
         <el-autocomplete
@@ -40,7 +35,7 @@ import {
   addReport,
   editReport
 } from "@/api/personalDoor";
-import { quillEditor } from "vue-quill-editor";
+import Editor from '@/components/Tinymce/Editor'
 export default {
   data() {
     return {
@@ -59,6 +54,9 @@ export default {
       },
     };
   },
+  components:{
+      Editor
+    },
   created() {
   },
   mounted() {
@@ -89,9 +87,8 @@ export default {
         toReportId: this.state2,
         state: 0,
       };
-      var ss = JSON.stringify(ruleFormss);
       this.$refs.ruleForm.validate((valid) => {
-        addReport(ss).then((response) => {
+        addReport(ruleFormss).then((response) => {
           this.$router.back(-1)
         });
       });
@@ -111,6 +108,10 @@ export default {
         });
       });
     },
+    newContent(val){
+        console.log(val)
+        this.tableData.content= val
+      }
   },
   
 };

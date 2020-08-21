@@ -48,7 +48,6 @@ export default {
   },
   created() {
     ToAttendMeeting().then((res) => {
-      // console.log(res.datas.list);
       this.tableData1 = res.datas.list;
     });
   },

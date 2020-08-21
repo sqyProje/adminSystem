@@ -257,6 +257,7 @@
         total: null,
         dialogTitle:'',
         dialogVisible: false,
+
         AddEditInfo:{
           uId:'',
           picpath:'',

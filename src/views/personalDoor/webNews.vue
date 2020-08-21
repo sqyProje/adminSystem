@@ -81,7 +81,6 @@ import {
   AnnounceList,
   newsList,
 } from "@/api/personalDoor";
-import qs from "qs";
 export default {
   data() {
     return {
@@ -136,7 +135,6 @@ export default {
   margin-top: 10px;
   margin-left: 10px;
   background: rgba(255, 255, 255, 1);
-  /* border: 1px solid black; */
 }
 .left-box1 {
   width: 1070px;
@@ -159,7 +157,6 @@ export default {
   height: 350px;
   margin: 10px 15px 0px 10px;
   background: rgba(255, 255, 255, 1);
-  /* border: 1px solid rgba(255, 255, 255, 1); */
 }
 .hint-box {
   width: 863px;
@@ -188,7 +185,6 @@ export default {
   width: 610px;
   height: 588px;
   background: rgba(255, 255, 255, 1);
-  /* border: 1px solid black; */
   margin: 10px 15px 0px 10px;
 }
 .biaoti {
