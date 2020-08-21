@@ -156,6 +156,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/personalDoor/webMeeting/waitmeetting'),
             meta: {title: '待参加会议'},
           },
+          {
+            path: 'AboutICCCAS',
+            name: 'AboutICCCAS',
+            component: () => import('@/views/personalDoor/webMeeting/AboutICCCAS'),
+            meta: {title: '会议详情'},
+            hidden: true
+          },
         ]
       },
       {
@@ -172,13 +179,68 @@ export const asyncRouterMap = [
             meta:{title:'发起的匿名信',noCache: true}
           },
           {
+            path:'myReport',
+            name:'person_report_myReport',
+            component:()=>import('@/views/personalDoor/letterbox/myReport'),
+            meta:{title:'我的汇报',noCache: true}
+          },
+          {
+            path: 'worksummarys',
+            name: 'person_report_reportMe',
+            component: () => import('@/views/personalDoor/letterbox/worksummarys'),
+            meta: {title: '汇报给我的',noCache: true},
+          },
+          {
+            path: 'myReportDraft',
+            name: 'person_report_myReportDraft',
+            component: () => import('@/views/personalDoor/letterbox/myReportDraft'),
+            meta: {title: '我的汇报草稿',noCache: true},
+          },
+          {
+            path: 'gohuibao',
+            name: 'gohuibao',
+            component: () => import('@/views/personalDoor/letterbox/gohuibao'),
+            meta: {title: '去汇报工作页',noCache: true},
+            hidden: true
+          },
+         
+          {
             path: 'worksummarys',
             name: 'webMyWorkSummary',
             component: () => import('@/views/personalDoor/letterbox/worksummarys'),
-            meta: {title: '工作汇报'},
+            meta: {title: '工作汇报',noCache: true},
           },
-        ]
-      }
+          {
+            path: 'editMyWorkSummary',
+            name: 'editMyWorkSummary',
+            component: () => import('@/views/personalDoor/letterbox/editMyWorkSummary'),
+            meta: {title: '编辑工作汇报'},
+            hidden: true
+          },
+          {
+            path:'newanonletter',
+            name:'newanonletter',
+            component:()=>import('@/views/personalDoor/letterbox/newanonletter'),
+            meta:{title:'发起新的的匿名信',noCache: true},
+            hidden: true
+          },
+          {
+            path:'anonletterDetails',
+            name:'anonletterDetails',
+            component:()=>import('@/views/personalDoor/letterbox/anonletterDetails'),
+            meta:{title:'我的匿名信详情',noCache: true},
+            hidden: true
+          },
+          {
+            path:'bianjihuibao',
+            name:'bianjihuibao',
+            component:()=>import('@/views/personalDoor/letterbox/bianjihuibao'),
+            meta:{title:'编辑汇报',noCache: true},
+            hidden: true
+          },
+        ],
+      },
+     
     ]
   },
   {
@@ -226,6 +288,7 @@ export const asyncRouterMap = [
           },
           {
             path: 'detail',
+            
             name: 'detail',
             component: () => import('@/views/hrDoor/record/employee/detail'),
             meta: {title: '详细信息'},
