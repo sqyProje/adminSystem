@@ -1,29 +1,25 @@
 <template>
-  <div class="ToReport">
-    <div class="ToReport-title">去汇报</div>
-    <el-form :model="ruleForm" ref="ruleForm" label-width="150px" class="demo-ruleForm">
-      <el-form-item label="主题" prop="theme">
-        <el-input v-model="ruleForm.theme"></el-input>
-      </el-form-item>
-      <el-form-item label="内容" prop="substance">
-          <Editor :curValue="tableData.content" @input="newContent"></Editor>
+  <div>
+    <div class="tittle">
+      <b>去汇报</b>
+    </div>
+    <div class="ToReport">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="200px" class="demo-ruleForm">
+        <el-form-item style="width: 700px" label="主题" prop="theme">
+          <el-input v-model="ruleForm.theme"></el-input>
+        </el-form-item>
+        <el-form-item style="width: 700px" label="内容" prop="substance">
+          <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
         </el-form-item>
 
-      <el-form-item label="收件人" prop="name">
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="state1"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入内容"
-          @select="handleSelect"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" @click="submitForm('ruleForm')">发送</el-button>
-        <el-button @click="resetForms('ruleForm')">保存为草稿</el-button>
-        <el-button @click="resetForm()">关闭</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item>
+          <el-button type="success" icon="el-icon-s-promotion" @click="submitForm('ruleForm')">发送</el-button>
+          <el-button @click="resetForms('ruleForm')">保存为草稿</el-button>
+          <el-button @click="resetForm('ruleForm')">关闭</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
 <script>
@@ -118,28 +114,22 @@ export default {
 </script>
 
 <style scoped>
+.tittle {
+  padding: 10px;
+  border-bottom: 1px solid #cccccc;
+}
 .ToReport {
-  width: 95%;
-  margin: 0 auto;
+  width: 100%;
+  height: 785px;
   border: 5px solid #f5f5f5;
   border-radius: 5px 5px 0px 0px;
 }
-.ToReport-title {
-  height: 30px;
-  line-height: 30px;
-  color: #ffffff;
-  padding-left: 20px;
-  background-color: #3c82fe;
-  margin-bottom: 10px;
-  border-radius: 5px 5px 0px 0px;
-}
-.fuwenbenbianji {
-  height: 300px;
-  padding-bottom: 50px;
-}
-.shoujianr-box {
-  display: flex;
-  justify-content: space-around;
+.bom-box {
+  text-align: center;
+  font-size: 12px;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f5f5f5;
 }
 </style>
 

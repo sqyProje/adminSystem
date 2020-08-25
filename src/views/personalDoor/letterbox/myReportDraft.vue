@@ -1,8 +1,24 @@
 <template>
   <div>
+    <div class="sousuo">
+      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="信件名称">
+          <el-input v-model="listQuery.title" placeholder="信件关键字"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <div class="my-Report">
-      <div class="ToReport-title">我的汇报草稿</div>
-      <el-table  :data="myReport" style="width: 100%">
+      <el-table
+        :row-style="{height:'36px'}"
+        :header-row-style="{height:'36px'}"
+        :cell-style="{padding:'2px',}"
+        :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
+        :data="myReport"
+        style="width: 100%"
+      >
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createDate" label="日期"></el-table-column>
         <el-table-column prop="toReportRealName" label="收件人"></el-table-column>
@@ -13,51 +29,107 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-container">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          layout="total, sizes,prev, pager, next,jumper"
+          :current-page.sync="listQuery.pageNum"
+          :page-size="listQuery.pageSize"
+          :page-sizes="[10,20,30]"
+          :total="total"
+        ></el-pagination>
+      </div>
     </div>
+    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
 <script>
-import { Message, MessageBox } from "element-ui";
-import {myReportDraft} from '@/api/personalDoor'
+import { Message, MessageBox, Row } from "element-ui";
+import { myReportDraft } from "@/api/personalDoor";
+const defaultListQuery = {
+  title: "",
+  createDate: "",
+  pageNum: 1,
+  pageSize: 10,
+};
 export default {
   data() {
     return {
+      listQuery: Object.assign({}, defaultListQuery),
       myReport: [],
+      total: null,
     };
   },
-  created(){
-    myReportDraft().then(res=>{
-      this.myReport= res.datas.list
-    })
-  },
   methods: {
-handleClick1(row){
-  this.$router.push({name:'bianjihuibao',query: {uId:row.uId}})
-}
+
+    newanonletters(row) {
+      this.$router.push({ name: "newanonletter", query: {} });
+    },
+ 
+    handleClick1(row) {
+      this.$router.push({ name: "bianjihuibao", query: { uId: row.uId } });
+    },
+    onSearchList() {
+      this.initTable();
+    },
+    initTable() {
+      this.listLoading = true;
+      myReportDraft(this.listQuery)
+        .then((response) => {
+          this.myReport = response.datas.list;
+          this.total = response.datas.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.initTable();
+    },
+    handleSizeChange(val) {
+      this.listQuery.pageNum = 1;
+      this.listQuery.pageSize = val;
+      this.initTable();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val;
+      this.initTable();
+    },
+  },
+  created() {
+    this.initTable();
   },
 };
 </script>
 
 <style scoped>
-
 .my-Report {
-  width: 100%;
-  height: 800px;
-  border: 5px solid #f5f5f5;
-  border-radius: 5px 5px 0px 0px;
+  width: 90%;
+  height: 760px;
+  border-radius: 10px 10px 0 0;
+  margin: 0 auto;
+  overflow: hidden;
 }
-.el-table .warning-row {
-  background: #dde5f2;
+
+.sousuo {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 10px;
 }
-.ToReport-title {
-  height: 30px;
-  line-height: 30px;
-  color: #ffffff;
-  padding-left: 20px;
-  background-color: #3c82fe;
-  margin-bottom: 10px;
-  border-radius: 5px 5px 0px 0px;
+.bom-box {
+  text-align: center;
+  font-size: 12px;
+  height: 50px;
+  line-height: 50px;
+  background-color: #f5f5f5;
 }
+el-table {
+  border-radius: 25px;
+}
+
 </style>
 
 

@@ -1,14 +1,16 @@
 <template>
   <div class="ToReport">
-    <div class="ToReport-title">去汇报</div>
+    <div class="tittle">
+      <b>去汇报</b>
+    </div>
     <el-form :model="ruleForm" ref="ruleForm" label-width="150px" class="demo-ruleForm">
-      <el-form-item label="主题" prop="theme">
+      <el-form-item style="width: 700px" label="主题" prop="theme">
         <el-input v-model="ruleForm"></el-input>
       </el-form-item>
-      <el-form-item label="内容详情" prop="substance">
+      <el-form-item style="width: 700px" label="内容详情" prop="substance">
         <Editor :curValue="neirong.content" @input="newContent"></Editor>
       </el-form-item>
-      <el-form-item label="收件人" prop="name">
+      <el-form-item style="width: 700px" label="收件人" prop="name">
         <el-autocomplete
           popper-class="my-autocomplete"
           v-model="neirong.toRealname"
@@ -124,28 +126,22 @@ export default {
 </script>
 
 <style scoped>
+.tittle {
+  padding: 10px;
+  border-bottom: 1px solid #cccccc;
+}
 .ToReport {
-  width: 95%;
-  margin: 0 auto;
+  width: 100%;
+  height: 785px;
   border: 5px solid #f5f5f5;
   border-radius: 5px 5px 0px 0px;
 }
-.ToReport-title {
-  height: 30px;
-  line-height: 30px;
-  color: #ffffff;
-  padding-left: 20px;
-  background-color: #3c82fe;
-  margin-bottom: 10px;
-  border-radius: 5px 5px 0px 0px;
-}
-.fuwenbenbianji {
-  height: 300px;
-  padding-bottom: 50px;
-}
-.shoujianr-box {
-  display: flex;
-  justify-content: space-around;
+.bom-box {
+  text-align: center;
+  font-size: 12px;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f5f5f5;
 }
 </style>
 

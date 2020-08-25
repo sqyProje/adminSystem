@@ -1,41 +1,65 @@
 <template>
-  <div>
-    <div class="tittle">
-      <b>待参加的会议</b>
-    </div>
+  <div class="app-container">
+    
     <!-- 查询 -->
-    <div class="chaxun-box">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="会议类型:">
-          <el-select v-model="formInline.user" placeholder="全部">
-            <el-option label="线上会议" value="xianshang"></el-option>
-            <el-option label="线下会议" value="xianxia"></el-option>
-          </el-select>
+    <div class="filter-container">
+      <el-form size="mini" :inline="true" :model="formInline" class="demo-form-inline">
+         <el-form-item label="主题名称">
+          <el-input v-model="listQuery.title" placeholder="主题关键字"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 会议信息 -->
     <div class="meeting-box">
-      <el-table :data="tableData1" border style="width: 100%">
-        <el-table-column header-align="center" fixed prop="title" label="会议标题"></el-table-column>
-        <el-table-column header-align="center"  prop="publishdate" label="会议时间"></el-table-column>
-        <el-table-column header-align="center"  prop="tableData" label="会议类型"></el-table-column>
-         <el-table-column header-align="center"  prop="sponsor" label="发起人"></el-table-column>
-        <el-table-column header-align="center"  prop="meetingroomname" label="地点"></el-table-column>
-        <el-table-column width="200"  label="操作">
+      <el-table
+        :data="tableData1"
+        v-loading="listLoading"
+        row-key="uId"
+        :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
+        size="small"
+        border
+      >
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="title" label="会议标题"></el-table-column>
+        <el-table-column prop="publishdate" label="会议时间"></el-table-column>
+        <el-table-column prop="tableData1" label="会议类型">
+          <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
+        </el-table-column>
+        <el-table-column prop="sponsor" label="发起人"></el-table-column>
+        <el-table-column prop="meetingroomname" label="地点"></el-table-column>
+        <el-table-column label="操作" width="260">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="mini" round>查看</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="mini">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-container">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          layout="total, sizes,prev, pager, next,jumper"
+          :current-page.sync="listQuery.pageNum"
+          :page-size="listQuery.pageSize"
+          :page-sizes="[10,20,30]"
+          :total="total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { Message, MessageBox } from "element-ui";
 import { ToAttendMeeting } from "@/api/personalDoor";
+const defaultListQuery = {
+  title: "",
+  sketch: "",
+  pageNum: 1,
+  pageSize: 10,
+};
 export default {
   data() {
     return {
@@ -44,35 +68,57 @@ export default {
         region: "",
       },
       tableData1: [],
+      listQuery: Object.assign({}, defaultListQuery),
+      total: null,
+      dialogTitle: "",
+      dialogVisible: false,
+      AddEditInfo: {
+        uId: "",
+        name: "",
+        sketch: "",
+        state: "",
+      },
     };
   },
   created() {
-    ToAttendMeeting().then((res) => {
-      this.tableData1 = res.datas.list;
-    });
+    this.initTable();
   },
   methods: {
     onSubmit() {
-      console.log("submit!");
+      this.initTable();
     },
-    handleClick(row) {
-      this.$router.push({name:'AboutICCCAS',query: {uId:row.uId}})
+    initTable() {
+      ToAttendMeeting(this.listQuery)
+        .then((response) => {
+          this.tableData1 = response.datas.list;
+          this.total = response.datas.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.initTable();
+    },
+    handleSizeChange(val) {
+      this.listQuery.pageNum = 1;
+      this.listQuery.pageSize = val;
+      this.initTable();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val;
+      this.initTable();
     },
   },
+  
 };
 </script>
-<style>
-.meeting-box {
-  width: 94%;
-  margin-left: 3%;
-}
+<style scoped>
 .tittle {
-  padding: 10px;
+  padding: 5px;
   border-bottom: 1px solid #cccccc;
-}
-.chaxun-box {
-  padding-left: 50px;
-  padding-top: 20px;
+  margin-bottom: 20px;
 }
 </style>
 

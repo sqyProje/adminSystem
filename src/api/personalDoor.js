@@ -26,15 +26,22 @@ export function newsType(){
   })
 }
 // 新闻列表 /person/news/list
-export function newsList(){
+export function newsList(params){
   return request({
     url: '/person/news/list',
     method: 'get',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
+    params: params
   })
 }
+// 新闻详情 /person/news/list
+export function newsdetails(params){
+  return request({
+    url: '/person/news/details?uId='+params,
+    method: 'get',
+    params: params
+  })
+}
+
 
 
 //我的会议详情列表 
@@ -45,7 +52,7 @@ export function MylistMemories(params){
     headers: {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
     },
-    data: params
+    params: params
   })
 }
 //会议详情 /person/meeting/details
@@ -57,31 +64,35 @@ export function MylistMemoriesList(params){
   })
 }
 // 待参加会议列表/person/meeting/wait_list
-export function ToAttendMeeting(){
+export function ToAttendMeeting(params){
   return request({
     url: '/person/meeting/wait_list',
     method: 'get',
+    params: params
   })
 }
 // 公告列表 /person/notice/list
-export function AnnounceList(){
+export function AnnounceList(params){
   return request({
     url: '/person/notice/list',
     method: 'get',
+    params: params
   })
 }
 // 我汇报的 /person/report/myReport
-export function myReport(){
+export function myReport(params){
   return request({
     url: '/person/report/myReport',
     method: 'get',
+    params: params
   })
 }
 //我发起的匿名信 /person/letter/myLetter
-export function myLetter(){
+export function myLetter(params){
   return request({
     url: '/person/letter/myLetter',
     method: 'get',
+    params: params
   })
 }
 // 写匿名信 /person/letter/toLetter 未使用
@@ -97,6 +108,7 @@ export function details(params){
   return request({
     url: '/person/letter/details?uId='+params,
     method: 'get',
+    
   })
 }
 // 选择收件人 /person/report/getToReport
@@ -122,17 +134,19 @@ export function addReport(param) {
   })
 }
 // 我的草稿列表 /person/report/myReportDraft
-export function myReportDraft(){
+export function myReportDraft(params){
   return request({
     url: '/person/report/myReportDraft',
     method: 'get',
+    params: params
   })
 }
 //给我的汇报 /person/report/reportMe
-export function reportMe(){
+export function reportMe(params){
   return request({
     url: '/person/report/reportMe',
     method: 'get',
+    params: params
   })
 }
 // /person/report/editReport 获取编辑
@@ -148,5 +162,21 @@ export function editReports(param) {
     url: '/person/report/editReport',
     method: 'POST',
     data:param
+  })
+}
+// 详情列表  /person/report/details
+export function detailsList(params){
+  return request({
+    url: '/person/report/details?uId='+params,
+    method: 'get',
+    params: params
+  })
+}
+// 公告详情
+export function noticedetails(params){
+  return request({
+    url: '/person/notice/details?uId='+params,
+    method: 'get',
+    params: params
   })
 }

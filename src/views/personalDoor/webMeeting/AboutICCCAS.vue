@@ -3,7 +3,6 @@
     <div class="tittle">
       <b>会议详情</b>
     </div>
-    <div class="fanhui-display" @click="fanhui">返回上一层</div>
     <div class="content-box" :model="tableData" ref="tableData">
       <div class="font-color">
         会议主题:
@@ -38,17 +37,15 @@
         </div>
       </div>
       <div class="font-color">会议介绍:</div>
-          <Editor :curValue="tableData.content"  @input="newContent"></Editor>
+          <div v-html="tableData.content"></div>
     </div>
   </div>
 </template>
 <script>
 import { MylistMemoriesList } from "@/api/personalDoor";
-import Editor from '@/components/Tinymce/Editor'
+
 export default {
-  components:{
-      Editor
-    },
+
   data() {
     return {
       tableData: {
@@ -57,19 +54,12 @@ export default {
       name: [],
     };
   },
-  components:{
-      Editor
-    },
   computed() {},
   created() {},
   mounted() {
     this.MyList(this.$route.query.uId);
   },
   methods: {
-    newContent(val){
-//         console.log(val)
-        this.tableData.content= val
-      },
     fanhui(){
        this.$router.back(-1)
     },
@@ -92,13 +82,13 @@ export default {
 }
 .font-color {
   color: #00a0e9;
-  font-size: 14px;
+  font-size: 16px;
   margin: 30px 0 0px 0;
 }
 .renyuan-yangshi {
   display: flex;
   flex-wrap: wrap;
-  width: 320px;
+  /* width: 800px; */
 }
 .name-size {
   color: aliceblue;
@@ -122,9 +112,6 @@ span {
   width: 700px;
   height: 200px;
 }
-.fanhui-display{
-  color: darkgreen;
-  padding: 10px;
-}
+
 </style>
 

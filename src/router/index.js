@@ -138,6 +138,20 @@ export const asyncRouterMap = [
         meta:{title:'新闻公告',icon: 'product-list',noCache: true}
       },
       {
+        path:'AnnouncementNewsDetails',
+        name:'AnnouncementNewsDetails',
+        component:()=>import('@/views/personalDoor/AnnouncementNewsDetails'),
+        meta:{title:'公告详情'},
+        hidden: true
+      },
+      {
+        path:'NewsDetails',
+        name:'NewsDetails',
+        component:()=>import('@/views/personalDoor/NewsDetails'),
+        meta:{title:'新闻详情'},
+        hidden: true
+      },
+      {
         path:'webMeeting',
         component: ()=> import('@/views/personalDoor/webMeeting/index'),
         redirect:'/personalDoor/webMeeting/mymeetting',
@@ -154,13 +168,13 @@ export const asyncRouterMap = [
             path: 'waitmeetting',
             name: 'webMyWaitMeeting',
             component: () => import('@/views/personalDoor/webMeeting/waitmeetting'),
-            meta: {title: '待参加会议'},
+            meta: {title:'待参加会议'},
           },
           {
             path: 'AboutICCCAS',
             name: 'AboutICCCAS',
             component: () => import('@/views/personalDoor/webMeeting/AboutICCCAS'),
-            meta: {title: '会议详情'},
+            meta: {title:'会议详情'},
             hidden: true
           },
         ]
@@ -210,13 +224,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/personalDoor/letterbox/worksummarys'),
             meta: {title: '工作汇报',noCache: true},
           },
-          // {
-          //   path: 'editMyWorkSummary',
-          //   name: 'editMyWorkSummary',
-          //   component: () => import('@/views/personalDoor/letterbox/editMyWorkSummary'),
-          //   meta: {title: '编辑工作汇报'},
-          //   hidden: true
-          // },
+          {
+            path: 'detailsList',
+            name: 'detailsList',
+            component: () => import('@/views/personalDoor/letterbox/detailsList'),
+            meta: {title: '汇报工作详情'},
+            hidden: true
+          },
           {
             path:'newanonletter',
             name:'newanonletter',

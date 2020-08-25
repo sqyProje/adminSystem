@@ -1,6 +1,6 @@
 
 <template>
-  <!-- 匿名信详情 -->
+  <!-- 汇报信件详情 -->
   <div class="root-box">
     <div class="title-box">
       <el-button type="info" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
@@ -10,8 +10,6 @@
       <div class="Information-style">收件人:{{neirong.realname}}</div>
       <div class="Information-style">时间:{{neirong.createdate}}</div>
     </div>
-
-   
       <!-- <Editor :curValue="neirong.content" @input="newContent"></Editor> -->
       <div class="neirong-box" v-html="neirong.content"></div>
     <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
@@ -19,12 +17,13 @@
 </template>
 <script >
 import { Message, MessageBox } from "element-ui";
-import { details } from "@/api/personalDoor";
+import { detailsList } from "@/api/personalDoor";
 import Editor from "@/components/Tinymce/Editor";
 export default {
   data() {
     return {
       neirong: [],
+      toReportRealName:""
     };
   },
   components: {
@@ -35,13 +34,15 @@ export default {
       this.$router.back(-1);
     },
     details1(uId) {
-      details(uId).then((res) => {
+      detailsList(uId).then((res) => {
         this.neirong = res.datas;
       });
     },
   },
   mounted() {
     this.details1(this.$route.query.uId);
+    // this.toReportRealName = this.details1(this.$route.query.toReportRealName);
+    // console.log(this.toReportRealName);
   },
   created() {},
 };

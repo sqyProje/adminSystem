@@ -13,60 +13,106 @@
       </div>
       <!--公告  -->
       <div class="right-box">
-        <div style="height:38px;line-height:38px;padding-left:15px">公告</div>
-        <div class="hint-box">
-          <span>标题</span>
-          <span class="headline">发布人</span>
-          <span>发布时间</span>
+        <div class="gonggao-box">
+          <div style="padding-left:15px;height:30px;line-height:30px;">公告</div>
+          <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+            <el-form-item label="公告搜索">
+              <el-input v-model="listQuery.title" placeholder="请输入关键字"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
+            </el-form-item>
+          </el-form>
         </div>
-        <div class="block">
-          <span class="demonstration" @click="xiangqing" v-for="(item,i) in AnnounceList" :key="i">
-            <span class="matter">{{item.title}}</span>
-            <span class="matter">{{item.title}}</span>
-            <span class="matter">{{item.publishDate}}</span>
-          </span>
-          <el-pagination background layout="prev, pager, next" :total="50"></el-pagination>
+        <el-table
+          :row-style="{height:'25px'}"
+          :header-row-style="{height:'25px'}"
+          :cell-style="{padding:'1px'}"
+          :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
+          :data="AnnounceList"
+          style="width: 100%"
+        >
+          <el-table-column prop="title" width="230" label="标题"></el-table-column>
+          <el-table-column prop="sketch" label="简介" width="250" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="publishDate" width="230" label="发布时间"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="NoticeDetails(scope.row)" type="text" size="small">打开</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            layout="total, sizes,prev, pager, next,jumper"
+            :current-page.sync="listQuery.pageNum"
+            :page-size="listQuery.pageSize"
+            :page-sizes="[10,20,30]"
+            :total="total"
+          ></el-pagination>
         </div>
       </div>
     </div>
     <!-- 下半部分 -->
-    <div class="top-root">
-      <div class="left-box1">
+
+    <div class="left-box1">
+      <div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane v-for="(item,i) in newsType" :key="i" :label="item.sketch" :name="item.name">
-              <div v-for="(item,i) in newsList" :key="i" :type="item.type"> {{item.type}}</div>
-            <el-pagination background layout="prev, pager, next" :total="50"></el-pagination>
+          <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
+            <el-form-item label="新闻搜索">
+              <el-input v-model="newQuery.title" placeholder="请输入关键字"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
+            </el-form-item>
+          </el-form>
+          <el-tab-pane
+            v-for="(item,i) in newsType"
+            :key="i"
+            :id="item.uId"
+            :label="item.name"
+            :name="item.name"
+          >
+            <div class="top-root">
+              <div v-for="(item,i) in newsList" :key="i">
+                <div v-if="i==0">
+                  <div>
+                    <img class="img-box" :src="item.picPath" alt />
+                  </div>
+                  <div class="biaoti">{{item.title}}</div>
+                  <div class="neirong">{{item.sketch}}</div>
+                  <div style="height:30px">
+                    <span class="btn-size">来源：国家卫生健康委 {{item.publishDate}}</span>
+                    <span class="btn-box btn-size" @click="SeeDetails(item)">查看详情 >></span>
+                  </div>
+                </div>
+              </div>
+              <div v-for="(item,i) in newsList" :key="i">
+                <div class="bom-boxs" @click="SeeDetails(item)" v-if="i!=0">
+                  <span>
+                    <img src="../../assets/images/lingwps.png" alt />
+                  </span>
+                  <span>{{item.title}}</span>
+                  <span class="el-icon-arrow-right"></span>
+                </div>
+              </div>
+              <div class="fenye">
+                <el-pagination
+                  background
+                  @size-change="handleSizeChanges"
+                  @current-change="handleCurrentChanges"
+                  layout="total, sizes,prev, pager, next,jumper"
+                  :current-page.sync="newQuery.pageNum"
+                  :page-size="newQuery.pageSize"
+                  :page-sizes="[10,20,30]"
+                  :total="total"
+                ></el-pagination>
+              </div>
+            </div>
           </el-tab-pane>
         </el-tabs>
-      </div>
-      <!-- 天气模块 -->
-      <div class="bum-right-box">
-        <div class="top-root">
-          <div class="tianqi-topleft-box">
-            <div class="data-box">今日:2020/08/06 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 星期三</div>
-            <div class="tianqi-root">
-              <span>
-                <img src="../../assets/images/tianqi_wps.png" alt />
-              </span>
-              <span class="tianqi-box">小雨转阴</span>
-              <div class="wendu">25℃-30℃</div>
-            </div>
-          </div>
-          <!-- 天气图 -->
-          <div class="tianqi-topright-box"></div>
-        </div>
-        <!-- 下半部分 -->
-        <div class="youqing-tishi">今日最高温度31℃ 最低温度25℃ 伴有小雨，出门请记得带伞哟~</div>
-        <div class="top-root">
-          <span>位置:{郑州}</span>
-          <div>
-            <el-button-group>
-              <el-button type="info" plain>今</el-button>
-              <el-button type="primary">明</el-button>
-              <el-button type="warning" plain>后</el-button>
-            </el-button-group>
-          </div>
-        </div>
       </div>
     </div>
     <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
@@ -74,6 +120,18 @@
 </template>
       
 <script>
+const defaultListQuery = {
+  name: "",
+  sketch: "",
+  pageNum: 1,
+  pageSize: 6,
+};
+const newListQuery = {
+  title: "",
+  type: "",
+  pageNum: 1,
+  pageSize: 10,
+};
 import {
   NewsDetails,
   slideshow,
@@ -84,45 +142,127 @@ import {
 export default {
   data() {
     return {
+      listQuery: Object.assign({}, defaultListQuery),
+      newQuery: Object.assign({}, newListQuery),
       list: [],
       newsType: [],
-      activeName: "行业",
+      activeName: "新闻",
       AnnounceList: [],
-      newsList: [],
+      total: null,
+      newsList:[],
+     
+      type: "",
     };
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event);
+      this.newQuery.type = tab.$vnode.data.attrs.id;
+      newsList(this.newQuery).then((res) => {
+        this.newsList = res.datas.list;
+      });
     },
-    xiangqing() {},
+    // 新闻详情
+    SeeDetails(row) {
+      this.$router.push({ name: "NewsDetails", query: { uId: row.uId } });
+    },
+    // 公告详情
+    NoticeDetails(row) {
+      this.$router.push({
+        name: "AnnouncementNewsDetails",
+        query: { uId: row.uId },
+      });
+    },
+    onSubmit() {
+      this.initTable();
+    },
+    newsSubmit() {
+      this.newsinitTable();
+    },
+    initTable() {
+      AnnounceList(this.listQuery)
+        .then((response) => {
+          this.AnnounceList = response.datas.list;
+          this.total = response.datas.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.initTable();
+    },
+    handleSizeChange(val) {
+      this.listQuery.pageNum = 1;
+      this.listQuery.pageSize = val;
+      this.initTable();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val;
+      this.initTable();
+    },
+    // 新闻搜索分页
+    newsinitTable() {
+      newsList(this.newQuery)
+        .then((response) => {
+          this.newsList = response.datas.list;
+          this.total = response.datas.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleResetSearch() {
+      this.newQuery = Object.assign({}, newQuery);
+      this.newsinitTable();
+    },
+    handleSizeChanges(val) {
+      this.newQuery.pageNum = 1;
+      this.newQuery.pageSize = val;
+      this.newsinitTable();
+    },
+    handleCurrentChanges(val) {
+      this.newQuery.pageNum = val;
+      this.newsinitTable();
+    },
   },
   created() {
-    slideshow().then((res) => {
-      // console.log(res.datas);
-      this.list = res.datas;
-    }),
-      newsType().then((res) => {
-        // console.log(res.datas);
-        this.newsType = res.datas;
+    this.initTable(),
+    this.newsinitTable()
+      slideshow().then((res) => {
+        this.list = res.datas;
       }),
-      // 公告
-      AnnounceList().then((res) => {
-        console.log(res.datas.list);
-        this.AnnounceList = res.datas.list;
+      newsType().then((res) => {
+        this.newsType = res.datas;
       });
-    // 新闻列表
-    newsList().then((res) => {
-      console.log(res.datas.list);
-      this.newsList = res.datas.list;
-    });
   },
 };
 </script>
 
 <style scoped>
+.fenye {
+  margin-top: 20%;
+}
+.img-box {
+  width: 608px;
+  height: 250px;
+  background-size: 100% 100%;
+}
+.new-box {
+  height: 500px;
+}
+.gonggao-box {
+  display: flex;
+  justify-content: space-between;
+  /* height:47px;line-height:47px; */
+  padding-top: 5px;
+}
 .root-box {
   background-color: #f1f1f1;
+}
+.news-root {
+  display: flex;
+  justify-content: space-between;
 }
 .top-root {
   display: flex;
@@ -137,8 +277,8 @@ export default {
   background: rgba(255, 255, 255, 1);
 }
 .left-box1 {
-  width: 1070px;
-  height: 588px;
+  width: 99%;
+  min-height: 460px;
   padding: 0px 10px 20px 15px;
   margin-top: 10px;
   margin-left: 10px;
@@ -148,7 +288,6 @@ export default {
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
 }
-
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
@@ -173,7 +312,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-left: 20px;
-  font-size: 14px;
+  padding-bottom: 5px;
 }
 .bom-box {
   text-align: center;
@@ -181,26 +320,20 @@ export default {
   height: 60px;
   line-height: 60px;
 }
-.bum-right-box {
-  width: 610px;
-  height: 588px;
-  background: rgba(255, 255, 255, 1);
-  margin: 10px 15px 0px 10px;
-}
+
 .biaoti {
   width: 516px;
   height: 23px;
   font-size: 22px;
   font-weight: bold;
   color: rgba(0, 0, 0, 1);
-  margin: 40px 0px 40px 0;
+  margin-bottom: 10px;
 }
 .neirong {
   width: 608px;
-  height: 62px;
   font-size: 14px;
   color: rgba(76, 76, 76, 1);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-right: 22px;
 }
 .btn-box {
@@ -217,77 +350,11 @@ export default {
   color: rgba(153, 153, 153, 1);
   line-height: 30px;
 }
-.new-box {
-  margin-bottom: 40px;
+.el-icon-arrow-right {
+  padding-left: 200px;
 }
-.tianqi-topright-box {
-  width: 323px;
-  height: 322px;
-  border: 1px solid black;
-}
-.tianqi-topleft-box {
-  width: 287px;
-}
-.data-box {
-  width: 158px;
-  height: 48px;
-  font-size: 18px;
-  color: rgba(153, 153, 153, 1);
-  margin: 29px 53px 140px 63px;
-}
-.tianqi-box {
-  display: inline-block;
-  height: 32px;
-  font-size: 18px;
-  color: rgba(0, 0, 0, 1);
-  line-height: 32px;
-}
-.tianqi-root {
-  margin: 29px 53px 80px 63px;
-}
-.wendu {
-  width: 152px;
-  height: 25px;
-  font-size: 30px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 1);
-}
-.youqing-tishi {
-  width: 462px;
-  height: 16px;
-  font-size: 16px;
-  color: rgba(0, 0, 0, 1);
-  margin: 29px 53px 139px 63px;
-}
-.matter {
-  margin: 5px;
-  font-size: 14px;
+.bom-boxs {
+  margin: 10px;
 }
 </style>
 
-
-    // <div class="top-root new-box">
-    //           <div>
-    //             <img src="../../assets/images/图层8.png" alt />
-    //           </div>
-    //           <div>
-    //             <div class="biaoti">国家卫健委：昨日新增确诊36例，其中本土病例30例</div>
-    //             <div
-    //               class="neirong"
-    //             >8月4日，据国家卫健委官网消息：8月3日0—24时，31个省（自治区、直辖市）和新疆生产建设兵团报告新增确诊病例36例，其中境外输入病例6例（广东4例，上海1例，四川1例），本土病例30例（新疆28例，辽宁2例）；无新增死亡病例；新增疑似病例1例，为境外输入病例......</div>
-    //             <div style="height:30px">
-    //               <span class="btn-size">来源：国家卫生健康委 2020.08.04 14:06</span>
-    //               <span class="btn-box btn-size">查看详情 >></span>
-    //             </div>
-    //           </div>
-    //         </div>
-    //         <div class="top-root">
-    //           <div>
-    //             <span style="margin-right:10px; ">
-    //               <img src="../../assets/images/lingwps.png" alt />
-    //             </span>
-    //             <span>国家卫健委：昨日新增确诊36例，其中本土病例30例</span>
-    //           </div>
-    //           <div class="el-icon-arrow-right"></div>
-    //         </div>

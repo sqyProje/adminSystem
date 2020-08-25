@@ -1,58 +1,68 @@
 <template>
-  <div>
-    <div class="tittle">
-      <b>我的会议</b>
-    </div>
-    <!-- 查询 -->
-    <div class="chaxun-box">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="会议类型:">
-          <el-select v-model="formInline.user" placeholder="全部">
-            <el-option label="线上会议" value="xianshang"></el-option>
-            <el-option label="线下会议" value="xianxia"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="会议状态:">
-          <el-select v-model="formInline.region" placeholder="全部">
-            <el-option label="待参加" value="ToStayIn"></el-option>
-            <el-option label="进行中" value="underway"></el-option>
-            <el-option label="已结束" value="finished"></el-option>
-          </el-select>
+  <div class="app-container">
+    
+    <div class="filter-container">
+      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="会议标题">
+          <el-input v-model="listQuery.title" placeholder="会议关键字"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit" size="small">查询</el-button>
+          <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
       </el-form>
-    </div>
-    <!-- 会议信息 -->
-    <div class="meeting-box">
-      <el-table :data="tableData" border style="width: 100%">
-        <el-table-column header-align="center"  prop="title" label="会议标题"></el-table-column>
-        <el-table-column header-align="center"  prop="startdate" label="会议时间"></el-table-column>
-        <el-table-column header-align="center"  prop="province" label="会议类型">
+      <!-- 会议信息 -->
+      <el-table
+        :data="tableData"
+        v-loading="listLoading"
+        row-key="uId"
+        :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
+        size="small"
+        border
+      >
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column label="会议标题" prop="title"></el-table-column>
+        <el-table-column label="会议时间" prop="startdate"></el-table-column>
+        <el-table-column prop="province" label="会议类型">
+          <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
+        </el-table-column>
+        <el-table-column label="会议状态">
           <template slot-scope="scope">
-              {{scope.row.meetingState ? "线上":"线下"}}
+            <div v-if="scope.row.meetingState=='2'">未开始</div>
+            <div v-if="scope.row.meetingState=='0'">已开始</div>
+            <div v-if="scope.row.meetingState=='1'">进行中</div>
           </template>
         </el-table-column>
-        <el-table-column header-align="center"  label="会议状态">
+        <el-table-column label="操作" fixed="right" width="260">
           <template slot-scope="scope">
-                    <p v-if="scope.row.meetingState=='0'">未开始</p>
-                    <p v-if="scope.row.meetingState=='1'">已开始</p>
-                    <p v-if="scope.row.meetingState=='2'">进行中</p>
-                </template>
-        </el-table-column>
-        <el-table-column header-align="center" prop="meetingroomname" label="地点"></el-table-column>
-        <el-table-column width="200"  label="操作">
-          <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="primary" size="mini" round>查看</el-button>
+            <el-button @click="handleClick(scope.row)" type="primary" size="mini">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination-container">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          layout="total, sizes,prev, pager, next,jumper"
+          :current-page.sync="listQuery.pageNum"
+          :page-size="listQuery.pageSize"
+          :page-sizes="[10,20,30]"
+          :total="total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
-<script>
+<script type="text/ecmascript-6">
+import { Message, MessageBox } from "element-ui";
+
 import { MylistMemories } from "@/api/personalDoor";
+const defaultListQuery = {
+  title: "",
+  pageNum: 1,
+  pageSize: 10,
+};
 export default {
   data() {
     return {
@@ -60,37 +70,61 @@ export default {
         user: "",
         region: "",
       },
+      listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
+      total: null,
+      dialogTitle: "",
+      dialogVisible: false,
+      AddEditInfo: {
+        uId: "",
+        name: "",
+        sketch: "",
+        state: "",
+      },
     };
   },
   created() {
-    MylistMemories().then((res) => {
-      // console.log(res.datas.list);
-      this.tableData = res.datas.list;
-    });
+    this.initTable();
   },
   methods: {
     onSubmit() {
-      console.log("submit!");
+      this.initTable();
+    },
+    initTable() {
+      this.listLoading = true;
+      MylistMemories(this.listQuery)
+        .then((response) => {
+          this.listLoading = false;
+          this.tableData = response.datas.list;
+          this.total = response.datas.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleResetSearch() {
+      this.listQuery = Object.assign({}, defaultListQuery);
+      this.initTable();
+    },
+    handleSizeChange(val) {
+      this.listQuery.pageNum = 1;
+      this.listQuery.pageSize = val;
+      this.initTable();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val;
+      this.initTable();
     },
     handleClick(row) {
-      // console.log(row.uId);
-      this.$router.push({name:'AboutICCCAS',query: {uId:row.uId}})
+      this.$router.push({ name: "AboutICCCAS", query: { uId: row.uId } });
     },
   },
 };
 </script>
-<style>
-.meeting-box {
-  width: 94%;
-  margin-left: 3%;
-}
+  <style  scoped>
 .tittle {
-  padding: 10px;
+  padding: 5px;
   border-bottom: 1px solid #cccccc;
-}
-.chaxun-box {
-  padding-left: 50px;
-  padding-top: 20px;
+  margin-bottom: 20px;
 }
 </style>
