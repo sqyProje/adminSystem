@@ -7,7 +7,7 @@
     </div>
     <div class="Letters-messages">
       <div>{{neirong.title}}</div>
-      <div class="Information-style">收件人:{{neirong.realname}}</div>
+      <div class="Information-style">收件人:{{neirong.toRealname}}</div>
       <div class="Information-style">时间:{{neirong.createdate}}</div>
     </div>
       <!-- <Editor :curValue="neirong.content" @input="newContent"></Editor> -->

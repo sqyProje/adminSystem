@@ -11,7 +11,7 @@
         <Editor :curValue="neirong.content" @input="newContent"></Editor>
       </el-form-item>
       <!--  @change="stationTrigger" -->
-      <el-form-item style="width: 700px" label="收件人" prop="name">
+      <el-form-item style="width: 700px" label="收件人" >
         <el-autocomplete
           popper-class="my-autocomplete"
           v-model="neirong.realname"
@@ -79,7 +79,6 @@ export default {
       });
     },
       handleSelect(item) {
-      console.log(item);
       this.naieong = item;
     },
     querySearch(queryString, cb) {
