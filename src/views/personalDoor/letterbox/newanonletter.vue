@@ -5,8 +5,8 @@
     </div>
     <div class="ToReport">
       <el-form :model="ruleForm" ref="ruleForm" label-width="200px" class="demo-ruleForm">
-        <el-form-item style="width: 700px" label="主题" prop="theme">
-          <el-input v-model="ruleForm.theme"></el-input>
+        <el-form-item size="mini" style="width: 700px;" label="主题" prop="theme">
+          <el-input  v-model="ruleForm.theme"></el-input>
         </el-form-item>
         <el-form-item style="width: 700px" label="内容" prop="substance">
           <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
@@ -63,7 +63,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .tittle {
   padding: 10px;
   border-bottom: 1px solid #cccccc;
@@ -75,6 +75,9 @@ export default {
   border-radius: 5px 5px 0px 0px;
   margin-top: 10px;
 }
+#height-input{
+    height: 30px;
+ }
 
 </style>
 
