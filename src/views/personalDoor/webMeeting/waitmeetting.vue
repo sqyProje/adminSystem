@@ -14,7 +14,7 @@
       </el-form>
     
     <!-- 会议信息 -->
-    <div class="meeting-box">
+   
       <el-table
         :data="tableData"
         v-loading="listLoading"
@@ -51,7 +51,7 @@
         ></el-pagination>
       </div>
     </div>
-    </div>
+    
   </div>
 </template>
 <script>
@@ -65,17 +65,9 @@ const defaultListQuery = {
 export default {
   data() {
     return {
+      listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
-     listQuery: Object.assign({}, defaultListQuery),
-      total: null,
-      dialogTitle: "",
-      dialogVisible: false,
-      AddEditInfo: {
-        uId: "",
-        name: "",
-        sketch: "",
-        state: "",
-      },
+      total: null, 
     };
   },
   created() {
@@ -110,11 +102,10 @@ export default {
       this.listQuery.pageNum = val;
       this.initTable();
     },
-    handleClick(row){
- this.$router.push({ name: "AboutICCCAS", query: { uId: row.uId } });
-    }
+    handleClick(row) {
+      this.$router.push({ name: "AboutICCCAS", query: { uId: row.uId } });
+    },
   },
-  
 };
 </script>
 <style scoped>

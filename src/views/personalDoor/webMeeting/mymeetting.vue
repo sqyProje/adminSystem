@@ -59,28 +59,16 @@ import { Message, MessageBox } from "element-ui";
 
 import { MylistMemories } from "@/api/personalDoor";
 const defaultListQuery = {
-  title: "",
+  title:"",
   pageNum: 1,
   pageSize: 10,
 };
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
       listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
-      total: null,
-      dialogTitle: "",
-      dialogVisible: false,
-      AddEditInfo: {
-        uId: "",
-        name: "",
-        sketch: "",
-        state: "",
-      },
+      total: null, 
     };
   },
   created() {
@@ -92,6 +80,7 @@ export default {
     },
     initTable() {
       this.listLoading = true;
+
       MylistMemories(this.listQuery)
         .then((response) => {
           this.listLoading = false;
@@ -102,6 +91,7 @@ export default {
           console.log(error);
         });
     },
+    
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);
       this.initTable();

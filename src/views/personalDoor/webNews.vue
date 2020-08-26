@@ -60,14 +60,6 @@
     <div class="left-box1">
       <div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
-            <el-form-item label="新闻搜索">
-              <el-input v-model="newQuery.title" placeholder="请输入关键字"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
-            </el-form-item>
-          </el-form>
           <el-tab-pane
             v-for="(item,i) in newsType"
             :key="i"
@@ -75,16 +67,24 @@
             :label="item.name"
             :name="item.name"
           >
-            <div class="top-root">
+            <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
+              <el-form-item label="新闻搜索">
+                <el-input v-model="newQuery.title" placeholder="请输入关键字"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
+              </el-form-item>
+            </el-form>
+            <div class="top-root" >
               <div v-for="(item,i) in newsList" :key="item.i">
-                <div v-if="i==0">
+                 <div v-if="i==0">
                   <div>
                     <img class="img-box" :src="item.picPath" alt />
                   </div>
                   <div class="biaoti">{{item.title}}</div>
                   <div class="neirong">{{item.sketch}}</div>
                   <div style="height:30px">
-                    <span class="btn-size">来源：国家卫生健康委 {{item.publishDate}}</span>
+                    <span class="btn-size">{{item.publishDate}}</span>
                     <span class="btn-box btn-size" @click="SeeDetails(item)">查看详情 >></span>
                   </div>
                 </div>
@@ -94,23 +94,24 @@
                   <span>
                     <img src="../../assets/images/lingwps.png" alt />
                   </span>
-                  <span>{{item.title}}{{item.title}}{{item.title}}{{item.title}}{{item.title}}</span>
+                  <span>{{item.title}}</span>
                   <span class="el-icon-arrow-right"></span>
                 </div>
               </div>
             </div>
+
             <div class="fenye">
-                <el-pagination
-                  background
-                  @size-change="handleSizeChanges"
-                  @current-change="handleCurrentChanges"
-                  layout="total, sizes,prev, pager, next,jumper"
-                  :current-page.sync="newQuery.pageNum"
-                  :page-size="newQuery.pageSize"
-                  :page-sizes="[10,20,30]"
-                  :total="total"
-                ></el-pagination>
-              </div>
+              <el-pagination
+                background
+                @size-change="handleSizeChanges"
+                @current-change="handleCurrentChanges"
+                layout="total, sizes,prev, pager, next,jumper"
+                :current-page.sync="listQuery.pageNum"
+                :page-size="listQuery.pageSize"
+                :page-sizes="[10,20,30]"
+                :total="newstotal"
+              ></el-pagination>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -139,8 +140,8 @@ import {
   AnnounceList,
   newsList,
 } from "@/api/personalDoor";
-import { Loading } from 'element-ui';
-import loginUserVue from '../manageDoor/menu_pers/loginUser.vue';
+import { Loading } from "element-ui";
+import loginUserVue from "../manageDoor/menu_pers/loginUser.vue";
 export default {
   data() {
     return {
@@ -148,26 +149,21 @@ export default {
       newQuery: Object.assign({}, newListQuery),
       list: [],
       newsType: [],
-      activeName:'新闻',
+      activeName: "新闻",
       AnnounceList: [],
       total: null,
-      newsList:[],
-      type: "a7c11246617946ed815ba662b1cc4d16",
+      newstotal: null,
+      newsList: [],
     };
   },
   methods: {
     handleClick(tab, event) {
       this.newQuery.type = tab.$vnode.data.attrs.id;
-      this.type = this.newQuery.type
-      // console.log(tab.$vnode.data.attrs.id);
-      newsList(this.type).then((res) => {
-        this.newsList = res.datas.list;
-        
-      });
+      this.newsinitTable();
     },
     // 新闻详情
     SeeDetails(row) {
-      this.$router.push({ name: "NewsDetails", query: { uId: row.uId } });
+      this.$router.push({ name: "NewsDetails", query:{ uId: row.uId }});
     },
     // 公告详情
     NoticeDetails(row) {
@@ -207,12 +203,10 @@ export default {
     },
     // 新闻搜索分页
     newsinitTable() {
-      console.log(1);
-      // this.handleClick()
       newsList(this.newQuery)
         .then((response) => {
           this.newsList = response.datas.list;
-          this.total = response.datas.total;
+          this.newstotal = response.datas.total;
         })
         .catch((error) => {
           console.log(error);
@@ -234,20 +228,20 @@ export default {
   },
   created() {
     this.initTable(),
-    // this.newsinitTable()
       slideshow().then((res) => {
         this.list = res.datas;
       }),
-      newsType().then((res) => {
-        this.newsType = res.datas;
-      });
-       newsList(this.type).then((res) => {
-        this.newsList = res.datas.list;
-        // this.newsList = response.datas.list;
-        //   this.total = response.datas.total;
-      });
-  }
-}
+      newsType()
+        .then((res) => {
+          this.newsType = res.datas;
+          this.newQuery.type = res.datas[0].uId;
+        })
+        .then(() => {
+          this.newsinitTable();
+        });
+    this.newsinitTable();
+  },
+};
 </script>
 
 <style scoped>

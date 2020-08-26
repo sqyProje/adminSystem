@@ -26,14 +26,14 @@ export function newsType(){
   })
 }
 // 新闻列表 /person/news/list
-export function newsList(params){
+export function newsList(params) {
   return request({
-    url: '/person/news/list?type='+params,
+    url: '/person/news/list',
     method: 'get',
     params: params
   })
 }
-// 新闻详情 /person/news/list
+// 新闻详情 
 export function newsdetails(params){
   return request({
     url: '/person/news/details?uId='+params,
@@ -49,9 +49,6 @@ export function MylistMemories(params){
   return request({
     url: '/person/meeting/list',
     method: 'get',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
     params: params
   })
 }

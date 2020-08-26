@@ -14,7 +14,6 @@
    
       <!-- <Editor :curValue="neirong.content" @input="newContent"></Editor> -->
       <div class="neirong-box" v-html="neirong.content"></div>
-    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
 <script >
@@ -65,7 +64,7 @@ export default {
   padding-left: 40px;
 }
 .Letters-messages {
-  height: 100px;
+  min-height: 90px;
   background: rgba(243, 247, 255, 1);
   padding: 10px;
   padding-left: 40px;

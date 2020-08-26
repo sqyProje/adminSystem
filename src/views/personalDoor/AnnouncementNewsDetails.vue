@@ -1,8 +1,11 @@
 <template >
+<div>
+<div class="fanhui" @click="gofanhui">返回</div>
   <div class="root-box">
       <div class="title-style"><b>{{neirong.title}}</b></div>
       <div class="news-content" v-html="neirong.content"></div>
       <div class="news-date">{{neirong.createdate}}</div>
+  </div>
   </div>
 </template>
       
@@ -16,12 +19,14 @@ export default {
     };
   },
    methods: {
-
     details1(uId) {
       noticedetails(uId).then((res) => {
         this.neirong = res.datas;
       });
     },
+    gofanhui(){
+      this.$router.back()
+    }
   },
   created(){
   },
@@ -35,7 +40,6 @@ export default {
 <style scoped>
 .title-style{
     font-size: 38px;
-    /* margin: 0 auto; */
     text-align: center;
 }
 .root-box{
@@ -49,6 +53,11 @@ export default {
     text-align: center;
 }
 .news-date{
-    padding-left: 90%;
+    padding-left: 70%;
+}
+.fanhui{
+  margin: 10px;
+  margin-left: 30px;
+  color: green;
 }
 </style>
