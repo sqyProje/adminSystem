@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    
     <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item label="会议标题">
@@ -18,19 +17,18 @@
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size="small"
+       
         border
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="会议标题" prop="title"></el-table-column>
         <el-table-column label="会议时间" prop="startdate"></el-table-column>
-        <el-table-column prop="province" label="会议类型">
-          <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
-        </el-table-column>
+        <el-table-column prop="meetingroomname" label="会议室"></el-table-column>
         <el-table-column label="会议状态">
           <template slot-scope="scope">
-            <div v-if="scope.row.meetingState=='2'">进行中</div>
-            <div v-if="scope.row.meetingState=='0'">已参加</div>
-            <div v-if="scope.row.meetingState=='1'">待参加</div>
+            <div class="focus-two" v-if="scope.row.meetingState=='2'">进行中</div>
+            <div class="focus-zero" v-if="scope.row.meetingState=='0'">已参加</div>
+            <div class="focus-one" v-if="scope.row.meetingState=='1'">待参加</div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="260">
@@ -59,7 +57,7 @@ import { Message, MessageBox } from "element-ui";
 
 import { MylistMemories } from "@/api/personalDoor";
 const defaultListQuery = {
-  title:"",
+  title: "",
   pageNum: 1,
   pageSize: 10,
 };
@@ -68,7 +66,7 @@ export default {
     return {
       listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
-      total: null, 
+      total: null,
     };
   },
   created() {
@@ -91,7 +89,7 @@ export default {
           console.log(error);
         });
     },
-    
+
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);
       this.initTable();
@@ -116,5 +114,26 @@ export default {
   padding: 5px;
   border-bottom: 1px solid #cccccc;
   margin-bottom: 20px;
+}
+.focus-two {
+  width: 60px;
+  text-align: center;
+  background: rgba(50, 177, 109, 1);
+  border-radius: 5px;
+   color: #ffffff;
+}
+.focus-zero {
+  width: 60px;
+  background: rgba(204, 204, 204, 1);
+  border-radius: 5px;
+  text-align: center;
+   color: #ffffff;
+}
+.focus-one {
+  width: 60px;
+  background:rgba(253,150,2,1);
+  border-radius: 5px;
+  text-align: center;
+  color: #ffffff;
 }
 </style>

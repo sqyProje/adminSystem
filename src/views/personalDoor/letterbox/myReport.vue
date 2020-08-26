@@ -33,7 +33,7 @@
           :page-size="listQuery.pageSize" :page-sizes="[10,20,30]" :total="total"></el-pagination>
       </div>
     </div>
-    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
+   
   </div>
 </template>
 <script>
@@ -115,13 +115,7 @@
     margin-top: 10px;
   }
 
-  .bom-box {
-    text-align: center;
-    font-size: 12px;
-    height: 50px;
-    line-height: 50px;
-    background-color: #f5f5f5;
-  }
+
 
   el-table {
     border-radius: 25px;
