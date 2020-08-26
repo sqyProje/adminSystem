@@ -27,7 +27,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
 <script>
@@ -130,13 +129,7 @@ export default {
   border: 5px solid #f5f5f5;
   border-radius: 5px 5px 0px 0px;
 }
-.bom-box {
-  text-align: center;
-  font-size: 12px;
-  height: 60px;
-  line-height: 60px;
-  background-color: #f5f5f5;
-}
+
 </style>
 
 

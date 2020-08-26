@@ -1,15 +1,17 @@
 
 <template>
-  <!-- 汇报信件详情 -->
+  <!-- 匿名信详情 -->
   <div class="root-box">
     <div class="title-box">
       <el-button type="primary" size="mini" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
     </div>
     <div class="Letters-messages">
       <div>{{neirong.title}}</div>
-      <div class="Information-style">收件人:{{neirong.toRealname}}</div>
-      <div class="Information-style">时间:{{neirong.createdate}}</div>
+      <div class="Information-style">发件人:&nbsp;&nbsp;<span>{{neirong.toRealname}}</span></div>
+      <div class="Information-style">时&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;&nbsp;{{neirong.createdate}}</div>
     </div>
+
+   
       <!-- <Editor :curValue="neirong.content" @input="newContent"></Editor> -->
       <div class="neirong-box" v-html="neirong.content"></div>
   </div>
@@ -22,7 +24,6 @@ export default {
   data() {
     return {
       neirong: [],
-      toReportRealName:""
     };
   },
   components: {
@@ -40,8 +41,6 @@ export default {
   },
   mounted() {
     this.details1(this.$route.query.uId);
-    // this.toReportRealName = this.details1(this.$route.query.toReportRealName);
-    // console.log(this.toReportRealName);
   },
   created() {},
 };
@@ -56,7 +55,7 @@ export default {
   background-color: #f5f5f5;
 }
 .root-box {
-  margin: 10px;
+  margin: 5px;
 }
 .title-box {
   height: 50px;
@@ -69,19 +68,22 @@ export default {
   background: rgba(243, 247, 255, 1);
   padding: 10px;
   padding-left: 40px;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
   color: rgba(0, 0, 0, 1);
 }
 .Information-style {
-  padding: 5px;
-  font-size: 12px;
+  padding-top: 10px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(151, 151, 151, 1);
 }
 .neirong-box {
   height: 665px;
   padding: 50px;
+}
+span{
+  color:rgba(15,155,5,1);
 }
 </style>
 

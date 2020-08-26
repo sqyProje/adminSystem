@@ -3,12 +3,12 @@
   <!-- 匿名信详情 -->
   <div class="root-box">
     <div class="title-box">
-      <el-button type="info" size="mini" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
+      <el-button type="primary" size="mini" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
     </div>
     <div class="Letters-messages">
       <div>{{neirong.title}}</div>
-      <div class="Information-style">收件人:{{neirong.realname}}</div>
-      <div class="Information-style">时间:{{neirong.createdate}}</div>
+      <div class="Information-style">发件人:&nbsp;&nbsp;<span>{{neirong.realname}}</span></div>
+      <div class="Information-style">时&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;&nbsp;{{neirong.createdate}}</div>
     </div>
 
    
@@ -68,19 +68,22 @@ export default {
   background: rgba(243, 247, 255, 1);
   padding: 10px;
   padding-left: 40px;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
   color: rgba(0, 0, 0, 1);
 }
 .Information-style {
-  padding: 5px;
-  font-size: 12px;
+  padding-top: 10px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(151, 151, 151, 1);
 }
 .neirong-box {
   height: 665px;
   padding: 50px;
+}
+span{
+  color:rgba(15,155,5,1);
 }
 </style>
 

@@ -13,12 +13,6 @@
         <span>{{tableData.title}}</span>
       </div>
       <div class="font-color">
-        会议状态:
-        <span v-if="tableData.state==0">未开始</span>
-        <span v-if="tableData.state==1">已结束</span>
-        <span v-if="tableData.state==2">进行中</span>
-      </div>
-      <div class="font-color">
         开始时间:
         <span>{{tableData.startdate}}</span>
       </div>
@@ -89,7 +83,7 @@ export default {
 }
 .name-size {
   color: aliceblue;
-  background: rgba(191, 191, 191, 1);
+  background: #4287c7;
   border-radius: 3px;
   padding: 3px;
   margin: 10px;
@@ -109,6 +103,7 @@ span {
   width: 700px;
   height: 200px;
 }
+
 
 </style>
 

@@ -116,7 +116,7 @@
         </el-tabs>
       </div>
     </div>
-    <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
+   
   </div>
 </template>
 
@@ -312,12 +312,7 @@ export default {
   padding-left: 20px;
   padding-bottom: 5px;
 }
-.bom-box {
-  text-align: center;
-  font-size: 12px;
-  height: 60px;
-  line-height: 60px;
-}
+
 
 .biaoti {
   width: 516px;
