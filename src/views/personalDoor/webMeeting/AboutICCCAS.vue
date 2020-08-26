@@ -89,7 +89,7 @@ export default {
 }
 .name-size {
   color: aliceblue;
-  background: rgba(191, 191, 191, 1);
+  background: #4287c7;
   border-radius: 3px;
   padding: 3px;
   margin: 10px;

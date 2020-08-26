@@ -106,8 +106,8 @@
                 @size-change="handleSizeChanges"
                 @current-change="handleCurrentChanges"
                 layout="total, sizes,prev, pager, next,jumper"
-                :current-page.sync="listQuery.pageNum"
-                :page-size="listQuery.pageSize"
+                :current-page.sync="newQuery.pageNum"
+                :page-size="newQuery.pageSize"
                 :page-sizes="[10,20,30]"
                 :total="newstotal"
               ></el-pagination>
