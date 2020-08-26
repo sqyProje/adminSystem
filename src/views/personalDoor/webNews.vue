@@ -106,8 +106,8 @@
                 @size-change="handleSizeChanges"
                 @current-change="handleCurrentChanges"
                 layout="total, sizes,prev, pager, next,jumper"
-                :current-page.sync="listQuery.pageNum"
-                :page-size="listQuery.pageSize"
+                :current-page.sync="newQuery.pageNum"
+                :page-size="newQuery.pageSize"
                 :page-sizes="[10,20,30]"
                 :total="newstotal"
               ></el-pagination>
@@ -119,7 +119,7 @@
     <div class="bom-box">河南健康奇点网络科技有限公司©All Rights Reserved.</div>
   </div>
 </template>
-      
+
 <script>
 const defaultListQuery = {
   name: "",
@@ -235,6 +235,7 @@ export default {
         .then((res) => {
           this.newsType = res.datas;
           this.newQuery.type = res.datas[0].uId;
+          this.activeName  = res.datas[0].name
         })
         .then(() => {
           this.newsinitTable();
