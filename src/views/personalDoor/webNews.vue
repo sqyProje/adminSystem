@@ -64,7 +64,7 @@
             v-for="(item,i) in newsType"
             :key="i"
             :id="item.uId"
-            :label="item.name"
+            :label="item.sketch"
             :name="item.name"
           >
             <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
