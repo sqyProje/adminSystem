@@ -28,9 +28,9 @@
         </el-table-column>
         <el-table-column label="会议状态">
           <template slot-scope="scope">
-            <div v-if="scope.row.meetingState=='2'">未开始</div>
-            <div v-if="scope.row.meetingState=='0'">已开始</div>
-            <div v-if="scope.row.meetingState=='1'">进行中</div>
+            <div v-if="scope.row.meetingState=='2'">进行中</div>
+            <div v-if="scope.row.meetingState=='0'">已参加</div>
+            <div v-if="scope.row.meetingState=='1'">待参加</div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="260">

@@ -3,7 +3,7 @@
   <!-- 汇报信件详情 -->
   <div class="root-box">
     <div class="title-box">
-      <el-button type="primary"  @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
+      <el-button type="primary" size="mini" @click="goBack" icon="el-icon-d-arrow-left" plain>返回</el-button>
     </div>
     <div class="Letters-messages">
       <div>{{neirong.title}}</div>

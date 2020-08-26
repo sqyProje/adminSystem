@@ -20,6 +20,7 @@
     </div>
     <div class="my-Report">
       <el-table
+      border
         :row-style="{height:'40px'}"
         :header-row-style="{height:'40px'}"
         :cell-style="{padding:'1px'}"

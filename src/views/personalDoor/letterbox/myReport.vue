@@ -15,7 +15,7 @@
       </el-form>
     </div>
     <div class="my-Report">
-      <el-table :row-style="{height:'36px'}" :header-row-style="{height:'36px'}" :cell-style="{padding:'2px',}"
+      <el-table border :row-style="{height:'36px'}" :header-row-style="{height:'36px'}" :cell-style="{padding:'2px',}"
         :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}" :data="myReport" style="width: 100%">
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createDate" label="日期"></el-table-column>

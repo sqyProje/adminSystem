@@ -1,8 +1,11 @@
 <template >
+<div>
+<div class="fanhui" @click="gofanhui">返回</div>
   <div class="root-box">
       <div class="title-style"><b>{{neirong.title}}</b></div>
       <div class="news-content" v-html="neirong.content"></div>
       <div class="news-date">{{neirong.createdate}}</div>
+  </div>
   </div>
 </template>
       
@@ -21,6 +24,9 @@ export default {
         this.neirong = res.datas;
       });
     },
+    gofanhui(){
+      this.$router.back()
+    }
   },
   created(){
   },
@@ -48,5 +54,10 @@ export default {
 }
 .news-date{
     padding-left: 70%;
+}
+.fanhui{
+  margin: 10px;
+  margin-left: 30px;
+  color: green;
 }
 </style>

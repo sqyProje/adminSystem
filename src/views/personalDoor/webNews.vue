@@ -94,11 +94,12 @@
                   <span>
                     <img src="../../assets/images/lingwps.png" alt />
                   </span>
-                  <span>{{item.title}}</span>
+                  <span>{{item.title}}{{item.title}}{{item.title}}{{item.title}}{{item.title}}</span>
                   <span class="el-icon-arrow-right"></span>
                 </div>
               </div>
-              <div class="fenye">
+            </div>
+            <div class="fenye">
                 <el-pagination
                   background
                   @size-change="handleSizeChanges"
@@ -110,7 +111,6 @@
                   :total="total"
                 ></el-pagination>
               </div>
-            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -252,28 +252,20 @@ export default {
 
 <style scoped>
 .fenye {
-  margin-top: 20%;
+  margin-left: 30%;
 }
 .img-box {
   width: 608px;
   height: 250px;
   background-size: 100% 100%;
 }
-.new-box {
-  height: 500px;
-}
 .gonggao-box {
   display: flex;
   justify-content: space-between;
-  /* height:47px;line-height:47px; */
   padding-top: 5px;
 }
 .root-box {
   background-color: #f1f1f1;
-}
-.news-root {
-  display: flex;
-  justify-content: space-between;
 }
 .top-root {
   display: flex;

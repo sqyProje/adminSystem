@@ -3,19 +3,20 @@
     
     <!-- 查询 -->
     <div class="filter-container">
-      <el-form size="mini" :inline="true" :model="formInline" class="demo-form-inline">
-         <el-form-item label="主题名称">
-          <el-input v-model="listQuery.title" placeholder="主题关键字"></el-input>
+      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="会议标题">
+          <el-input v-model="listQuery.title" placeholder="会议关键字"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
+          <el-button type="primary" @click="onSubmit" size="small">查询</el-button>
+          <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    
     <!-- 会议信息 -->
     <div class="meeting-box">
       <el-table
-        :data="tableData1"
+        :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
@@ -25,9 +26,9 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="title" label="会议标题"></el-table-column>
         <el-table-column prop="publishdate" label="会议时间"></el-table-column>
-        <el-table-column prop="tableData1" label="会议类型">
+        <!-- <el-table-column prop="province" label="会议类型">
           <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="sponsor" label="发起人"></el-table-column>
         <el-table-column prop="meetingroomname" label="地点"></el-table-column>
         <el-table-column label="操作" width="260">
@@ -36,7 +37,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="pagination-container">
+      
+       <div class="pagination-container">
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -49,26 +51,22 @@
         ></el-pagination>
       </div>
     </div>
+    </div>
   </div>
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
 import { ToAttendMeeting } from "@/api/personalDoor";
 const defaultListQuery = {
-  title: "",
-  sketch: "",
+  title:"",
   pageNum: 1,
   pageSize: 10,
 };
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-        region: "",
-      },
-      tableData1: [],
-      listQuery: Object.assign({}, defaultListQuery),
+      tableData: [],
+     listQuery: Object.assign({}, defaultListQuery),
       total: null,
       dialogTitle: "",
       dialogVisible: false,
@@ -92,7 +90,7 @@ export default {
       ToAttendMeeting(this.listQuery)
         .then((response) => {
           this.listLoading = false;
-          this.tableData1 = response.datas.list;
+          this.tableData = response.datas.list;
           this.total = response.datas.total;
         })
         .catch((error) => {
