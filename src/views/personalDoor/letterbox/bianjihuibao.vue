@@ -11,22 +11,18 @@
         <Editor :curValue="neirong.content" @input="newContent"></Editor>
       </el-form-item>
       <!--  @change="stationTrigger" -->
-      <el-form-item label="收件人">
-        <el-select
-        class="shoujian-box"
-          v-model="neirong.name"
-          placeholder="收件人"
-        > 
-          <el-option
-            v-for="item in stationData"
-            :value="item.uId"
-            :key="item.uId"
-          >{{item.name}}</el-option>
-        </el-select>
+      <el-form-item style="width: 700px" label="收件人" prop="name">
+        <el-autocomplete
+          popper-class="my-autocomplete"
+          v-model="neirong.realname"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入内容"
+          @select="handleSelect"
+        ></el-autocomplete>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="submitForm('ruleForm')">发送</el-button>
-        <el-button @click="resetForms('ruleForm')">保存为草稿</el-button>
+        <el-button type="success" @click="submitForm('neirong')">发送</el-button>
+        <el-button @click="resetForms('neirong')">保存为草稿</el-button>
         <el-button @click="resetForm()">关闭</el-button>
       </el-form-item>
     </el-form>
@@ -58,11 +54,11 @@ export default {
         },
       },
       neirong: {
-        title: {},
+        title: "",
         content: "",
         toRealname: "",
       },
-      stationData: '',
+      stationData: [],
     };
   },
   components: {
@@ -79,7 +75,20 @@ export default {
   methods: {
     editReport1(uId) {
       editReport(uId).then((res) => {
-        this.neirong = res.datas != null ?res.datas :[] ;
+        this.neirong = res.datas != null ? res.datas : [];
+      });
+    },
+      handleSelect(item) {
+      console.log(item);
+      this.naieong = item;
+    },
+    querySearch(queryString, cb) {
+      getToReport().then(({ datas }) => {
+        for (var i = 0; i < datas.length; i++) {
+          datas[i].value = datas[i].realname;
+          datas[i].id = datas[i].uId;
+        }
+        cb(datas);
       });
     },
     submitForm(formName) {},
@@ -91,11 +100,11 @@ export default {
       let ruleFormss = {
         title: this.neirong.title,
         content: this.neirong.content,
-        toReportId: this.neirong.toRealname,
+        toReportId: this.naieong.id,
         state: 0,
         uId: this.neirong.uId,
       };
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.neirong.validate((valid) => {
         editReports(ruleFormss).then((response) => {
           this.$router.back(-1);
         });
@@ -106,7 +115,7 @@ export default {
       let ruleFormss = {
         title: this.neirong.title,
         content: this.neirong.content,
-        toReportId: this.state2,
+        toReportId: this.naieong.id,
         state: 1,
         uId: this.neirong.uId,
       };
@@ -116,10 +125,10 @@ export default {
         });
       });
     },
-     newContent(val){
-//         console.log(val)
-        this.neirong.content= val
-      }
+    newContent(val) {
+      //         console.log(val)
+      this.neirong.content = val;
+    },
   },
 };
 </script>

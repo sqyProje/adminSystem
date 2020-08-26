@@ -14,7 +14,7 @@
            <el-form-item style="width: 700px" label="收件人" prop="name">
         <el-autocomplete
           popper-class="my-autocomplete"
-          
+          v-model="state2.realname"
           :fetch-suggestions="querySearch"
           placeholder="请输入内容"
           @select="handleSelect"
@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       ruleForm: {},
-      state2: "",
+      state2: [],
       tableData: [],
       editorOption: {
         modules: {
@@ -65,12 +65,12 @@ export default {
     
   },
   methods: {
-    submitForm(formName) {},
     resetForm(formName) {
       this.$router.back();
     },
     handleSelect(item) {
-      this.state2 = item.id;
+      console.log(item);
+      this.state2 = item;
     },
     querySearch(queryString, cb) {
       getToReport().then(({ datas }) => {
@@ -86,7 +86,7 @@ export default {
       let ruleFormss = {
         title: this.ruleForm.theme,
         content: this.tableData.content,
-        toReportId: this.state2,
+        toReportId: this.state2.id,
         state: 0,
       };
       this.$refs.ruleForm.validate((valid) => {
@@ -100,7 +100,7 @@ export default {
       let ruleFormss = {
         title: this.ruleForm.theme,
         content: this.tableData.content,
-        toReportId: this.state2,
+        toReportId: this.state2.id,
         state: 1,
       };
       var ss = JSON.stringify(ruleFormss);
