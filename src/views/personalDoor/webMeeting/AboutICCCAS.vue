@@ -20,7 +20,7 @@
       </div>
       <div class="font-color">
         开始时间:
-        <span>{{tableData.updatedate}}</span>
+        <span>{{tableData.startdate}}</span>
       </div>
       <div class="font-color">
         结束时间:
@@ -48,13 +48,10 @@ export default {
 
   data() {
     return {
-      tableData: {
-       
-      },
+      tableData: {},
       name: [],
     };
   },
-  computed() {},
   created() {},
   mounted() {
     this.MyList(this.$route.query.uId);

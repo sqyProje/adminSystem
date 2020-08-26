@@ -11,7 +11,15 @@
         <el-form-item style="width: 700px" label="内容" prop="substance">
           <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
         </el-form-item>
-
+           <el-form-item style="width: 700px" label="收件人" prop="name">
+        <el-autocomplete
+          popper-class="my-autocomplete"
+          
+          :fetch-suggestions="querySearch"
+          placeholder="请输入内容"
+          @select="handleSelect"
+        ></el-autocomplete>
+      </el-form-item>
         <el-form-item>
           <el-button type="success" icon="el-icon-s-promotion" @click="submitForm('ruleForm')">发送</el-button>
           <el-button @click="resetForms('ruleForm')">保存为草稿</el-button>
@@ -36,8 +44,6 @@ export default {
   data() {
     return {
       ruleForm: {},
-      restaurants: [],
-      state1: "",
       state2: "",
       tableData: [],
       editorOption: {
@@ -105,7 +111,7 @@ export default {
       });
     },
     newContent(val){
-        console.log(val)
+//         console.log(val)
         this.tableData.content= val
       }
   },

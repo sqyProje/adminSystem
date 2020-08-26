@@ -3,21 +3,26 @@
     <div class="tittle">
       <b>去汇报</b>
     </div>
-    <el-form :model="ruleForm" ref="ruleForm" label-width="150px" class="demo-ruleForm">
-      <el-form-item style="width: 700px" label="主题" prop="theme">
-        <el-input v-model="ruleForm"></el-input>
+    <el-form :model="neirong" ref="neirong" label-width="150px" class="demo-ruleForm">
+      <el-form-item style="width: 700px" label="主题">
+        <el-input v-model="neirong.title"></el-input>
       </el-form-item>
-      <el-form-item style="width: 700px" label="内容详情" prop="substance">
+      <el-form-item style="width: 700px" label="内容详情">
         <Editor :curValue="neirong.content" @input="newContent"></Editor>
       </el-form-item>
-      <el-form-item style="width: 700px" label="收件人" prop="name">
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="neirong.toRealname"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入内容"
-          @select="handleSelect"
-        ></el-autocomplete>
+      <!--  @change="stationTrigger" -->
+      <el-form-item label="收件人">
+        <el-select
+        class="shoujian-box"
+          v-model="neirong.name"
+          placeholder="收件人"
+        > 
+          <el-option
+            v-for="item in stationData"
+            :value="item.uId"
+            :key="item.uId"
+          >{{item.name}}</el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="submitForm('ruleForm')">发送</el-button>
@@ -42,8 +47,6 @@ import {
 export default {
   data() {
     return {
-      ruleForm: {},
-      state1: "",
       state2: "",
       tableData: [],
       editorOption: {
@@ -54,46 +57,41 @@ export default {
           ],
         },
       },
-      neirong: [],
+      neirong: {
+        title: {},
+        content: "",
+        toRealname: "",
+      },
+      stationData: '',
     };
   },
-   components:{
-      Editor
-    },
-  created() {},
+  components: {
+    Editor,
+  },
+  created() {
+    getToReport().then((response) => {
+      this.stationData = response.datas;
+    });
+  },
   mounted() {
     this.editReport1(this.$route.query.uId);
   },
   methods: {
     editReport1(uId) {
       editReport(uId).then((res) => {
-        this.neirong = res.datas;
-        this.ruleForm = res.datas.title;
-        //  console.log(res.datas.title);
+        this.neirong = res.datas != null ?res.datas :[] ;
       });
     },
     submitForm(formName) {},
     resetForm(formName) {
       this.$router.back();
     },
-    handleSelect(item) {
-      this.state2 = item.id;
-    },
-    querySearch(queryString, cb) {
-      getToReport().then(({ datas }) => {
-        for (var i = 0; i < datas.length; i++) {
-          datas[i].value = datas[i].realname;
-          datas[i].id = datas[i].uId;
-        }
-        cb(datas);
-      });
-    },
     // 保存草稿
     resetForms() {
       let ruleFormss = {
         title: this.neirong.title,
         content: this.neirong.content,
-        toReportId: this.state2,
+        toReportId: this.neirong.toRealname,
         state: 0,
         uId: this.neirong.uId,
       };
@@ -112,15 +110,16 @@ export default {
         state: 1,
         uId: this.neirong.uId,
       };
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.neirong.validate((valid) => {
         editReports(ruleFormss).then((response) => {
           this.$router.back(-1);
         });
       });
     },
-  },
-  newContent(val) {
-    this.neirong.content = val;
+     newContent(val){
+//         console.log(val)
+        this.neirong.content= val
+      }
   },
 };
 </script>
@@ -129,6 +128,7 @@ export default {
 .tittle {
   padding: 10px;
   border-bottom: 1px solid #cccccc;
+  margin-bottom: 10px;
 }
 .ToReport {
   width: 100%;

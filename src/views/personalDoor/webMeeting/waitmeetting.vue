@@ -88,8 +88,10 @@ export default {
       this.initTable();
     },
     initTable() {
+      this.listLoading = true;
       ToAttendMeeting(this.listQuery)
         .then((response) => {
+          this.listLoading = false;
           this.tableData1 = response.datas.list;
           this.total = response.datas.total;
         })
@@ -110,6 +112,9 @@ export default {
       this.listQuery.pageNum = val;
       this.initTable();
     },
+    handleClick(row){
+ this.$router.push({ name: "AboutICCCAS", query: { uId: row.uId } });
+    }
   },
   
 };

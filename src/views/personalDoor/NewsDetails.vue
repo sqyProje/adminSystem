@@ -16,7 +16,6 @@ export default {
     };
   },
    methods: {
-
     details1(uId) {
       newsdetails(uId).then((res) => {
         this.neirong = res.datas;
@@ -48,6 +47,6 @@ export default {
     text-align: center;
 }
 .news-date{
-    padding-left: 90%;
+    padding-left: 70%;
 }
 </style>

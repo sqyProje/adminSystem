@@ -28,7 +28,7 @@ export function newsType(){
 // 新闻列表 /person/news/list
 export function newsList(params){
   return request({
-    url: '/person/news/list',
+    url: '/person/news/list?type='+params,
     method: 'get',
     params: params
   })
@@ -57,7 +57,7 @@ export function MylistMemories(params){
 }
 //会议详情 /person/meeting/details
 export function MylistMemoriesList(params){
-  console.log(params);
+  // console.log(params);
   return request({
     url: '/person/meeting/details?uId='+params,
     method: 'get',

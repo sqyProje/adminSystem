@@ -71,8 +71,9 @@ export default {
 .ToReport {
   width: 100%;
   height: 785px;
-  border: 5px solid #f5f5f5;
+  /* border: 5px solid #f5f5f5; */
   border-radius: 5px 5px 0px 0px;
+  margin-top: 10px;
 }
 .bom-box {
   text-align: center;

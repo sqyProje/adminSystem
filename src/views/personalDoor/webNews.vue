@@ -76,7 +76,7 @@
             :name="item.name"
           >
             <div class="top-root">
-              <div v-for="(item,i) in newsList" :key="i">
+              <div v-for="(item,i) in newsList" :key="item.i">
                 <div v-if="i==0">
                   <div>
                     <img class="img-box" :src="item.picPath" alt />
@@ -89,7 +89,7 @@
                   </div>
                 </div>
               </div>
-              <div v-for="(item,i) in newsList" :key="i">
+              <div v-for="(item,i) in newsList" :key="item.i">
                 <div class="bom-boxs" @click="SeeDetails(item)" v-if="i!=0">
                   <span>
                     <img src="../../assets/images/lingwps.png" alt />
@@ -139,6 +139,8 @@ import {
   AnnounceList,
   newsList,
 } from "@/api/personalDoor";
+import { Loading } from 'element-ui';
+import loginUserVue from '../manageDoor/menu_pers/loginUser.vue';
 export default {
   data() {
     return {
@@ -146,19 +148,21 @@ export default {
       newQuery: Object.assign({}, newListQuery),
       list: [],
       newsType: [],
-      activeName: "新闻",
+      activeName:'新闻',
       AnnounceList: [],
       total: null,
       newsList:[],
-     
-      type: "",
+      type: "a7c11246617946ed815ba662b1cc4d16",
     };
   },
   methods: {
     handleClick(tab, event) {
       this.newQuery.type = tab.$vnode.data.attrs.id;
-      newsList(this.newQuery).then((res) => {
+      this.type = this.newQuery.type
+      // console.log(tab.$vnode.data.attrs.id);
+      newsList(this.type).then((res) => {
         this.newsList = res.datas.list;
+        
       });
     },
     // 新闻详情
@@ -203,6 +207,8 @@ export default {
     },
     // 新闻搜索分页
     newsinitTable() {
+      console.log(1);
+      // this.handleClick()
       newsList(this.newQuery)
         .then((response) => {
           this.newsList = response.datas.list;
@@ -228,15 +234,20 @@ export default {
   },
   created() {
     this.initTable(),
-    this.newsinitTable()
+    // this.newsinitTable()
       slideshow().then((res) => {
         this.list = res.datas;
       }),
       newsType().then((res) => {
         this.newsType = res.datas;
       });
-  },
-};
+       newsList(this.type).then((res) => {
+        this.newsList = res.datas.list;
+        // this.newsList = response.datas.list;
+        //   this.total = response.datas.total;
+      });
+  }
+}
 </script>
 
 <style scoped>
