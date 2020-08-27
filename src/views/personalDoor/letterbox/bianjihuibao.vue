@@ -125,7 +125,6 @@ export default {
       });
     },
     newContent(val) {
-      //         console.log(val)
       this.neirong.content = val;
     },
   },

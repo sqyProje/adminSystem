@@ -6,19 +6,23 @@
     <div class="ToReport">
       <el-form :model="ruleForm" ref="ruleForm" label-width="200px" class="demo-ruleForm">
         <el-form-item size="mini" style="width: 700px;" label="主题" prop="theme">
-          <el-input  v-model="ruleForm.theme"></el-input>
+          <el-input v-model="ruleForm.theme"></el-input>
         </el-form-item>
         <el-form-item style="width: 700px" label="内容" prop="substance">
           <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
         </el-form-item>
-
+        <div style="margin:10px 0px 10px 200px; ">
+          <el-radio-group v-model="isanonym" size="small">
+            <el-radio label="0" border>不匿名</el-radio>
+            <el-radio label="1" border>匿名</el-radio>
+          </el-radio-group>
+        </div>
         <el-form-item>
           <el-button type="success" icon="el-icon-s-promotion" @click="submitForm('ruleForm')">发送</el-button>
           <el-button @click="resetForm('ruleForm')">关闭</el-button>
         </el-form-item>
       </el-form>
     </div>
-   
   </div>
 </template>
 <script >
@@ -28,7 +32,8 @@ import Editor from "@/components/Tinymce/Editor";
 export default {
   data() {
     return {
-      isanonym: 1,
+      isanonym: 0,
+      // radio: '1',
       ruleForm: {
         substance: "",
         theme: "",
@@ -43,7 +48,7 @@ export default {
         title: this.ruleForm.theme,
         isanonym: this.isanonym,
       };
-     
+
       this.$refs.ruleForm.validate((valid) => {
         toLetter(ruleFormss).then((response) => {
           this.$router.back(-1);
@@ -75,10 +80,9 @@ export default {
   border-radius: 5px 5px 0px 0px;
   margin-top: 10px;
 }
-#height-input{
-    height: 30px;
- }
-
+#height-input {
+  height: 30px;
+}
 </style>
 
 

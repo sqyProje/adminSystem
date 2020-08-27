@@ -1,7 +1,8 @@
 <template >
 <div>
-<div class="fanhui" @click="gofanhui">返回</div>
-  <div class="root-box">
+<el-button style="margin:10px" @click="backtrack" type="primary" >返回</el-button> 
+
+  <div style="cursor:pointer" class="root-box">
       <div class="title-style"><b>{{neirong.title}}</b></div>
       <div class="news-content" v-html="neirong.content"></div>
       <div class="news-date">{{neirong.createdate}}</div>
@@ -24,7 +25,7 @@ export default {
         this.neirong = res.datas;
       });
     },
-    gofanhui(){
+    backtrack(){
       this.$router.back()
     }
   },

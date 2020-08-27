@@ -10,8 +10,8 @@
         </el-form-item>
         <el-button type="primary" size="mini" @click="newanonletters" v-if="tuoqian.bool==false" plain
           icon="el-icon-plus">去汇报</el-button>
-        <el-button type="primary" size="mini" @click="newanonletters" v-if="tuoqian.bool==true" plain
-          icon="el-icon-plus">去汇报!已经拖欠{{tuoqian.days}}天</el-button>
+        <el-button type="danger" size="mini" @click="newanonletters" v-if="tuoqian.bool==true" plain
+          icon="el-icon-plus">已经拖欠{{tuoqian.days}}天!请及时进行工作汇报</el-button>
       </el-form>
     </div>
     <div class="my-Report">

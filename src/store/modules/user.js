@@ -1,4 +1,4 @@
-import { login, logout, getLeftMenuInfo,getLoginUserInfo,shiftToken } from '@/api/login'
+import { login, logout, getLeftMenuInfo, getLoginUserInfo, shiftToken } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
 
@@ -6,13 +6,12 @@ const user = {
   state: {
     // 获取token
     token: localStorage.getItem('loginToken'),
-    // token: localStorage.getItem('tokenPc'),
     //token: Cookies.get('authorization'),
     name: '',
     avatar: '',
     roles: [],
-    loginUserInfo:{},
-    btnPermission:[]
+    loginUserInfo: {},
+    btnPermission: []
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -27,10 +26,10 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
-    SET_USERS :(state,loginUserInfo) =>{
+    SET_USERS: (state, loginUserInfo) => {
       state.loginUserInfo = loginUserInfo
     },
-    SET_BUTTON: (state,btnPermission) => {
+    SET_BUTTON: (state, btnPermission) => {
       state.btnPermission = btnPermission
     }
   },
@@ -39,12 +38,11 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password,userInfo.code).then(response => {
-          
-          shiftToken().then(response=>{
-            console.log(response);
-           localStorage.setItem("tokenPc",response.datas)
-          })
+        login(username, userInfo.password, userInfo.code).then(response => {
+
+
+          localStorage.setItem("loginToken", response.datas)
+
           resolve()
         }).catch(error => {
           reject(error)
@@ -63,7 +61,7 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-         commit('SET_BUTTON',data.perModels)
+          commit('SET_BUTTON', data.perModels)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -71,15 +69,14 @@ const user = {
       })
     },
     //获取用户登录信息
-    GetLoginUserInfo({commit, state}) {
+    GetLoginUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getLoginUserInfo().then(response => {
-          // console.log(response.datas.uId);
-           localStorage.setItem("uid",response.datas.uId)
-          const data =response.datas
+          localStorage.setItem("uid", response.datas.uId)
+          const data = response.datas
           commit('SET_NAME', data.realname)
           commit('SET_AVATAR', data.picpath) //上线请打开注释
-          commit('SET_USERS',data)
+          commit('SET_USERS', data)
         }).catch(error => {
           reject(error)
         })
@@ -105,7 +102,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
-       // removeToken()
+        // removeToken()
         localStorage.removeItem('loginToken')
         resolve()
       })

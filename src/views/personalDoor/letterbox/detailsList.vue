@@ -7,7 +7,7 @@
     </div>
     <div class="Letters-messages">
       <div>{{neirong.title}}</div>
-      <div class="Information-style">发件人:&nbsp;&nbsp;<span>{{neirong.toRealname}}</span></div>
+      <div class="Information-style">收件人:&nbsp;&nbsp;<span>{{neirong.toRealname}}</span></div>
       <div class="Information-style">时&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;&nbsp;{{neirong.createdate}}</div>
     </div>
 

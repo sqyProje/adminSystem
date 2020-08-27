@@ -20,7 +20,7 @@
        
         border
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column label="会议标题" prop="title"></el-table-column>
         <el-table-column label="会议时间" prop="startdate"></el-table-column>
         <el-table-column prop="meetingroomname" label="会议室"></el-table-column>

@@ -193,6 +193,12 @@ export const asyncRouterMap = [
             meta:{title:'发起的匿名信',noCache: true}
           },
           {
+            path:'personletters',
+            name:'person_letter/s',
+            component:()=>import('@/views/personalDoor/letterbox/personletters'),
+            meta:{title:'匿名信池',noCache: true}
+          },
+          {
             path:'myReport',
             name:'person_report_myReport',
             component:()=>import('@/views/personalDoor/letterbox/myReport'),

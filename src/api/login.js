@@ -141,14 +141,4 @@ export function logout() {
     }
   })
 }
-//转换token
-var tokenap = localStorage.getItem('loginToken')
-export function shiftToken() {
-  return request({
-    url: '/exchange/getClientToken?Authorization'+tokenap,
-    method: 'get',
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-    }
-  })
-}
+

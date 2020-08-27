@@ -185,7 +185,6 @@ export function DeleteStationMove(params) {
 }
 //员工详情
 export function GetEmployeeInfo(params) {
-  console.log(params);
   return request({
     url: '/employeeInfo/edit?e_id='+params,
     method: 'get',

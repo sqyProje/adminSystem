@@ -32,6 +32,7 @@
       </div>
       <div class="font-color">会议介绍:</div>
           <div v-html="tableData.content"></div>
+        <el-button @click="backtrack" type="primary" plain>返回</el-button>  
     </div>
   </div>
 </template>
@@ -51,7 +52,8 @@ export default {
     this.MyList(this.$route.query.uId);
   },
   methods: {
-    fanhui(){
+
+    backtrack(){
        this.$router.back(-1)
     },
     MyList(uId) {

@@ -1,6 +1,4 @@
-var tokenPc = localStorage.getItem('tokenPc')
-var token = localStorage.getItem('loginToken')
-// console.log(tokenPc);
+
 var uidd = localStorage.getItem("uid")
 import request from '@/utils/request'
 import qs from 'qs'
@@ -54,7 +52,7 @@ export function MylistMemories(params){
 }
 //会议详情 /person/meeting/details
 export function MylistMemoriesList(params){
-  // console.log(params);
+  
   return request({
     url: '/person/meeting/details?uId='+params,
     method: 'get',
@@ -116,10 +114,11 @@ export function getToReport(){
   })
 }
 //  是否拖欠汇报 /person/report/defaultReport
-export function defaultReport(){
+export function defaultReport(params){
   return request({
     url: '/person/report/defaultReport',
     method: 'get',
+    params: params
   })
 }
 // 去汇报 /person/report/addReport
@@ -177,3 +176,12 @@ export function noticedetails(params){
     params: params
   })
 }
+// 匿名信信池 /person/letter/letters
+export function AnonymousLetterPool(params){
+  return request({
+    url: '/person/letter/letters',
+    method: 'get',
+    params: params
+  })
+}
+

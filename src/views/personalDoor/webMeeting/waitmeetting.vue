@@ -23,7 +23,7 @@
         size="small"
         border
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="title" label="会议标题"></el-table-column>
         <el-table-column prop="publishdate" label="会议时间"></el-table-column>
         <!-- <el-table-column prop="province" label="会议类型">

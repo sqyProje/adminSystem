@@ -32,11 +32,9 @@
 <script>
 import { Message, MessageBox } from "element-ui";
 import {
-  ToReport,
-  DraftEditor,
   getToReport,
   addReport,
-  editReport
+  defaultReport
 } from "@/api/personalDoor";
 import Editor from '@/components/Tinymce/Editor'
 export default {
@@ -53,12 +51,17 @@ export default {
           ],
         },
       },
+      defaultReports:[]
     };
   },
   components:{
       Editor
     },
   created() {
+    defaultReport().then(res=>{
+
+      this.defaultReports = res.datas
+    })
   },
   mounted() {
     
@@ -68,7 +71,6 @@ export default {
       this.$router.back();
     },
     handleSelect(item) {
-      console.log(item);
       this.state2 = item;
     },
     querySearch(queryString, cb) {
@@ -101,16 +103,16 @@ export default {
         content: this.tableData.content,
         toReportId: this.state2.id,
         state: 1,
-      };
-      var ss = JSON.stringify(ruleFormss);
+      }; 
       this.$refs.ruleForm.validate((valid) => {
-        addReport(ss).then((response) => {
-          this.$router.back(-1)
+        addReport(ruleFormss).then((response) => {
+          defaultReport().then(()=>{
+            this.$router.back(-1)
+          })
         });
       });
     },
     newContent(val){
-//         console.log(val)
         this.tableData.content= val
       }
   },
