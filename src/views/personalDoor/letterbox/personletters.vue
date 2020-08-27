@@ -8,14 +8,9 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
+          <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="newanonletters"
-          plain
-          icon="el-icon-plus"
-        >发起新的匿名信</el-button>
+       
       </el-form>
     </div>
     <div class="my-Report">
@@ -70,10 +65,7 @@ export default {
     };
   },
   methods: {
-    //新的匿名信
-    newanonletters(row) {
-      this.$router.push({ name: "newanonletter", query: {} });
-    },
+ 
     // 打开匿名信详情
     handleClick1(row) {
       this.$router.push({ name: "anonletterDetails", query: { uId: row.uId } });

@@ -8,6 +8,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
+          <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
         <el-button
           type="primary"
