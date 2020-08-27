@@ -32,7 +32,7 @@ import Editor from "@/components/Tinymce/Editor";
 export default {
   data() {
     return {
-      isanonym: 0,
+      isanonym:'1',
       // radio: '1',
       ruleForm: {
         substance: "",
