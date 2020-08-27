@@ -64,7 +64,7 @@
             v-for="(item,i) in newsType"
             :key="i"
             :id="item.uId"
-            :label="item.sketch"
+            :label="item.name"
             :name="item.name"
           >
             <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
@@ -75,7 +75,7 @@
                 <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
               </el-form-item>
             </el-form>
-            <div class="top-root" >
+            <div class="top-root" v-if="newsList.length!=0" >
               <div v-for="(item,i) in newsList" :key="item.i">
                  <div v-if="i==0">
                   <div>
@@ -98,6 +98,9 @@
                   <span class="el-icon-arrow-right"></span>
                 </div>
               </div>
+            </div>
+            <div v-if="newsList.length==0" style="height:300px;text-align: center;line-height:300px ;">
+              暂无数据
             </div>
 
             <div class="fenye">
@@ -154,6 +157,7 @@ export default {
       total: null,
       newstotal: null,
       newsList: [],
+      
     };
   },
   methods: {
@@ -248,6 +252,7 @@ export default {
 <style scoped>
 .fenye {
   margin-left: 30%;
+  
 }
 .img-box {
   width: 608px;
