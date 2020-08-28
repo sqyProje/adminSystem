@@ -1,56 +1,31 @@
 <template>
   <div class="app-container" shadow="never">
-    <div class="progress-container">
-      <h3>{{otherInfo.name}}</h3>
-      <div class="clearfix">
-        <span class="left">部门名称：{{otherInfo.departName}}</span>
-        <span class="right">审批编号：{{otherInfo.approveId}}</span>
-      </div>
-      <table class="progress-table" cellspacing="0" cellpadding="0" >
-        <tr v-for="item in ProcessData">
-          <td class="fieldName">
-            {{item.fieldName}}
-          </td>
-          <td  class="fieldValues">{{item.fieldValues}}</td>
-        </tr>
-        <tr>
-          <td class="fieldName">
-            {{imgTitle}}
-          </td>
-          <td  class="fieldValues"><el-image
-            v-for="item in imgArray"
-            :key="item"
-            style="width: 100px; height: 100px;margin-top: 10px;"
-            :src="item"
-            fit="cover"
-            :preview-src-list="imgArray"
-          ></el-image>
-          </td>
-        </tr>
-        <tr>
-          <td class="fieldName">
-            {{fileTitle}}
-          </td>
-          <td class="fieldValues">
-            <a :href="fileHref">{{fileHref}}</a>
-          </td>
-        </tr>
-      </table>
-      <div class="clearfix">
-        <span class="left">查看人：{{otherInfo.checkRealName}}</span>
-        <span class="right">查看日期：{{otherInfo.checkDate}}</span>
-      </div>
-      <h3> 审批流程</h3>
-      <table class='progress-table' cellspacing="0" cellpadding="0" >
-        <tr v-for="item in workData">
-          <td class="fieldName">
-            {{item.courseName}}
-          </td>
-          <td >
-            <table class='progress-man' cellspacing="0" cellpadding="0" >
-              <tr v-for="(itemchild,index) in item.approveStepCourseModels">
-                <td>
-                  <span><el-image
+    <div id="subOutputRank-print">
+      <!--startprint-->
+      <div class="progress-container" >
+        <h2>{{otherInfo.name}}</h2>
+        <div class="clearfix">
+          <span class="left">部门名称：{{otherInfo.departName}}</span>
+          <span class="right">审批编号：{{otherInfo.approveId}}</span>
+        </div>
+        <table class="progress-table two-table" cellspacing="0" cellpadding="0" >
+          <tr v-for="item in ProcessData">
+            <td class="fieldName">
+              {{item.fieldName}}
+            </td>
+            <td  class="fieldValues">{{item.fieldValues}}</td>
+          </tr>
+        </table>
+        <table class='progress-table ' cellspacing="0" cellpadding="0"><!-- style="border-left:1px solid #e1e1e1 "-->
+          <tr v-for="(items,keys) in workData">
+            <td class="fieldName" :style="keys==0? 'border-top:none':''">
+              {{items.courseName}}
+            </td>
+            <td style="display: block">
+              <table class='progress-man' cellspacing="0" cellpadding="0" >
+                <tr v-for="(itemchild,index) in items.approveStepCourseModels" class="ddtss">
+                  <td>
+                  <span style="display: block;width: 100%;"><el-image
                     style="
                       width: 30px; height: 30px;
                       background-color:#e1e1e1;
@@ -81,15 +56,23 @@
                         </div>
                     </el-image>
                   </span>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-      <div style="text-align: center;">
-        <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <div class="clearfix">
+          <span class="left">查看人：{{otherInfo.checkRealName}}</span>
+          <span class="right">查看日期：{{otherInfo.checkDate}}</span>
+        </div>
+
       </div>
+      <!--endprint-->
+    </div>
+    <div style="text-align: center;">
+      <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
+      <el-button style="margin-top: 12px;" type="warning" size="medium" @click="print">打印</el-button>
     </div>
   </div>
 </template>
@@ -154,13 +137,7 @@
           checkRealName:response.datas.checkRealName,
         }
         response.datas.tableFieldValueModels.forEach((item,index)=>{
-          if(item.fieldType ===150){
-            this.imgTitle = item.fieldName
-            this.imgArray= item.fieldValues.split(',')
-          }else if(item.fieldType === 160){
-            this.fileTitle = item.fieldName
-            this.fileHref = decodeURIComponent(item.fieldValues)
-          }else{
+          if(item.fieldType !=150 && item.fieldType !=160){
             this.ProcessData.push(item)
           }
         })
@@ -169,46 +146,55 @@
     methods:{
       prev(){
         this.$router.go(-1)
+      },
+      print(){
+        let oldContent = document.body.innerHTML;
+        let newContent = document.getElementById('subOutputRank-print').innerHTML;
+        document.body.innerHTML = newContent;
+        window.print();
+        this.$router.go(0)
       }
     }
   }
 
 </script>
 
-<style rel="stylesheet/stylus">
+<style rel="stylesheet/stylus" >
   .progress-container{
     width: 800px;
     margin: 20px auto 50px;
   }
-  .progress-container h3{
-    text-align: left;
+  .progress-container h2{
+    text-align: center;
   }
   .clearfix span{
     margin:15px 0;
   }
   .progress-table {
     width: 800px;
-
-    border-left:1px solid #e1e1e1;
-    border-bottom:1px solid #e1e1e1;
+  }
+  .two-table{
+    border-top:1px solid #999999;
+  }
+  .progress-table td{
+    border-right:1px solid #999999;
+    border-bottom:1px solid #999999;
   }
   .progress-table td{
     min-height: 38px;
     line-height: 38px;
     color: #595959;
-
   }
   .fieldName{
     width: 200px;
     text-align: right;
     padding-right: 10px;
-    border-top:1px solid #e1e1e1;
-    border-right:1px solid #e1e1e1;
+    border-right:none;
+    border-left: 1px solid #999999;
   }
+
   .fieldValues{
     text-indent: 20px;
-    border-top:1px solid #e1e1e1;
-    border-right:1px solid #e1e1e1;
   }
   .fieldName span{
     display:block;
@@ -216,15 +202,23 @@
     text-align: center;
   }
   .progress-man{
-    border-right:1px solid #e1e1e1;
+    display: block;
+  }
+  .progress-man tbody{
+    width:100%;
     display: block;
   }
   .progress-man tr{
+    width:100%;
     display: block;
-    border-top: 1px solid #e1e1e1;
   }
+
   .progress-man td{
+    width:100%;
     display: block;
+    border-left:none;
+    border-bottom:none;
+    border-right: none;
   }
   .progress-man td span{
     margin-left: 20px;

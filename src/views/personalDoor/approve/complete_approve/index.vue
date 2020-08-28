@@ -20,11 +20,6 @@
       size  = "small"
       border
     >
-      <el-table-column
-        align="center"
-        type="selection"
-        width="55">
-      </el-table-column>
       <el-table-column type="expand" label="摘要" align="center">
         <template slot-scope="scope">
           <div
@@ -58,6 +53,11 @@
             size="mini"
             type="primary"
             @click="HandleWorkFlow(scope.row)">审批过程</el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            v-if="scope.row.approveStatus==90"
+            @click="HandlePrint(scope.row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,7 +143,7 @@
     filters:{
       formatState(value){
         if(value===10){
-          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>草稿</el-button>"
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>撤销</el-button>"
         }else if(value===20){
           return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #FF9900; padding: 5px 12px;'>审批中</el-button>"
         }else if(value===25){
@@ -242,6 +242,9 @@
             })
           })
         }
+      },
+      HandlePrint(row){
+        this.$router.push({name:'print',query: {u_id: row.approveId}})
       }
     }
   }

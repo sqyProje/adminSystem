@@ -26,11 +26,6 @@
         size  = "small"
         border
       >
-        <el-table-column
-          align="center"
-          type="selection"
-          width="55">
-        </el-table-column>
       <el-table-column type="expand" label="摘要" align="center">
         <template slot-scope="scope">
           <div
@@ -62,7 +57,7 @@
         <el-table-column label="审批结束时间" prop="approveEndDate" align="center"></el-table-column>
         <el-table-column label="发起用户名" prop="startUserName" align="center"></el-table-column>
         <el-table-column label="审批人" prop="approveUserName" align="center"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="400" align="center">
+        <el-table-column label="操作" fixed="right"  width="460" align="left">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -72,7 +67,7 @@
             >去除挂起</el-button>
             <el-button
               size="mini"
-              v-if="scope.row.approveStepStatus==20"
+              v-if="scope.row.approveStepStatus == 20 || scope.row.approveStepStatus == 25"
               type="warning"
               @click="handlerFun(scope.row)"
             >挂起</el-button>
@@ -84,14 +79,14 @@
             >拿取任务</el-button>
             <el-button
               size="mini"
-              v-if="scope.row.approveStepStatus==25"
+              v-if="scope.row.approveStepStatus == 20 || scope.row.approveStepStatus == 25"
               type="warning"
               @click="handleraaFun(scope.row)"
             >释放任务</el-button>
             <el-button
               size="mini"
               type="success"
-              v-if="scope.row.approveStepStatus==20||scope.row.approveStepStatus==25"
+              v-if="scope.row.approveStepStatus == 20 || scope.row.approveStepStatus == 25"
               @click="handleEdit(scope.row)">审批</el-button>
             <el-button
               size="mini"
@@ -141,7 +136,7 @@
     filters:{
       formatState(value){
         if(value===10){
-          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>草稿</el-button>"
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>撤销</el-button>"
         }else if(value===20){
           return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #FF9900; padding: 5px 12px;'>审批中</el-button>"
         }else if(value===25){

@@ -124,6 +124,9 @@
           <el-form-item label ='菜单图标' >
             <el-input v-model="FirstMenuInfo.imgicon"></el-input>
           </el-form-item>
+          <el-form-item label ='权限代码' prop="percode">
+            <el-input v-model="FirstMenuInfo.percode"></el-input>
+          </el-form-item>
           <el-form-item label ='排序' prop="sort">
             <el-input v-model="FirstMenuInfo.sort"></el-input>
           </el-form-item>
@@ -178,10 +181,10 @@
           <el-form-item label ='英文名称'  prop="enName" v-show="parentBtn">
             <el-input v-model="menuInfo.enName"></el-input>
           </el-form-item>
-          <el-form-item label ='路径' v-show="parentBtn">
-            <el-input v-model="menuInfo.murl" placeholder="非最终主菜单禁止填写"></el-input>
+          <el-form-item label ='路径'>
+            <el-input v-model="menuInfo.murl"></el-input>
           </el-form-item>
-          <el-form-item label ='权限代码' prop="percode" v-show="!parentBtn">
+          <el-form-item label ='权限代码' prop="percode">
             <el-input v-model="menuInfo.percode"></el-input>
           </el-form-item>
           <el-form-item label ='排序' prop="sort">
@@ -232,6 +235,7 @@
             imgicon:'',
             name:'',
             enName:'',
+            percode:'',
             type:'0',
             sort:'',
             parentid:'0',

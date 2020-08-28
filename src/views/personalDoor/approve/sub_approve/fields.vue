@@ -1,6 +1,7 @@
 <template>
   <div class="app-container" shadow="never">
     <el-form
+      v-if="dynamicValidateForm.domains.length>0"
       :model="dynamicValidateForm"
       ref="dynamicValidateForm"
       label-width="150px"
@@ -222,6 +223,10 @@
         <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
       </el-form-item>
     </el-form>
+    <div v-else style="text-align: center;color: #999;" >
+      <div style="margin: 40px 0;" >暂无表单信息请联系管理员</div>
+      <el-button type="warning" @click="prev()">返回</el-button>
+    </div>
     <el-dialog
       title="选择下一级审批人"
       :close-on-click-modal="false"
@@ -278,7 +283,8 @@
         ApproveUserData:[],
         rulesInfo: {
           UserId: [{required: true, trigger: 'blur', message: '请选择用户'}],
-        }
+        },
+        submitFlag:false
       }
     },
     components:{
@@ -337,11 +343,15 @@
 
       },
       prev(){
-        this.$router.go(-1)
+        this.$router.push({name:'sub_approve'})
       },
 
       //提交审批
       submitForm() {
+        if(this.submitFlag){
+          return
+        }
+        this.submitFlag=true
         const data={
           tableFormId:this.$route.query.form_id,
           tableFieldSubModels:[]
@@ -359,7 +369,7 @@
             })
           }
         })
-        console.log(data)
+      //  console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
             GetApproveUser(data).then(response=>{
@@ -369,6 +379,7 @@
                 AddFormInfo(data).then(res => {
                   if (res.status === 0) {
                     this.dialogVisible = false
+                    this.$router.push({name:'sub_approve'})
                     Message({
                       message: res.msg,
                       type: 'success',
@@ -392,6 +403,7 @@
               type: 'error',
               duration: 3 * 1000
             })
+            this.submitFlag=false
             return false;
           }
         });
@@ -422,6 +434,7 @@
           AddFormInfo(data).then(res => {
             if (res.status === 0) {
               this.dialogVisible = false
+              this.$router.push({name:'sub_approve'})
               Message({
                 message: res.msg,
                 type: 'success',

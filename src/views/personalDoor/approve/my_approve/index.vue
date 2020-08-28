@@ -34,11 +34,6 @@
         size  = "small"
         border
       >
-        <el-table-column
-          align="center"
-          type="selection"
-          width="55">
-        </el-table-column>
         <el-table-column type="expand" label="摘要" align="center">
           <template slot-scope="scope">
             <div
@@ -59,10 +54,9 @@
             <div v-html=" $options.filters.formatState(scope.row.approvestatus)"></div>
           </template>
         </el-table-column>
-        <el-table-column label="结束时间" prop="enddate" align="center"></el-table-column>
         <el-table-column label="创建时间" prop="createdate" align="center"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate" align="center"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="260" align="center">
+        <el-table-column label="结束时间" prop="enddate" align="center"></el-table-column>
+        <el-table-column label="操作" fixed="right"  width="300" align="left">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -75,6 +69,7 @@
             <el-button
               size="mini"
               type="error"
+              v-if="scope.row.approvestatus !=10 && scope.row.approvestatus !=60 && scope.row.approvestatus !=90"
               @click="HandleRepeal(scope.row)">撤销</el-button>
           </template>
         </el-table-column>
@@ -120,12 +115,13 @@
       enumeration('/approveEnum/getApproveStateEnums').then(response=>{
         this.approveStatusData = response.datas
       })
+      console.log(43)
       this.initTable();
     },
     filters:{
       formatState(value){
         if(value===10){
-          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>草稿</el-button>"
+          return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #c53535; padding: 5px 12px;'>撤销</el-button>"
         }else if(value===20){
           return "<el-button class='el-button el-button--default el-button--mini is-round' style='color: #FF9900; padding: 5px 12px;'>审批中</el-button>"
         }else if(value===25){
@@ -175,19 +171,6 @@
         this.listQuery.pageNum = val;
         this.initTable();
       },
-      /*typeStateBg(row){
-          if(row.state===0){
-            return this.typeStateBtn='info'
-          }else if(row.state===1){
-            return this.typeStateBtn='primary'
-          }else if(row.state===2){
-            return this.typeStateBtn='danger'
-          }else if(row.state===3){
-            return this.typeStateBtn='warning'
-          }else if(row.state===4){
-            return this.typeStateBtn='success'
-          }
-      },*/
       handleSeek(row) {
         this.$router.push({name:'see',query: {u_id: row.uId}})
       },
@@ -198,7 +181,7 @@
         repeal(row.uId).then(res=>{
           this.initTable()
           Message({
-            message: response.msg,
+            message: res.msg,
             type: 'success',
             duration: 3 * 1000
           })

@@ -5,7 +5,8 @@
       <el-step :title="item.courseName"  v-for="(item,index) in workData" :key="index">
         <template slot="description" >
           <div class="step-row" v-for="child in item.approveStepCourseModels">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content"
+                   v-if=" child.courseStatus !=80 && child.courseStatus != 85 ">
               <tr>
                 <td style="color:#333">
                   <div class="processing_content_detail">
@@ -20,9 +21,11 @@
                       <div slot="error" class="image-slot">
                         <el-image :src=logo></el-image>
                       </div>
-                    </el-image><span style="color:#219AFF">{{child.courseUserName}}({{child.courseStatus}})</span></div>
-                    <div >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
-                    <div class="demo-image__error">签名：
+                    </el-image>
+                      <span v-if="child.courseStatus=='' "></span>
+                      <span v-else-if=" child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span></div>
+                    <div v-if="child.bool" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
+                    <div v-if="child.bool" class="demo-image__error">签名：
                       <el-image
                         v-if="child.picsignatureUrl.length != 0"
                         style="width: 100px; height: 40px;background-color:#e1e1e1;vertical-align: top"
@@ -54,6 +57,35 @@
         logo:logo,
         workData:[],
       };
+    },
+    filters:{
+      formatState(value){
+        if(value===10){
+          return "草稿"
+        }else if(value===20){
+          return "审批中"
+        }else if(value===25){
+          return "任务审批中"
+        }else if(value===30){
+          return "待批"
+        }else if(value===40){
+          return "挂起"
+        }else if(value===50){
+          return "任务"
+        }else if(value===55){
+          return "待领任务"
+        }else if(value===60){
+          return "拒绝"
+        }else if(value===70){
+          return "同意"
+        }else if(value===80){
+          return "抄送"
+        }else if(value===85){
+          return "抄送完成"
+        }else if(value===90){
+          return '完成审批'
+        }
+      }
     },
     created(){
       WorkFlow(this.$route.query.u_id).then(response=>{
