@@ -48,13 +48,14 @@ export default {
   padding: 20px;
 }
 .news-content {
-  padding: 20px;
-  padding-left: 300px;
+  padding-top: 20px;
   width: 1200px;
+  margin: 0 auto;
   text-align: center;
 }
 .news-date {
-  padding-left: 70%;
+  padding-left: 80%;
+  margin-top: 10px;
 }
 .fanhui {
   margin: 10px;

@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    
     <!-- 查询 -->
     <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
@@ -12,9 +11,9 @@
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
       </el-form>
-    
-    <!-- 会议信息 -->
-   
+
+      <!-- 会议信息 -->
+
       <el-table
         :data="tableData"
         v-loading="listLoading"
@@ -23,12 +22,12 @@
         size="small"
         border
       >
-        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+        
         <el-table-column prop="title" label="会议标题"></el-table-column>
         <el-table-column prop="publishdate" label="会议时间"></el-table-column>
         <!-- <el-table-column prop="province" label="会议类型">
           <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column prop="sponsor" label="发起人"></el-table-column>
         <el-table-column prop="meetingroomname" label="地点"></el-table-column>
         <el-table-column label="操作" width="260">
@@ -37,8 +36,7 @@
           </template>
         </el-table-column>
       </el-table>
-      
-       <div class="pagination-container">
+      <div class="pagination-container">
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -51,14 +49,13 @@
         ></el-pagination>
       </div>
     </div>
-    
   </div>
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
 import { ToAttendMeeting } from "@/api/personalDoor";
 const defaultListQuery = {
-  title:"",
+  title: "",
   pageNum: 1,
   pageSize: 10,
 };
@@ -67,7 +64,7 @@ export default {
     return {
       listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
-      total: null, 
+      total: null,
     };
   },
   created() {

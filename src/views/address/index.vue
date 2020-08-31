@@ -102,7 +102,7 @@
               :data="tableData"
               v-loading="listLoading"
               row-key="id"
-              default-expand-all="true"
+              :default-expand-all="true"
               :tree-props="{children:'children',hasChildren:'hasChildren'}"
               size  = "small"
               border
@@ -163,14 +163,17 @@
         this.dutyData.push(response.datas[0])
       })
       GetDepartInfoArray().then(response=>{
+
         response.datas.forEach(item=>{
           this.departData.push(item)
         })
       })
       GetStationDrop().then(response=>{
+
         this.stationData = response.datas
       })
       this.initTableCheck();
+    
       this.initTable()
     },
     methods: {
@@ -213,7 +216,7 @@
               })
             })
           })
-          console.log(this.tableData)
+          // console.log(this.tableData)
 
         })
           .catch(error => {

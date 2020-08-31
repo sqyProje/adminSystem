@@ -5,7 +5,7 @@
     <div class="top-root">
       <!-- 轮播图 -->
       <div class="block left-box">
-        <el-carousel height="310px">
+        <el-carousel height="350px">
           <el-carousel-item v-for="(item,i) in list" :key="i">
             <img style="max-width: 100%;height:310px" :src="item.picpath" alt />
           </el-carousel-item>
@@ -25,14 +25,14 @@
           </el-form>
         </div>
         <el-table
-          :row-style="{height:'25px'}"
-          :header-row-style="{height:'25px'}"
+          :row-style="{height:'20px'}"
+          :header-row-style="{height:'20px'}"
           :cell-style="{padding:'1px'}"
           :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
           :data="AnnounceList"
           style="width: 100%"
         >
-          <el-table-column prop="title" width="230" label="标题"></el-table-column>
+          <el-table-column prop="title" width="230" label="标题" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="sketch" label="简介" width="250" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="publishDate" width="230" label="发布时间"></el-table-column>
           <el-table-column label="操作">
@@ -49,7 +49,7 @@
             layout="total, sizes,prev, pager, next,jumper"
             :current-page.sync="listQuery.pageNum"
             :page-size="listQuery.pageSize"
-            :page-sizes="[10,20,30]"
+            :page-sizes="[6]"
             :total="total"
           ></el-pagination>
         </div>
@@ -85,18 +85,20 @@
                   <div class="neirong">{{item.sketch}}</div>
                   <div style="height:30px">
                     <span class="btn-size">{{item.publishDate}}</span>
-                    <span class="btn-box btn-size" @click="SeeDetails(item)">查看详情 >></span>
+                    <span class="btn-box btn-size" style="cursor:pointer" @click="SeeDetails(item)">查看详情 >></span>
                   </div>
                 </div>
               </div>
-              <div v-for="(item,i) in newsList" :key="item.i">
-                <div class="bom-boxs" @click="SeeDetails(item)" v-if="i!=0">
-                  <span>
+              <div>
+                <div v-for="(item,i) in newsList" :key="item.i">
+                <div style="cursor:pointer" class="bom-boxs top-root" @click="SeeDetails(item)" v-if="i!=0">
+                  <div>
                     <img src="../../assets/images/lingwps.png" alt />
-                  </span>
-                  <span>{{item.title}}</span>
-                  <span class="el-icon-arrow-right"></span>
+                  </div>
+                  <div class="news-title">{{item.title}}</div>
+                  <div class="el-icon-arrow-right"></div>
                 </div>
+              </div>
               </div>
             </div>
             <div v-if="newsList.length==0" style="height:300px;text-align: center;line-height:300px ;">
@@ -125,8 +127,7 @@
 
 <script>
 const defaultListQuery = {
-  name: "",
-  sketch: "",
+  title: "",
   pageNum: 1,
   pageSize: 6,
 };
@@ -250,6 +251,16 @@ export default {
 </script>
 
 <style scoped>
+.news-title{
+  height: 18px;
+  width:700px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.pagination-container{
+  margin-top: 20px;
+}
 .fenye {
   margin-left: 30%;
   
@@ -272,8 +283,8 @@ export default {
   justify-content: space-between;
 }
 .left-box {
-  width: 863px;
-  height: 350px;
+  width: 49%;
+  height: 380px;
   padding: 20px 10px 20px 15px;
   margin-top: 10px;
   margin-left: 10px;
@@ -295,8 +306,8 @@ export default {
   background-color: #d3dce6;
 }
 .right-box {
-  width: 863px;
-  height: 350px;
+  width: 49%;
+  height: 380px;
   margin: 10px 15px 0px 10px;
   background: rgba(255, 255, 255, 1);
 }
@@ -333,6 +344,9 @@ export default {
   color: rgba(76, 76, 76, 1);
   margin-bottom: 10px;
   padding-right: 22px;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  
 }
 .btn-box {
   width: 100px;
@@ -353,6 +367,8 @@ export default {
 }
 .bom-boxs {
   margin: 10px;
+  margin-top: 15px;
+  width: 1000px;
 }
 </style>
 

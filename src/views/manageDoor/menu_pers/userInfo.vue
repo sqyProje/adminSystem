@@ -44,7 +44,7 @@
             type="selection"
             width="55">
           </el-table-column>
-          <el-table-column label="真是姓名" prop="realname"></el-table-column>
+          <el-table-column label="真实姓名" prop="realname"></el-table-column>
           <el-table-column label="手机号" prop="phoneno"></el-table-column>
           <el-table-column label="部门" prop="departName"></el-table-column>
           <el-table-column label="身份证号" prop="idcard"></el-table-column>

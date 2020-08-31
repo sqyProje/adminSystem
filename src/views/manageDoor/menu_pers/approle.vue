@@ -190,7 +190,8 @@
         Object.keys(this.roleInfo).forEach(key => this.roleInfo[key]= '');
       },
       UpdateUser(){
-        this.$refs.roleInfo.validate(valid => {
+        this.$refs.
+        validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
               AddAppRole(this.roleInfo)
