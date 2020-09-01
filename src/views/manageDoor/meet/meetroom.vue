@@ -121,13 +121,13 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label='会议类型' prop="type">
-              <el-select v-model="AddEditInfo.type" placeholder="关键字" style="width: 100%;">
+              <el-select v-model="AddEditInfo.type" placeholder="会议类型" style="width: 100%;">
                 <el-option
                   v-for="item in stateData"
-                  :label="item.name"
+                  :label="item.type_name"
                   :value="item.id"
                   :key = "item.id"
-                >{{item.name}}</el-option>
+                >{{item.type_name}}</el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -226,9 +226,12 @@
           state:'',
         },
         TypeData:[],
-      
-      
-      
+        stateData:[
+          {id:0,display_name:'不开放',type_name:'线下'},
+          {id:1,display_name:'开放',type_name:'线上'},
+        ],
+
+
         rulesInfo: {
           name:[{required: true, trigger: 'blur', message: '请输入名称'}],
           maxpeople: [{ required: true,trigger: 'blur',message: '请输入容纳人数'}],

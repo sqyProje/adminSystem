@@ -47,7 +47,6 @@ export const constantRouterMap = [
 export const asyncRouterMap = [
   {
     path: '/address',
-    redirect: '/address',
     component: Layout,
     name: 'addressBook',
     meta: {title: '通讯录', icon: 'product'},

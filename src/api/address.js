@@ -75,3 +75,10 @@ export function GetToReportUser(params) {
     method: 'get',
   })
 }
+/*拖欠人员*/
+export function OweReportList() {
+  return request({
+    url: '/oweReport/list',
+    method: 'get',
+  })
+}

@@ -13,7 +13,7 @@ export function GetSubInfo(form_Id) {
     method: 'get',
   })
 }
-//提交表单字段并生成审批
+//提交表单字段并生成审批外加审批人
 export function AddFormInfo(params) {
   return request({
     url: '/sub_approve/postForm',

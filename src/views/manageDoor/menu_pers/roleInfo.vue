@@ -322,8 +322,8 @@
         UpdateRoleMenu(){
           let checkedKeys = this.$refs.roleData.getCheckedKeys();
           let hafCheckedKeys = this.$refs.roleData.getHalfCheckedKeys();
-          this.roleData = checkedKeys.concat(hafCheckedKeys)
-          UploadRoleMenu(this.roleId,this.roleData)
+          let perIds = checkedKeys.concat(hafCheckedKeys)
+          UploadRoleMenu(this.roleId,perIds)
             .then(response=>{
               this.RoleDialogVisible = false
               this.resourceCheckedKey=[]

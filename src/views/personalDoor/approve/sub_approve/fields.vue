@@ -373,27 +373,26 @@
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
             GetApproveUser(data).then(response=>{
-              this.ApproveUserData = response.datas
-              if(this.ApproveUserData===null){
+              if(response.datas===null){
                 this.dialogVisible = false
-                AddFormInfo(data).then(res => {
-                  if (res.status === 0) {
-                    this.dialogVisible = false
-                    this.$router.push({name:'sub_approve'})
-                    Message({
-                      message: res.msg,
-                      type: 'success',
-                      duration: 3 * 1000
-                    })
-                  }
-                })
-                  .catch(error => {
-                    console.log(error);
-                  });
+                  AddFormInfo(data).then(res => {
+                    if (res.status === 0) {
+                      this.dialogVisible = false
+                      this.$router.push({name:'sub_approve'})
+                      Message({
+                        message: res.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+                    .catch(error => {
+                      console.log(error);
+                    });
 
               }else{
                 this.dialogVisible = true
-                this.UpdateUser()
+                this.ApproveUserData = response.datas
               }
 
             })
@@ -430,7 +429,7 @@
             })
           }
         })
-        this.$refs.AddEditInfo.validate(valid => {
+        if(this.AddEditInfo.UserId.length>0){
           AddFormInfo(data).then(res => {
             if (res.status === 0) {
               this.dialogVisible = false
@@ -445,10 +444,17 @@
             .catch(error => {
               console.log(error);
             });
-        })
+        }else{
+          Message({
+            message: '请选择审批人',
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
       },
       canleDialog(){
         this.dialogVisible = false
+        this.submitFlag=false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },

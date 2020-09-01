@@ -163,17 +163,14 @@
         this.dutyData.push(response.datas[0])
       })
       GetDepartInfoArray().then(response=>{
-
         response.datas.forEach(item=>{
           this.departData.push(item)
         })
       })
       GetStationDrop().then(response=>{
-
         this.stationData = response.datas
       })
-      this.initTableCheck();
-    
+    //  this.initTableCheck();
       this.initTable()
     },
     methods: {
@@ -200,7 +197,6 @@
               })
             })
             res.childMenu.forEach((child,two)=>{
-              console.log(two)
               this.tableData[key].children.push({id:this.i++,name:child.name,children:[]})
               child.employees.forEach((three)=>{
                 this.tableData[key].children[two].children.push({

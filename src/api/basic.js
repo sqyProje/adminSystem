@@ -68,3 +68,18 @@ export function importExcel(res) {
   window.URL.revokeObjectURL(link.href);
   document.body.removeChild(link)
 }
+/*操作日志*/
+export function LogList(params) {
+  return request({
+    url: '/operation/list',
+    method: 'get',
+    params: params
+  })
+}
+
+export function GetLog(params) {
+  return request({
+    url: '/operation/details?uId='+params,
+    method: 'get',
+  })
+}

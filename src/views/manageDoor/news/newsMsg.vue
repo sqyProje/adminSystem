@@ -59,6 +59,8 @@
             </el-button>
           </template>
         </el-table-column>
+
+        <el-table-column label="发布时间" prop="publishdate"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
         <el-table-column label="操作" fixed="right"  width="260">

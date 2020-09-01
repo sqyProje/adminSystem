@@ -388,8 +388,7 @@
           })
         },
         handleEdit(row) {
-          this.dialogVisible = true
-          this.editInfoMenu = true
+
           this.dialogTitle = '编辑'
           this.parentBtn = false;
           if(row.type===1){
@@ -403,8 +402,17 @@
           }
           GetMenu(row.uId)
             .then(response => {
-              this.menuInfo = response.datas;
-              console.log(response.datas.enName)
+              if(response.status == 0){
+                this.dialogVisible = true
+                this.editInfoMenu = true
+                this.menuInfo = response.datas;
+              }else{
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+              }
             })
             .catch( error => {
               console.log(error);

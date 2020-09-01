@@ -73,13 +73,13 @@
             >挂起</el-button>
             <el-button
               size="mini"
-              v-if="scope.row.approveStepStatus==55"
+              v-if="scope.row.approveStepStatus==55 "
               type="info"
               @click="handleraaFun(scope.row)"
             >拿取任务</el-button>
             <el-button
               size="mini"
-              v-if="scope.row.approveStepStatus == 20 || scope.row.approveStepStatus == 25"
+              v-if=" scope.row.approveStepStatus == 25"
               type="warning"
               @click="handleraaFun(scope.row)"
             >释放任务</el-button>

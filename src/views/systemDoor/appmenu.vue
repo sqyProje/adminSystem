@@ -45,7 +45,11 @@
         width="55">
       </el-table-column>
       <el-table-column label="菜单名称" prop="name"></el-table-column>
-      <el-table-column label="图标" prop="imgicon"></el-table-column>
+      <el-table-column label="图标">
+        <template slot-scope="scope">
+         <img :src="scope.row.imgicon" alt="" width="30" height="30">
+        </template>
+      </el-table-column>
       <el-table-column label="权限代码" prop="percode"></el-table-column>
       <el-table-column label="是否默认">
         <template slot-scope="scope">
@@ -95,18 +99,21 @@
       :visible.sync="FirstDialogVisible"
       width="33%">
       <el-form
-        :inline="true"
+        :inline="false"
         size="mini"
         :model="FirstMenuInfo"
         label-width="100px"
         ref="FirstMenuInfo"
         :rules ="rulesInfo"
       >
+        <el-form-item label ='图标' >
+          <singleUpload  :value="FirstMenuInfo.imgicon" :urlSign = urlSign @input="picFun"></singleUpload><!--:urlSign = urlSign-->
+        </el-form-item>
         <el-form-item label ='名称'  prop="name">
           <el-input v-model="FirstMenuInfo.name"></el-input>
         </el-form-item>
-        <el-form-item label ='图标' >
-          <el-input v-model="FirstMenuInfo.imgicon"></el-input>
+        <el-form-item label ='图标颜色' >
+          <el-input v-model="FirstMenuInfo.imgIconColour"></el-input>
         </el-form-item>
         <el-form-item label ='权限代码'  prop="percode">
           <el-input v-model="FirstMenuInfo.percode"></el-input>
@@ -135,6 +142,7 @@
 </template>
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
+  import singleUpload from '@/components/Upload/singleImg'
   import {AppMenuList,AppMenuGet,AddAppMenu,EditAppMenu,DeleteAppMenu} from '@/api/appmenu'
   const defaultListQuery = {
     name: '',
@@ -153,8 +161,10 @@
         dialogTitle:'',
         FirstDialogVisible:false,
         btnFlag:false,
+        urlSign:'/file/getIconPicPath',
         FirstMenuInfo:{
           imgicon:'',
+          imgIconColour:'',
           name:'',
           sort:'',
           parentid:'0',
@@ -171,6 +181,9 @@
         },
       }
     } ,
+    components:{
+      singleUpload
+    },
     mounted(){
       this.initTable();
     },
@@ -201,11 +214,19 @@
       handleEdit(row) {
         this.dialogTitle = '编辑'
         this.btnFlag=false
-        this.FirstDialogVisible = true
         AppMenuGet(row.uId)
           .then(response => {
-            this.FirstMenuInfo = response.datas;
-            console.log(response.datas.enName)
+            if(response.status == 0){
+              this.FirstDialogVisible = true
+              this.FirstMenuInfo = response.datas;
+            }else{
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }
+
           })
       },
       handleRoleMenu(row){
@@ -308,6 +329,9 @@
           });
         });
 
+      },
+      picFun(data){
+        this.FirstMenuInfo.imgicon = data
       },
     }
   }

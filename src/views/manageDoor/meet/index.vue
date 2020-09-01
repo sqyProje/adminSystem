@@ -118,7 +118,7 @@
             @change="roomChange"
             style="width: 100%;">
               <el-tooltip placement="top"  v-for="item in TypeData"  :key = "item.uId">
-                <div slot="content">容纳人数：{{item.maxpeople}}<br/>类型：{{item.type = item.type ?'线上':'线下'}}</div>
+                <div slot="content">容纳人数：{{item.maxpeople}}<br/>类型：{{item.type==1 ?'线下':'线上'}}</div>
                 <el-option
                   :label="item.name"
                   :value="{key:item.uId,label:item.name}"
@@ -332,10 +332,19 @@
         this.AddEditInfo.state=0
       },
       handleEdit(row) {
-        this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '编辑'
         GetMeet(row.uId).then(response=>{
-          this.AddEditInfo = response.datas
+          if(response.status==0){
+            this.dialogVisible = !this.dialogVisible
+
+            this.AddEditInfo = response.datas
+          }else{
+            Message({
+              message: response.msg,
+              type: 'success',
+              duration: 3 * 1000
+            })
+          }
         })
       },
       UpdateUser(){

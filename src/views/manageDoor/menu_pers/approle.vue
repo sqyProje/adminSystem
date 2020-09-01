@@ -190,8 +190,7 @@
         Object.keys(this.roleInfo).forEach(key => this.roleInfo[key]= '');
       },
       UpdateUser(){
-        this.$refs.
-        validate(valid => {
+        this.$refs.roleInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
               AddAppRole(this.roleInfo)
@@ -280,8 +279,9 @@
       UpdateRoleMenu(){
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
         let hafCheckedKeys = this.$refs.roleData.getHalfCheckedKeys();
-        this.roleData = checkedKeys.concat(hafCheckedKeys)
-        updateAppRole(this.roleData,this.roleId)
+        let perIds= checkedKeys.concat(hafCheckedKeys)
+        console.log(perIds)
+        updateAppRole(this.roleId,perIds)
           .then(response=>{
             this.RoleDialogVisible = false
             this.resourceCheckedKey=[]

@@ -40,9 +40,9 @@ export function AppRole(params) {
   })
 }
 
-export function updateAppRole(perIds,roleId) {
+export function updateAppRole(roleId,perIds) {
   return request({
-    url: '/appRole_Per/updatePerByRoleId?perIds='+perIds+'&roleId='+roleId,
+    url: '/appRole_Per/updatePerByRoleId?roleId='+roleId+'&perIds='+perIds,
     method: 'post',
     headers: {
       "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"

@@ -1,7 +1,7 @@
 <template> 
   <div>
+    <!--:class="{hide:hideUpload}"-->
     <el-upload
-      :class="{hide:hideUpload}"
       name="fileName"
       :action="this.baseURL+urlSign"
       list-type="picture-card"
@@ -31,7 +31,7 @@
     name: 'singleUpload',
     data(){
       return {
-        hideUpload:false,
+    //    hideUpload:false,
         limitCount:1,
         dialogVisible: false,
         fileList:[],
@@ -45,13 +45,11 @@
       } ,
       urlSign:{
         type:String,
-        default: '/file/getPicPath'
+        default: '/file/getPicPath' /*/file/getIconPicPath*/
       }
     },
     watch:{
       'value'(){
-       // debugger
-       // console.log(this.value)
         if(this.value==undefined){
           this.fileList=[]
           return
@@ -65,11 +63,13 @@
               url: item
             }
           });
-          this.hideUpload = this.fileList.length > 0
+        //  this.hideUpload = this.fileList.length > 0
         }
       }
     },
-
+    mounted(){
+      console.log(this.urlSign)
+    },
     methods: {
       beforeAvatarUpload(file){
         const isJPG = file.type === 'image/jpeg';
@@ -85,11 +85,11 @@
         return (isJPG  || isPNG) && isLt1M;
       },
       handleRemove(file, fileList) {
-        DeleteFileUrl(file.url).then(res=>{
-          this.hideUpload = false
-          this.$message.warning(res.msg);
+      //  DeleteFileUrl(file.url).then(res=>{
+      //    this.hideUpload = false
+          this.$message.warning('删除成功');
           this.$emit('input', '')
-        })
+      //  })
       },
       handlePreview(file) {
         this.dialogVisible = true;
@@ -99,9 +99,10 @@
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，请删除后重新上传`);
       },
       handleUploadSuccess(res, file) {
+        console.log(res)
         this.fileList=[{name: file.name, url: res.datas}];
         //this.hideUpload = this.fileList.length >= this.limitCount;
-        this.hideUpload = false
+     //   this.hideUpload = false
         this.$emit('input', res.datas)
       }
     }

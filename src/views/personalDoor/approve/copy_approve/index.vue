@@ -36,9 +36,6 @@
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
           <div v-html=" $options.filters.formatState(scope.row.approveStatus)"></div>
-          <!--<el-button size="mini" round class='label-btn' :type="scope.row.approveStatus==20 ? 'warning' : 'success'">
-            {{scope.row.approveStatus | formatState}}
-          </el-button>-->
         </template>
       </el-table-column>
       <el-table-column label="审批创建时间" prop="approveCreateDate" align="center"></el-table-column>
