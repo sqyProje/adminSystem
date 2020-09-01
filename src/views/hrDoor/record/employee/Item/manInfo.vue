@@ -89,14 +89,33 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="婚姻状况">
+            <el-select
+              v-model="AddEditInfo.marriage"
+              placeholder="婚姻状况"
+              style="width: 100%;">
+              <el-option
+                v-for="item in marriageData"
+                :label="item.name"
+                :value="item.uId"
+                :key = "item.uId"
+              >{{item.name}}</el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="开户行">
+            <el-input v-model="AddEditInfo.openBank"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="银行（工资）卡号">
             <el-input v-model="AddEditInfo.payCard"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="开户行">
-        <el-input v-model="AddEditInfo.openBank"></el-input>
-      </el-form-item>
       <el-form-item label="离职/退休/停止原因" prop="dimissionreason">
         <el-input type="textarea" v-model="AddEditInfo.dimissionreason"></el-input>
       </el-form-item>
@@ -218,7 +237,7 @@
 <script>
   import {Message,MessageBox} from 'element-ui'
   import {validmobile,validEmail} from '@/utils/validate'
-  import {enumeration} from '@/api/basic'
+  import {enumeration,dictionType} from '@/api/basic'
   import {GetEmployeeInfo,EditEmployeeInfo} from '@/api/personnel'
   export default {
     data() {
@@ -257,6 +276,7 @@
           jobuniversity: "",
           number: "",
           phone: "",
+          marriage:'',
           politics: "",
           partyDate:"",
           partyDuty:"",
@@ -293,9 +313,10 @@
           dimissionreason:[{ required: true,trigger: 'blur',message: '请输入离职/退休/停止原因'}],
           email: [{required: true, trigger: 'blur', validator: checkmail}]
         },
-        //政治面貌，人员性质
+        //政治面貌，人员性质,婚姻状况
         politicsData:[],
-        propertyData:[]
+        propertyData:[],
+        marriageData:[]
       };
     },
     mounted(){
@@ -304,6 +325,9 @@
       })
       enumeration('/approveEnum/getPoliticsEnums').then(res=>{
         this.politicsData = res.datas
+      })
+      dictionType('79f606fccb8046a2b2069e37bdecdc91').then(res=>{
+        this.marriageData = res.datas
       })
       this.getInfo(this.$route.query.uId)
 

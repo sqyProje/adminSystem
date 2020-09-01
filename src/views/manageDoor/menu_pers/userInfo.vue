@@ -97,7 +97,7 @@
       <!--添加编辑-->
       <el-dialog
         :title="dialogTitle"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="dialogVisible"
         width="33%">
         <el-form
@@ -163,7 +163,7 @@
       <!--角色-->
       <el-dialog
         :title="roleTitle"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="roleDialogVisible"
         width="20%">
         <el-select

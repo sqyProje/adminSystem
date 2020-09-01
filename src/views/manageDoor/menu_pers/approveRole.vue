@@ -81,7 +81,7 @@
       </div>
       <el-dialog
         :title="dialogTitle"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="dialogVisible"
         width="33%">
         <el-form
@@ -128,7 +128,7 @@
       <!--用户-->
       <el-dialog
         title="用户"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="RoleDialogVisible"
         width="33%">
         <!---->

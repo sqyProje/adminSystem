@@ -95,7 +95,7 @@
     </div>
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="FirstDialogVisible"
       width="33%">
       <el-form

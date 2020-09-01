@@ -87,7 +87,7 @@
 
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="23%">
       <el-form
@@ -136,7 +136,7 @@
     <!--选择员工-->
     <el-dialog
       title="选择员工"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
       <el-tree
@@ -156,7 +156,7 @@
     <!--导出 弹出框-->
     <el-dialog
       title="导出"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogExcelVisible"
       width="23%">
         <el-select v-model="wealName" placeholder="请选择表单名称" style="width:100%">

@@ -3,7 +3,7 @@
     <el-button size="small" type="primary" @click="QDFlowInfo">表单流程信息</el-button>
     <el-dialog
       title="表单流程"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="QDdialogVisible"
       width="25%">
       <el-form

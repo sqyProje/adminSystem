@@ -4,6 +4,7 @@
     <el-upload
       name="fileName"
       :action="this.baseURL+urlSign"
+      :headers = "headers"
       list-type="picture-card"
       :limit="limitCount"
       accept="image/jpeg,image/png"
@@ -15,7 +16,7 @@
       :on-exceed="handleExceed"
       :on-preview="handlePreview">
       <i class="el-icon-plus"></i>
-      <div slot="tip" >只能上传jpg/png文件，且不超过1MB</div>
+      <div slot="tip" >只能上传一张jpg/png文件，且不超过1MB</div>
     </el-upload>
     <el-dialog
       :visible.sync="dialogVisible"
@@ -36,6 +37,9 @@
         dialogVisible: false,
         fileList:[],
         dialogImageUrl: '',
+        headers:{
+          Authorization: localStorage.getItem('loginToken') //从cookie里获取token，并赋值  Authorization ，而不是token
+        }
       }
     },
     props: {

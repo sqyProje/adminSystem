@@ -4,6 +4,7 @@
       class="upload-demo"
       name="fileName"
       :action="this.baseURL+'/file/getPicPath'"
+      :headers = "headers"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :before-remove="beforeRemove"
@@ -42,6 +43,9 @@
         fileList: [],
         dialogImageUrl: '',
         picDialogVisible: false,
+        headers:{
+          Authorization: localStorage.getItem('loginToken') //从cookie里获取token，并赋值  Authorization ，而不是token
+        }
       };
     },
     watch:{

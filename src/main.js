@@ -17,7 +17,6 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // permission control
 import {hasPermission} from './utils/hasPermission' //new add
-import { Message, MessageBox } from 'element-ui'
 Vue.use(ElementUI, { locale })
 Vue.use(Vue2OrgTree)
 Vue.use(VCharts)

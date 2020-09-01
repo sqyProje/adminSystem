@@ -6,7 +6,7 @@
           <el-input v-model="listQuery.name" placeholder="操作的用户名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="提交的数据"></el-input>
+          <el-input v-model="listQuery.postKey" placeholder="提交的数据"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -27,8 +27,8 @@
     >
       <el-table-column label="操作账户" prop="operUsername" width="150"></el-table-column>
       <el-table-column label="操作类型" prop="operType" width="100"></el-table-column>
-      <el-table-column label="操作模块" prop="operModul"></el-table-column>
-      <el-table-column label="操作的方法" prop="operMethod"></el-table-column>
+      <el-table-column label="操作模块" prop="operModul"  width="100"></el-table-column>
+      <el-table-column label="操作的方法" prop="operMethod"  width="400"></el-table-column>
       <el-table-column label="操作描述" prop="operDesc"></el-table-column>
       <el-table-column label="操作时间" prop="createDate"></el-table-column>
       <el-table-column label="操作">
@@ -55,6 +55,7 @@
     <el-dialog
       title="查看详情"
       :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="dialogVisible"
       width="33%">
       <el-form
@@ -63,6 +64,9 @@
         :model="AddEditInfo"
         label-width="100px"
       >
+        <el-form-item label ='用户ID'>
+          <el-input v-model="AddEditInfo.uId"></el-input>
+        </el-form-item>
         <el-form-item label ='操作账户'>
           <el-input v-model="AddEditInfo.operUsername"></el-input>
         </el-form-item>
@@ -169,7 +173,3 @@
     }
 
 </script>
-
-<style>
-
-</style>

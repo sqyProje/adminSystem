@@ -49,32 +49,32 @@ export const asyncRouterMap = [
     path: '/address',
     component: Layout,
     name: 'addressBook',
-    meta: {title: '通讯录', icon: 'product'},
+    meta: {title: '通讯录'},
     children: [{
       path: 'address',
       name: 'addressBook',
       component: () => import('@/views/address/index'),
-      meta: {title: '通讯录', icon: 'home'}
+      meta: {title: '通讯录'}
     }]
   },
   {
     path:'/personalDoor',
     component: Layout,
     name: 'personalDoor',
-    meta: {title: '个人门户', icon: 'product'},
+    meta: {title: '个人门户'},
     children: [
       {
         path:'approve',
         component: ()=> import('@/views/personalDoor/approve/index'),
         redirect:'/personalDoor/approve/sub_approve',
         name:'approve',
-        meta:{title:'审批管理',icon:'product'},
+        meta:{title:'审批管理'},
         children:[
           {
             path:'sub_approve',
             name:'sub_approve',
             component:()=>import('@/views/personalDoor/approve/sub_approve'),
-            meta:{title:'提交审批',icon: 'product-list',noCache: true}
+            meta:{title:'提交审批',noCache: true}
           },
           {
             path: 'sub_approve_fields',
@@ -87,7 +87,7 @@ export const asyncRouterMap = [
             path:'my_approve',
             name:'my_approve',
             component:()=>import('@/views/personalDoor/approve/my_approve'),
-            meta:{title:'我的审批',icon: 'product-list',noCache: true}
+            meta:{title:'我的审批',noCache: true}
           },
           {
             path: 'flowInfo',
@@ -121,19 +121,19 @@ export const asyncRouterMap = [
             path:'wait_approve',
             name:'wait_approve',
             component:()=>import('@/views/personalDoor/approve/wait_approve'),
-            meta:{title:'待我审批',icon: 'product-list',noCache: true}
+            meta:{title:'待我审批',noCache: true}
           },
           {
             path:'complete_approve',
             name:'complete_approve',
             component:()=>import('@/views/personalDoor/approve/complete_approve'),
-            meta:{title:'我已审批',icon: 'product-list',noCache: true}
+            meta:{title:'我已审批',noCache: true}
           },
           {
             path:'copy_approve',
             name:'copy_approve',
             component:()=>import('@/views/personalDoor/approve/copy_approve'),
-            meta:{title:'抄送我的',icon: 'product-list',noCache: true}
+            meta:{title:'抄送我的',noCache: true}
           }
         ]
       },
@@ -141,7 +141,7 @@ export const asyncRouterMap = [
         path:'webNews',
         name:'webNews',
         component:()=>import('@/views/personalDoor/webNews'),
-        meta:{title:'新闻公告',icon: 'product-list',noCache: true}
+        meta:{title:'新闻公告',noCache: true}
       },
       {
         path:'AnnouncementNewsDetails',
@@ -162,7 +162,7 @@ export const asyncRouterMap = [
         component: ()=> import('@/views/personalDoor/webMeeting/index'),
         redirect:'/personalDoor/webMeeting/mymeetting',
         name:'webMyMeeting',
-        meta:{title:'我的会议',icon:'product'},
+        meta:{title:'我的会议'},
         children:[
           {
             path:'mymeetting',
@@ -190,7 +190,7 @@ export const asyncRouterMap = [
         component: ()=> import('@/views/personalDoor/letterbox/index'),
         redirect:'/personalDoor/letterbox/anonletter',
         name:'webLetterbox',
-        meta:{title:'我的信箱',icon:'product'},
+        meta:{title:'我的信箱'},
         children:[
           {
             path:'anonletter',
@@ -274,43 +274,43 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/hrDoor/depart',
     name: 'HRDoor',
-    meta: {title: '人事管理', icon: 'product'},
+    meta: {title: '人事管理'},
     children: [
       {
         path: 'depart',
         name: 'depart',
         component: () => import('@/views/hrDoor/depart'),
-        meta: {title: '部门管理', icon: 'product-list',noCache: true}
+        meta: {title: '部门管理', noCache: true}
       },
       {
         path: 'station',
         name: 'station',
         component: () => import('@/views/hrDoor/station'),
-        meta: {title: '岗位管理', icon: 'product-list',noCache: true}
+        meta: {title: '岗位管理', noCache: true}
       },
       {
         path: 'duty',
         name: 'duty',
         component: () => import('@/views/hrDoor/duty'),
-        meta: {title: '职务管理', icon: 'product-list',noCache: true}
+        meta: {title: '职务管理', noCache: true}
       },
       {
         path: 'record',
         name: 'record',
         component: ()=> import('@/views/hrDoor/record/index'),
-        meta: {title: '档案管理', icon: 'product-list',noCache: true},
+        meta: {title: '档案管理', noCache: true},
         redirect:'/hrDoor/record/employee',
         children:[{
           path: 'employee',
           name: 'employee',
           component: () => import('@/views/hrDoor/record/employee'),
-          meta: {title: '人员管理', icon: 'product-list',noCache: true},
+          meta: {title: '人员管理', noCache: true},
         },
           {
             path: 'msgApprove',
             name: 'msgApprove',
             component: () => import('@/views/hrDoor/record/employee/msgApprove'),
-            meta: {title: '信息审核', icon: 'product-list',noCache: true},
+            meta: {title: '信息审核', noCache: true},
           },
           {
             path: 'detail',
@@ -326,13 +326,13 @@ export const asyncRouterMap = [
         path: 'salary',
         name: 'salary',
         component: () => import('@/views/hrDoor/salary'),
-        meta: {title: '薪资管理', icon: 'product-list',noCache: true}
+        meta: {title: '薪资管理', noCache: true}
       },
       {
         path: 'e_weal',
         name: 'e_weal',
         component: ()=> import('@/views/hrDoor/e_weal/index'),
-        meta: {title: '福利管理',  icon: 'product-list',noCache: true},
+        meta: {title: '福利管理',noCache: true},
         redirect:'/hrDoor/e_weal/weal',
         children:[
           {
@@ -356,25 +356,25 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/reportDoor/yearReport',
     name: 'reportDoor',
-    meta: {title: '报表门户', icon: 'product'},
+    meta: {title: '报表门户'},
     children: [
       {
         path: 'yearReport',
         name: 'yearApproveReport',
         component: () => import('@/views/reportDoor/yearReport'),
-        meta: {title: '年度审批报表', icon: 'product-list', noCache: true}
+        meta: {title: '年度审批报表',  noCache: true}
       },
       {
         path: 'checkReport',
         name: 'checkReport',
         component: () => import('@/views/reportDoor/checkReport'),
-        meta: {title: '核算报表', icon: 'product-list', noCache: true}
+        meta: {title: '核算报表',  noCache: true}
       },
       {
         path: 'financeReport',
         name: 'financeReport',
         component: () => import('@/views/reportDoor/financeReport'),
-        meta: {title: '财务报表', icon: 'product-list', noCache: true}
+        meta: {title: '财务报表',  noCache: true}
       },
     ]
   },
@@ -382,7 +382,7 @@ export const asyncRouterMap = [
     path:'/systemDoor',
     component: Layout,
     name: 'systemDoor',
-    meta: {title: '系统门户', icon: 'product'},
+    meta: {title: '系统门户'},
     children: [
       {
       path: 'menuInfo',
@@ -421,14 +421,20 @@ export const asyncRouterMap = [
     name: 'manageDoor',
     component: Layout,
     redirect: '/manageDoor/news/keyWord',
-    meta: {title: '管理门户', icon: 'product'},
+    meta: {title: '管理门户'},
     children:[
+      {
+        path: 'carousel',
+        name: 'carousel',
+        component: () => import('@/views/manageDoor/carousel'),
+        meta: {title: '轮播图管理'},
+      },
       {
         path:'news',
         name:'newsMsg',
         component:()=> import('@/views/manageDoor/index'),
         redirect:'/manageDoor/news/newsType',
-        meta:{title:'新闻公告管理' ,icon: 'product'},
+        meta:{title:'新闻公告管理'},
         children:[
           {
             path: 'newsType',
@@ -461,25 +467,25 @@ export const asyncRouterMap = [
         name:'meeting',
         component:()=> import('@/views/manageDoor/index'),
         redirect:'/manageDoormeet/meetroom',
-        meta:{title:'会议管理',icon:'product'},
+        meta:{title:'会议管理'},
         children:[
           {
             path: 'meetroom',
             name: 'meetingRoom',
             component: () => import('@/views/manageDoor/meet/meetroom'),
-            meta: {title: '会议室管理', icon: 'product-list',noCache: true}
+            meta: {title: '会议室管理', noCache: true}
           },
           {
             path: 'meetType',
             name: 'meetingType',
             component: () => import('@/views/manageDoor/meet/meetType'),
-            meta: {title: '会议分类', icon: 'product-list',noCache: true}
+            meta: {title: '会议分类', noCache: true}
           },
           {
             path: 'meeting',
             name: 'meeting',
             component: () => import('@/views/manageDoor/meet/index'),
-            meta: {title: '会议管理', icon: 'product-list',noCache: true}
+            meta: {title: '会议管理', noCache: true}
           },
         ]
       },
@@ -488,7 +494,7 @@ export const asyncRouterMap = [
         component:()=> import('@/views/manageDoor/index'),
         redirect: '/manageDoor/menu_pers/userInfo',
         name: 'menu_pers',
-        meta: {title: '权限管理', icon: 'product'},
+        meta: {title: '权限管理'},
         children: [
           {
             path: 'userInfo',
@@ -519,7 +525,7 @@ export const asyncRouterMap = [
             name: '个人信息',
             hidden:true,
             component: () => import('@/views/manageDoor/menu_pers/loginUser'),
-            meta: {title: '个人信息', icon: 'home'}
+            meta: {title: '个人信息'}
           }
         ]
       },
@@ -528,19 +534,19 @@ export const asyncRouterMap = [
         name:'tableForm',
         component:()=> import('@/views/manageDoor/index'),
         redirect:'/manageDoortableForm/act_form_type/act_form_type',
-        meta:{title:'表单管理',icon:'product'},
+        meta:{title:'表单管理'},
         children:[
           {
             path: 'act_form_type',
             name: 'act_form_type',
             component: () => import('@/views/manageDoor/tableForm/act_form_type/act_form_type'),
-            meta: {title: '流程表单分类', icon: 'product-list',noCache: true}
+            meta: {title: '流程表单分类', noCache: true}
           },
           {
             path: 'form',
             name: 'form',
             component: () => import('@/views/manageDoor/tableForm/form/form'),
-            meta: {title: '表单管理', icon: 'product-list',noCache: true}
+            meta: {title: '表单管理', noCache: true}
           },
           {
             path: 'FormFields',
@@ -562,7 +568,7 @@ export const asyncRouterMap = [
         component:()=> import('@/views/manageDoor/index'),
         redirect: '/manageDoor/work/oweuser',
         name: 'workReport',
-        meta: {title: '工作汇报管理', icon: 'product'},
+        meta: {title: '工作汇报管理'},
         children: [
           {
             path: 'oweuser',

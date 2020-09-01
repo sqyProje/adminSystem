@@ -66,7 +66,7 @@
     </el-table>
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="35%"
     >
@@ -170,6 +170,14 @@
             :picArray="picString"
           ></multiUploadImg>
         </el-form-item>
+        <el-form-item label="附件" prop="filepath">
+          <multiUploadFile
+            @file-url="FilePreview"
+            :picArray="picArray">
+          </multiUploadFile>
+          <el-input v-model="AddEditInfo.fileIds" type="hidden"></el-input>
+          <a :href="AddEditInfo.fileIds" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileIds}}</a>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
@@ -182,10 +190,13 @@
   import {Message,MessageBox} from 'element-ui'
   import {CredentialList,AddCredential,GetCredential,EditCredential,DeleteCredential} from '@/api/personnel'
   import multiUploadImg from '@/components/Upload/multiUploadImg'
+  import multiUploadFile from '@/components/Upload/multiUploadFile'
+
   export default {
     data(){
       return{
         tableData:[],
+        picArray:[],
         fileList: [],
         dialogTitle:'',
         dialogVisible: false,
@@ -209,7 +220,9 @@
           changecase:"",
           extantaddress:"",
           picids:"",
-          state:""
+          state:"",
+          fileIds:'',
+          fileName:''
         },
         stateData:[
           { id: 0, display_name: '有效'},
@@ -227,12 +240,16 @@
       }
     },
     components:{
-      multiUploadImg
+      multiUploadImg,multiUploadFile
     },
     mounted(){
       this.initList(this.$route.query.uId)
     },
     methods:{
+      FilePreview(value){
+        console.log(value);
+        this.AddEditInfo.fileIds += value+','
+      },
       picPreview(value){
         this.picPreviewInfo += value+','
         console.log( this.picPreviewInfo);

@@ -161,3 +161,37 @@ export function GetMeetDrop(params) {
     method: 'get',
   })
 }
+/*轮播图管理*/
+export function BannerList(params) {
+  return request({
+    url: '/carousel/list',
+    method: 'get',
+    params: params
+  })
+}
+export function BannerAdd(params) {
+  return request({
+    url: '/carousel/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetBanner(params) {
+  return request({
+    url: '/carousel/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditBanner(params) {
+  return request({
+    url: '/carousel/edit',
+    method: 'post',
+    data: params
+  })
+}
+export function DeleteBanner(params) {
+  return request({
+    url: '/carousel/deletes?array='+params,
+    method: 'post'
+  })
+}

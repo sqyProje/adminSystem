@@ -101,7 +101,7 @@
     </el-col>
     <el-dialog
       title="导入工资表"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="23%">
       <el-form

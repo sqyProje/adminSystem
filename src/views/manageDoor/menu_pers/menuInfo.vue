@@ -104,7 +104,7 @@
       </div>
       <el-dialog
         title="添加主菜单"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="FirstDialogVisible"
         width="33%">
         <el-form
@@ -147,7 +147,7 @@
       <!--子集添加编辑-->
       <el-dialog
         :title="dialogTitle"
-        :close-on-click-modal="false"
+        :close-on-click-modal="false"      :show-close="false"
         :visible.sync="dialogVisible"
         width="33%">
         <el-form

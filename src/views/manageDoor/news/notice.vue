@@ -113,7 +113,7 @@
 
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="50%">
       <el-form

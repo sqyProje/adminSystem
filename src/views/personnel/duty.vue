@@ -95,7 +95,7 @@
     </el-col>
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="23%">
       <el-form
@@ -132,7 +132,7 @@
     <!--组织树-->
     <el-dialog
       title="组织架构树"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="TreeDialogVisible">
       <tree :toChildTree="TreeDataOrg"></tree>
     </el-dialog>

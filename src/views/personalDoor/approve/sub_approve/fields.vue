@@ -229,7 +229,7 @@
     </div>
     <el-dialog
       title="选择下一级审批人"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="25%">
       <el-form

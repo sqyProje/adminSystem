@@ -1,11 +1,11 @@
 <template> 
-  <div>
+  <div><!-- :class="{hide:hideUpload}"-->
     <el-upload
-      :class="{hide:hideUpload}"
       name="fileName"
       :multiple='false'
       :limit="limitCount"
       :action=" this.baseURL+'/file/getFilePath'"
+      :headers = "headers"
       :on-change="handleChange"
       :on-exceed="handleExceed"
       :on-success="handleSuccess"
@@ -38,6 +38,9 @@
         hideUpload:false,
         limitCount:1,
         fileList: [],
+        headers:{
+          Authorization: localStorage.getItem('loginToken') //从cookie里获取token，并赋值  Authorization ，而不是token
+        }
       };
     },
     watch:{
@@ -51,7 +54,7 @@
     },
     methods: {
       handleSuccess(response, file, fileList) {
-        this.hideUpload = true
+      //  this.hideUpload = true
         this.fileList.push({name: response.datas.fileName,url: response.datas.filePath})
         this.$emit('file-url',decodeURIComponent(response.datas.filePath))
         this.$message.success('文件上传成功');
@@ -75,12 +78,12 @@
         }
       },
       handleRemove(file, fileList) {
-        DeleteFileUrl( file.url).then(res=>{
-          this.hideUpload = false
-          this.$message.warning(res.msg);
+       /* DeleteFileUrl( file.url).then(res=>{
+          this.hideUpload = false*/
+          this.$message.warning('删除成功');
           this.fileList = []
           this.$emit('file-url','')
-        })
+       /* })*/
       },
       handleExceed (files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，请删除后继续上传`)

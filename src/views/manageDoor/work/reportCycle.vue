@@ -86,7 +86,7 @@
 
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="35%">
       <el-form
@@ -154,7 +154,7 @@
     </el-dialog>
     <el-dialog
       title="选择汇报人员"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
       <el-tree
@@ -173,7 +173,7 @@
     </el-dialog>
     <el-dialog
       title="选择被汇报人员"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisibleTo"
       width="33%">
       <el-tree

@@ -108,7 +108,7 @@
     </el-col>
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
       width="23%">
       <el-form
@@ -217,7 +217,7 @@
     </el-dialog>
     <el-dialog
       title="岗位调动信息"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="stationFlag"
       width="70%">
       <stationmove :employeeIds ='employeeId'></stationmove>
@@ -228,7 +228,7 @@
     <!--导出 弹出框-->
     <el-dialog
       title="导出"
-      :close-on-click-modal="false"
+      :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogExcelVisible"
       width="23%">
       <el-select v-model="wealName" placeholder="请选择岗位名称" style="width:100%">
