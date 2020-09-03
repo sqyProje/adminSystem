@@ -7,7 +7,7 @@
       <div class="block left-box">
         <el-carousel height="350px">
           <el-carousel-item v-for="(item,i) in list" :key="i">
-            <img style="max-width: 100%;height:310px" :src="item.picpath" alt />
+            <img style="width: 100%;height:100%" :src="item.picpath" alt />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -259,7 +259,9 @@ export default {
   white-space: nowrap;
 }
 .pagination-container{
-  margin-top: 20px;
+  position: absolute;
+  top: 310px;
+  left: 150px;
 }
 .fenye {
   margin-left: 30%;
@@ -310,6 +312,7 @@ export default {
   height: 380px;
   margin: 10px 15px 0px 10px;
   background: rgba(255, 255, 255, 1);
+  position: relative;
 }
 .hint-box {
   width: 863px;
