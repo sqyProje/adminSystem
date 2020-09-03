@@ -166,7 +166,6 @@
         },
         canleDialog(){
           this.dialogVisible = false
-          this.$refs.AddEditInfo.resetFields();
           Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         },
       }

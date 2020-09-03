@@ -235,8 +235,7 @@
         this.AddEditInfo.birthdate = birth;
       },
       getDays () { // 获取当前月份所有公历日期及其农历日期
-
-        console.log(this.year,this.month)
+      //  console.log(this.year,this.month)
         this.days = []
         const day = new Date()
         day.setFullYear(this.year, this.month - 1, 1) // 此处较之前调整，获取当月第一天

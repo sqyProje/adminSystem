@@ -54,6 +54,7 @@
           this.fileList=[]
         }else{
           const pictureList=this.picArray.split(",")
+          console.log(pictureList)
           this.fileList = pictureList.map(item => {
             return {
               url: item
@@ -68,7 +69,13 @@
         this.$emit('imgUrl',response.datas)
       },
       handleRemove(file, fileList) {
-        console.log(file, fileList);
+        let multiUrl = ''
+        fileList.forEach((value,key)=>{
+
+          multiUrl = multiUrl + value.url +','
+        })
+        this.$message.warning('删除成功');
+        this.$emit('delUrl', multiUrl)
       },
       handlePreview(file) {
         this.dialogImageUrl = file.url;

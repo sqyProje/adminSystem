@@ -167,6 +167,7 @@
         <el-form-item label ='图集'>
           <multiUploadImg
             @imgUrl="picPreview"
+            @delUrl = "delUrlPreview"
             :picArray="picString"
           ></multiUploadImg>
         </el-form-item>
@@ -252,7 +253,11 @@
       },
       picPreview(value){
         this.picPreviewInfo += value+','
-        console.log( this.picPreviewInfo);
+      },
+      delUrlPreview(value){
+        this.picPreviewInfo = value
+        this.picString = value.substring(0,value.length-1)
+        console.log( this.picString);
       },
       initList(uId){
         CredentialList(uId).then(response => {
@@ -273,6 +278,10 @@
         GetCredential(row.uId).then(response=>{
           this.AddEditInfo = response.datas
           this.picString = response.datas.picids;
+          if(response.datas.picids.length==0){
+            this.picPreviewInfo = ''
+            return
+          }
           this.picPreviewInfo = response.datas.picids+','
           console.log( this.picPreviewInfo)
         })

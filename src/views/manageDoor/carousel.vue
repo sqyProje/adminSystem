@@ -44,7 +44,7 @@
       :close-on-click-modal="false"
       :show-close="false"
       :visible.sync="dialogVisible"
-      width="50%">
+      width="35%">
       <el-form
         :inline="false"
         size="mini"
@@ -57,7 +57,7 @@
           <singleUpload  v-model="AddEditInfo.picpath" @input="picFun"></singleUpload>
         </el-form-item>
         <el-form-item label ='排序'  prop="sort">
-          <el-input v-model="AddEditInfo.sort"></el-input>
+          <el-input v-model="AddEditInfo.sort" type="number"></el-input>
         </el-form-item>
 
       </el-form>
@@ -88,7 +88,7 @@
         },
         rulesInfo: {
           picpath: [{ required: true,trigger: 'blur',message: '请上传图片'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入标题'}],
+          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
         }
       }
     } ,

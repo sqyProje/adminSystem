@@ -102,6 +102,7 @@
           <multiUploadImg
             @imgUrl="picPreview"
             :picArray="picString"
+            @delUrl = "delUrlPreview"
           ></multiUploadImg>
         </el-form-item>
       </el-form>
@@ -173,6 +174,10 @@
         GetEdu(row.uId).then(response=>{
           this.AddEditInfo = response.datas
           this.picString = response.datas.picPaths;
+          if(response.datas.picPaths.length==0){
+            this.picPreviewInfo = ''
+            return
+          }
           this.picPreviewInfo = response.datas.picPaths+','
           console.log( this.picPreviewInfo)
         })
@@ -256,6 +261,11 @@
       picPreview(value){
         this.picPreviewInfo += value+','
         console.log( this.picPreviewInfo);
+      },
+      delUrlPreview(value){
+        this.picPreviewInfo = value
+        this.picString = value.substring(0,value.length-1)
+        console.log( this.picString);
       },
     }
   }

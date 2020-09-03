@@ -54,6 +54,8 @@
           <!--修改基本信息-->
           <el-dialog
             title="修改基本信息"
+            :close-on-click-modal="false"
+            :show-close="false"
             :visible.sync="dialogVisible"
             width="40%">
             <el-form size="mini" :model="editInfoQuery" label-width="100px">
@@ -76,17 +78,19 @@
           <!--修改手机号-->
           <el-dialog
             title="更改手机号"
+            :close-on-click-modal="false"
+            :show-close="false"
             :visible.sync="PhoneDialogVisible"
             width="20%"
           >
-            <el-form size="mini" :model="editPhoneQuery" label-width="100px">
+            <el-form size="mini" :model="editPhoneQuery" :rules="rulesPhone" ref="rulesPhone" label-width="100px">
               <el-form-item label ='原手机号'>
                 <el-input v-model="loginUserInfo.phoneno" disabled></el-input>
               </el-form-item>
-              <el-form-item label ='新手机号'>
+              <el-form-item label ='新手机号' prop="phoneno">
                 <el-input v-model="editPhoneQuery.phoneno"></el-input>
               </el-form-item>
-              <el-form-item label ='验证码'>
+              <el-form-item label ='验证码' prop="code">
                 <el-col :span="13">
                   <el-input v-model="editPhoneQuery.code"></el-input>
                 </el-col>
@@ -109,11 +113,11 @@
             :visible.sync="passwordDialogVisible"
             width="20%"
           >
-            <el-form size="mini" :model="editPassQuery" label-width="100px">
-              <el-form-item label ='旧密码'>
+            <el-form size="mini" :model="editPassQuery" ref="editPass" :rules="rules" label-width="100px">
+              <el-form-item label ='旧密码' prop="re_Pwword">
                 <el-input type="password" v-model="editPassQuery.re_Pwword"></el-input>
               </el-form-item>
-              <el-form-item label ='新密码'>
+              <el-form-item label ='新密码' prop="password">
                 <el-input type="password" v-model="editPassQuery.password"></el-input>
               </el-form-item>
             </el-form>
@@ -129,15 +133,25 @@
 <script type="text/ecmascript-6">
   import { mapGetters } from 'vuex'
   import store from '../../../store'
+  import md5 from 'js-md5';
   import {Message} from 'element-ui'
   import {getLoginUserInfo,editInfo,uploadfile,editPhone,getPhoneCode,editPassWord} from '@/api/login'
   import singleUpload from '@/components/Upload/singleImg'
-  import md5 from 'js-md5';
+  import {validmobile} from '@/utils/validate'
   export default {
     components: {
       singleUpload
     },
     data () {
+      const checkphone = (rule, value, callback) => {
+        console.log(value)
+        if (!validmobile(value)) {
+          console.log(validmobile(value))
+          callback(new Error('请输入正确的手机号'))
+        } else {
+          callback()
+        }
+      };
       return {
         loginUserInfo:{
           picpath: "",
@@ -168,6 +182,15 @@
         sendAuthCode:true,
         auth_time:0,
         defaultImg:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        rules:{
+          re_Pwword:[{ required: true,trigger: 'blur',message: '原密码不能为空'}],
+          password:[{ required: true,trigger: 'blur',message: '新密码不能为空'}]
+        },
+        rulesPhone:{
+          phoneno:[{ required: true,trigger: 'blur',validator: checkphone}],
+          code:[{ required: true,trigger: 'blur',message: '验证码不能为空'}]
+        }
+
       }
     },
     created(){
@@ -218,32 +241,41 @@
         })
       },
       editPhoneFunc(){
-        editPhone(this.editPhoneQuery).then(response =>{
-          this.PhoneDialogVisible = false
-          this.loginUserInfo.phoneno = this.editPhoneQuery.phoneno
-          this.editPhoneQuery ={
-            phoneno:'',
-            code:'',
+        console.log(this.editPhoneQuery)
+        this.$refs.rulesPhone.validate(valid=>{
+          if(valid){
+            editPhone(this.editPhoneQuery).then(response =>{
+              this.PhoneDialogVisible = false
+              this.loginUserInfo.phoneno = this.editPhoneQuery.phoneno
+              this.editPhoneQuery = {
+                phoneno:'',
+                code:'',
+              }
+            })
           }
         })
       },
       editPassWordFunc(){
-       let editPassQueryM={
-            re_Pwword:md5(this.editPassQuery.re_Pwword),
-            password:md5(this.editPassQuery.password),
-        }
-        editPassWord(editPassQueryM).then(response=>{
-          if(response.status === 0){
-            Message({
-              message: response.msg,
-              type: 'success',
-              duration: 3 * 1000
+        this.$refs.editPass.validate(valid => {
+          if (valid) {
+            let editPassQueryM = {
+              re_Pwword: md5(this.editPassQuery.re_Pwword),
+              password: md5(this.editPassQuery.password),
+            }
+            editPassWord(editPassQueryM).then(response => {
+              if (response.status === 0) {
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+              }
+              this.passwordDialogVisible = false
+              store.dispatch('FedLogOut').then(() => {
+                location.reload()// 为了重新实例化vue-router对象 避免bug
+              })
             })
           }
-          this.passwordDialogVisible = false
-          store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
-          })
         })
       },
       picFun(data){

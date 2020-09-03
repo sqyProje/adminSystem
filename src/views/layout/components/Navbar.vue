@@ -6,9 +6,9 @@
       <template v-if="device!=='mobile'">
        <!-- <search id="header-search" class="right-menu-item"></search>-->
         <screenfull id="screenfull" class="right-menu-item hover-effect"></screenfull>
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+        <!--<el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect"></size-select>
-        </el-tooltip>
+        </el-tooltip>-->
       </template>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">

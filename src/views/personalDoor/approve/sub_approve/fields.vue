@@ -198,6 +198,7 @@
         >
           <multiUploadImg
             @imgUrl="picPreview"
+            @delUrl = "delUrlPreview"
             :picArray="''"
           ></multiUploadImg>
         <!--  <el-input v-model="domain.fieldValue" :placeholder="domain.valimessage"></el-input>-->
@@ -340,7 +341,15 @@
             console.log(item.fieldValue)
           }
         })
-
+      },
+      delUrlPreview(value){
+        this.picPreviewInfo = value
+        this.dynamicValidateForm.domains.forEach((item,index)=>{
+          if(item.fieldtype === 150){
+            item.fieldValue += value.substring(0,value.length-1)
+            console.log(item.fieldValue)
+          }
+        })
       },
       prev(){
         this.$router.push({name:'sub_approve'})

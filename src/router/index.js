@@ -370,12 +370,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/reportDoor/checkReport'),
         meta: {title: '核算报表',  noCache: true}
       },
-      {
+     /* {
         path: 'financeReport',
         name: 'financeReport',
         component: () => import('@/views/reportDoor/financeReport'),
         meta: {title: '财务报表',  noCache: true}
-      },
+      }*/
     ]
   },
   {
@@ -430,8 +430,14 @@ export const asyncRouterMap = [
         meta: {title: '轮播图管理'},
       },
       {
+        path: 'reportType',
+        name: 'reportType',
+        component: () => import('@/views/manageDoor/reportType'),
+        meta: {title: '报表平台分类'},
+      },
+      {
         path:'news',
-        name:'newsMsg',
+        name:'news_notice_Msg',
         component:()=> import('@/views/manageDoor/index'),
         redirect:'/manageDoor/news/newsType',
         meta:{title:'新闻公告管理'},
@@ -464,7 +470,7 @@ export const asyncRouterMap = [
       },
       {
         path:'meet',
-        name:'meeting',
+        name:'meeting_manage',
         component:()=> import('@/views/manageDoor/index'),
         redirect:'/manageDoormeet/meetroom',
         meta:{title:'会议管理'},

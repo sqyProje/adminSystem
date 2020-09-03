@@ -150,8 +150,12 @@
       },
       getInfo(uId){
         GetContractInfo(uId).then(response=>{
+          if(response.datas==null){
+            return
+          }
           this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas;
-          this.picArray.push({name:response.datas.fileName,url:response.datas.filepath})
+
+          this.picArray.push({name:response.datas.fileIds,url:response.datas.fileIds})
         })
       },
       UpdateUser() {

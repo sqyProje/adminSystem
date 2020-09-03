@@ -195,3 +195,37 @@ export function DeleteBanner(params) {
     method: 'post'
   })
 }
+/*报表平台分类*/
+export function ReportList(params) {
+  return request({
+    url: '/reportType/list',
+    method: 'get',
+    params: params
+  })
+}
+export function ReportAdd(params) {
+  return request({
+    url: '/reportType/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetReport(params) {
+  return request({
+    url: '/reportType/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditReport(params) {
+  return request({
+    url: '/reportType/edit',
+    method: 'post',
+    data: params
+  })
+}
+export function DeleteReport(params) {
+  return request({
+    url: '/reportType/deletes?array='+params,
+    method: 'post'
+  })
+}
