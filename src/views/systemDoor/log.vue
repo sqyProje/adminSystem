@@ -22,7 +22,7 @@
     <el-table
       :data="tableData"
       v-loading="listLoading"
-      size  = "small"
+      size  = "small"  max-height="600"
       border
     >
       <el-table-column label="操作账户" prop="operUsername" width="150"></el-table-column>
@@ -48,7 +48,7 @@
         layout="total, sizes,prev, pager, next,jumper"
         :current-page.sync="listQuery.pageNum"
         :page-size="listQuery.pageSize"
-        :page-sizes="[10,15,20]"
+        :page-sizes="[30,40,50]"
         :total="total">
       </el-pagination>
     </div>
@@ -64,8 +64,8 @@
         :model="AddEditInfo"
         label-width="100px"
       >
-        <el-form-item label ='用户ID'>
-          <el-input v-model="AddEditInfo.uId"></el-input>
+        <el-form-item label ='操作用户ID'>
+          <el-input v-model="AddEditInfo.operUserId"></el-input>
         </el-form-item>
         <el-form-item label ='操作账户'>
           <el-input v-model="AddEditInfo.operUsername"></el-input>
@@ -111,7 +111,7 @@
     userName: '',
     postKey:'',
     pageNum:1,
-    pageSize:10
+    pageSize:30
   }
     export default {
       data(){
@@ -137,6 +137,7 @@
             this.listLoading = false
             this.tableData = response.datas.list
             this.total = response.datas.total
+           // this.listQuery.pageNum =  response.datas.pages
           })
         },
         handleResetSearch() {

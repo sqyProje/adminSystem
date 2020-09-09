@@ -33,7 +33,7 @@
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
-        size  = "small"
+        size  = "small"  max-height="600"
         border
       >
         <el-table-column
@@ -41,7 +41,6 @@
           width="55">
         </el-table-column>
         <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="岗位职责" prop="sketch"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-button size="mini" round class='label-btn' :type="scope.row.state ? 'warning' : 'success'">
@@ -49,6 +48,7 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
         <el-table-column label="操作" fixed="right"  width="260">
@@ -97,7 +97,7 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='岗位职责' prop="sketch">
-          <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
+          <el-input type="textarea" v-model="AddEditInfo.sketch" rows="7"></el-input>
         </el-form-item>
         <el-form-item label='状态'>
           <el-select v-model="AddEditInfo.state" placeholder="状态" style="width: 100%;">
@@ -108,6 +108,9 @@
               :key = "item.id"
             >{{item.display_name}}</el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label ='排序'  prop="sort">
+          <el-input type="number" min="0" v-model="AddEditInfo.sort"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -130,6 +133,7 @@
   export default {
     data(){
       return {
+        listLoading:true,
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
@@ -140,6 +144,7 @@
           name:'',
           sketch:'',
           state:'',
+          sort:''
         },
         stateData:[
           { id: 0, display_name: '启用'},
@@ -148,6 +153,7 @@
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           sketch:[{required: true, trigger: 'blur', message: '请输入岗位职责'}],
+          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
         }
       }
     } ,

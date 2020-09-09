@@ -1,11 +1,11 @@
 <template>
-  <el-col :span="3">
-    <div style="padding-right: 16px;">
+  <el-col :xs="8" :sm="6" :md="3" class="scroll-wrap" >
+    <el-scrollbar wrap-class="scrollbar-wrapper" style="width: 90%;height: calc(100vh - 160px);margin-bottom: 20px">
       <el-input
         placeholder="输入上级部门"
         v-model="filterText"
         size="mini"
-        style="margin-bottom: 6px;"
+        style="margin-bottom: 6px;width: 90%;"
       >
       </el-input>
       <el-tree
@@ -15,9 +15,10 @@
         @node-click="handleNodeClickDepart"
         default-expand-all
         :filter-node-method="filterNode"
-        :props="defaultProps">
+        :props="defaultProps"
+      >
       </el-tree>
-    </div>
+    </el-scrollbar>
   </el-col>
 </template>
 <script type="text/ecmascript-6">
@@ -73,7 +74,9 @@
 </script>
 
 <style>
-  .text-center{
-    text-align: center;
+  .scroll-wrap .el-scrollbar .el-scrollbar_wrap{
+    overflow-x: hidden;
   }
+  .scroll-wrap .el-tree>.el-tree-node{display:inline-block;}
+  .el-scrollbar .el-scrollbar__wrap {overflow-x: hidden;}
 </style>

@@ -247,6 +247,11 @@
       //倒计时
       timeOut(response){
         if(response.status === 0){
+          Message({
+            message: response.msg,
+            type: 'success',
+            duration: 3 * 1000
+          })
           this.sendAuthCode = false;
           this.auth_time = 180;
           var auth_timetimer =  setInterval(()=>{
@@ -256,6 +261,12 @@
               clearInterval(auth_timetimer);
             }
           }, 1000);
+        }else{
+          Message({
+            message: response.msg,
+            type: 'success',
+            duration: 3 * 1000
+          })
         }
       },
       changeImgCode () {
@@ -313,8 +324,16 @@
                   type: 'success',
                   duration: 3 * 1000
                 })
+                Object.keys(this.ForgetPasswordQuery).forEach(key => this.ForgetPasswordQuery[key]= '');
+                this.sendAuthCode = true;
                 this.loginFormFlag = !this.loginFormFlag
                 this.passFormFlag = !this.passFormFlag
+              }else{
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
               }
             })
           }

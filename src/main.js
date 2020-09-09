@@ -5,7 +5,7 @@ import 'vue2-org-tree/dist/style.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
-import VCharts from 'v-charts'
+import echarts from 'echarts'
 import Vue2OrgTree from 'vue2-org-tree';
 import VueTinymce from "@packy-tang/vue-tinymce"
 import '@/styles/index.scss' // global css
@@ -19,10 +19,11 @@ import '@/permission' // permission control
 import {hasPermission} from './utils/hasPermission' //new add
 Vue.use(ElementUI, { locale })
 Vue.use(Vue2OrgTree)
-Vue.use(VCharts)
+
 Vue.use(VueTinymce)
 
 Vue.config.productionTip = true // true 生产环境 false阻止vue在启动时生成生成提示 开发环境
+Vue.prototype.$echarts = echarts;
 Vue.prototype.baseURL = process.env.BASE_API
 Vue.prototype.hasPerm = hasPermission
 

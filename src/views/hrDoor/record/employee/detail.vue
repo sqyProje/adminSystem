@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <div class="conedu" style="text-align: left;color: #f1c40f;font-size: 14px;cursor: pointer" @click="prev">返回上一级</div>
     <el-tabs tab-position="left" class="conedu">
       <el-tab-pane label="员工详情"><manInfo style="width: 800px"></manInfo></el-tab-pane>

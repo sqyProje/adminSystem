@@ -55,9 +55,13 @@ a:hover {
 }
 
 .app-container {
-  padding: 20px;
+  padding: 10px 10px;
 }
-
+@media only screen and (max-width: 1500px) {
+  .app-container {
+    padding: 10px 10px 100px;
+  }
+}
 //搜索栏样式
 .filter-container {
 
@@ -149,5 +153,23 @@ a:hover {
 
 .color-info {
   color: #909399;
+}
+/*表格刷新边框闪烁问题*/
+.basetreetable .el-table--border td{
+  border-right: none;
+}
+.basetreetable .el-table::before{
+  height:0;
+}
+.basetreetable{
+  border-top: 1px solid #dfe6ec;
+  border-left: 1px solid #dfe6ec;
+  border-right: 1px solid #dfe6ec;
+}
+.basetreetable .el-table__body .el-table__row td,.basetreetable .has-gutter th{
+  border-right: 1px solid #dfe6ec;
+}
+.basetreetable .el-table__body .el-table__row td:last-child,.basetreetable .has-gutter th:last-child{
+  border-right:none;
 }
 

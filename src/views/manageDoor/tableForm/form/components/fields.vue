@@ -12,7 +12,7 @@
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
-        size  = "small"
+        size  = "small"  max-height="600"
         border
       >
         <el-table-column

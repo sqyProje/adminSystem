@@ -11,9 +11,9 @@
               <el-select
                 v-model="listQuery.departName"
                 placeholder="请选择部门"
-                style="width: 100%"
-              >
-                <el-option value="1" style="height: auto">
+                ref="departName"
+                style="width: 100%">
+                <el-option :value="listQuery.departName" style="height: auto;padding:0">
                   <el-tree
                     :data="departData"
                     node-key="uId"
@@ -27,9 +27,10 @@
               <el-select
                 v-model="listQuery.dutyName"
                 placeholder="请选择职务"
+                ref="dutyName"
                 style="width: 100%"
               >
-                <el-option value="2" style="height: auto">
+                <el-option :value="listQuery.dutyName" style="height: auto;padding:0">
                   <el-tree
                     :data="dutyData"
                     node-key="uId"
@@ -41,7 +42,7 @@
             </el-form-item>
             <el-form-item>
               <el-select
-                v-model="listQuery.stationName"
+                v-model="listQuery.stationId"
                 placeholder="请选择岗位名称"
                 style="width: 100%;">
                 <el-option
@@ -72,14 +73,15 @@
             <el-table
               :data="tableDataCheck"
               v-loading="listLoadingCheck"
-              size  = "small"
+              size  = "small"  max-height="600"
               border
             >
               <el-table-column label="姓名" prop="realname"></el-table-column>
+              <el-table-column label="部门" prop="departName"></el-table-column>
               <el-table-column label="职务" prop="duty"></el-table-column>
               <el-table-column label="岗位" prop="station"></el-table-column>
               <el-table-column label="短号" prop="shortPhone"></el-table-column>
-              <el-table-column label="电话" prop="phone"></el-table-column>
+              <el-table-column label="手机号" prop="phone"></el-table-column>
               <el-table-column label="邮箱" prop="email"></el-table-column>
             </el-table>
             <div class="pagination-container">
@@ -102,16 +104,16 @@
               :data="tableData"
               v-loading="listLoading"
               row-key="id"
-              :default-expand-all="true"
+              default-expand-all
               :tree-props="{children:'children',hasChildren:'hasChildren'}"
-              size  = "small"
+              size  = "small"  max-height="600"
               border
             >
               <el-table-column label="部门/姓名" prop="name"></el-table-column>
               <el-table-column label="职务" prop="duty"></el-table-column>
               <el-table-column label="岗位" prop="station"></el-table-column>
               <el-table-column label="短号" prop="shortPhone"></el-table-column>
-              <el-table-column label="电话" prop="phone"></el-table-column>
+              <el-table-column label="手机号" prop="phone"></el-table-column>
               <el-table-column label="邮箱" prop="email"></el-table-column>
             </el-table>
           </div>
@@ -147,7 +149,7 @@
         listLoading:false,
         tableData:[],
         listLoadingCheck:false,
-        i:0,
+        i:1,
         tableDataCheckFlag:false,
         departData:[],
         dutyData:[],
@@ -170,7 +172,6 @@
       GetStationDrop().then(response=>{
         this.stationData = response.datas
       })
-    //  this.initTableCheck();
       this.initTable()
     },
     methods: {
@@ -192,6 +193,7 @@
                 duty:child.duty,
                 phone:child.phone,
                 picPath:child.picPath,
+                station:child.station,
                 shortPhone:child.shortPhone,
                 selected:child.selected
               })
@@ -206,18 +208,14 @@
                   duty:three.duty,
                   phone:three.phone,
                   picPath:three.picPath,
+                  station:three.station,
                   shortPhone:three.shortPhone,
                   selected:three.selected
                 })
               })
             })
           })
-          // console.log(this.tableData)
-
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       initTableCheck() {
         this.listLoadingCheck = true
@@ -247,10 +245,12 @@
       departNodeClick(val){
         this.listQuery.departId = val.uId
         this.listQuery.departName = val.name
+        this.$refs.departName.blur();
       },
       dutyNodeClick(val){
         this.listQuery.dutyId = val.uId
         this.listQuery.dutyName = val.name
+        this.$refs.dutyName.blur();
       },
 
     }

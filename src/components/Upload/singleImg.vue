@@ -3,6 +3,7 @@
     <!--:class="{hide:hideUpload}"-->
     <el-upload
       name="fileName"
+      :class="{hide:hideUpload}"
       :action="this.baseURL+urlSign"
       :headers = "headers"
       list-type="picture-card"
@@ -32,34 +33,40 @@
     name: 'singleUpload',
     data(){
       return {
-    //    hideUpload:false,
+        hideUpload:false,
         limitCount:1,
         dialogVisible: false,
         fileList:[],
         dialogImageUrl: '',
         headers:{
           Authorization: localStorage.getItem('loginToken') //从cookie里获取token，并赋值  Authorization ，而不是token
-        }
+        },
       }
     },
     props: {
       value:{
         type:String,
-        default:''
+        default:'http://minio.hnjkqd.com/upload/SignaturePictures/83007959bc0ff06169d522fbda22396.png'
       } ,
       urlSign:{
         type:String,
         default: '/file/getPicPath' /*/file/getIconPicPath*/
-      }
+      },
+     /* hideUpload:{
+        type:Boolean,
+        default:false
+      }*/
     },
     watch:{
       'value'(){
         if(this.value==undefined){
           this.fileList=[]
+          this.hideUpload = false
           return
         }
         if(this.value.length<=0){
           this.fileList=[]
+          this.hideUpload = false
         }else if(this.value.length>0){
           const pictureList=this.value.split(",")
           this.fileList = pictureList.map(item => {
@@ -67,33 +74,52 @@
               url: item
             }
           });
-        //  this.hideUpload = this.fileList.length > 0
+          this.hideUpload = true
         }
       }
     },
     mounted(){
-      console.log(this.urlSign)
+      if(this.value==undefined){
+        this.fileList=[]
+        this.hideUpload = false
+        return
+      }
+      if(this.value.length<=0){
+        this.fileList=[]
+        this.hideUpload = false
+      }else if(this.value.length>0) {
+        const pictureList = this.value.split(",")
+        this.fileList = pictureList.map(item => {
+          return {
+            url: item
+          }
+        });
+        console.log( this.value.length > 0 ? true :false)
+
+        this.hideUpload = true
+
+      }
     },
     methods: {
       beforeAvatarUpload(file){
         const isJPG = file.type === 'image/jpeg';
         const isPNG = file.type === 'image/png';
         const isLt1M = file.size / 1024 / 1024 < 1;
-
         if (!isJPG && !isPNG) {
-          this.$message.warning('上传图片必须是JPG/GIF/PNG/BMP 格式!');
+          this.$message.warning('上传图片必须是JPG/PNG 格式!');
+          return isJPG && isPNG ;
         }
         if (!isLt1M) {
           this.$message.warning('上传图片大小不能超过 1MB!');
+          return isLt1M;
         }
-        return (isJPG  || isPNG) && isLt1M;
       },
       handleRemove(file, fileList) {
-      //  DeleteFileUrl(file.url).then(res=>{
-      //    this.hideUpload = false
+        if (file && file.status==="success") {
+          this.hideUpload = false
           this.$message.warning('删除成功');
           this.$emit('input', '')
-      //  })
+        }
       },
       handlePreview(file) {
         this.dialogVisible = true;
@@ -105,8 +131,8 @@
       handleUploadSuccess(res, file) {
         console.log(res)
         this.fileList=[{name: file.name, url: res.datas}];
-        //this.hideUpload = this.fileList.length >= this.limitCount;
-     //   this.hideUpload = false
+        this.hideUpload = this.fileList.length >= this.limitCount;
+        this.hideUpload = true
         this.$emit('input', res.datas)
       }
     }
@@ -114,9 +140,9 @@
 </script>
 <style>
    .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
-    width:110px;
-    height:110px;
-    line-height:110px;
+    width: 100px;
+    height:100px;
+    line-height:100px;
   }
   .hide .el-upload--picture-card {
     display: none;

@@ -30,7 +30,7 @@
           v-loading="listLoading"
           row-key="uId"
           :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
-          size  = "small"
+          size  = "small"  max-height="600"
           border
         >
           <el-table-column

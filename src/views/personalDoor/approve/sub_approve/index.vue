@@ -59,7 +59,7 @@
     margin-bottom: 20px;
   }
   .icons-container .icon-item {
-    margin: 20px;
+    margin-bottom: 20px;
     padding:20px 4px;
     height: 110px;
     text-align: center;

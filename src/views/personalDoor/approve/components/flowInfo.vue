@@ -244,6 +244,7 @@
         }else{
           this.$refs.AddEditInfo.validate(valid => {
             if (valid) {
+              this.$router.push({name:'wait_approve'})
               ToApprove(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
                   this.$router.push({name:'wait_approve'})
@@ -273,6 +274,7 @@
                   type: 'success',
                   duration: 3 * 1000
                 })
+                this.$router.push({name:'wait_approve'})
               }
             })
           }else{

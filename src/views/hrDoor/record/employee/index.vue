@@ -5,7 +5,7 @@
       :toChildTree="departData"
       @childFnToParent="childFnInfo"
     ></search-tree>
-    <el-col :span="21">
+    <el-col :xs="16" :sm="18" :md="21">
       <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
@@ -51,12 +51,13 @@
         </el-col>
       </el-form>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
-        border
+        max-height="600"
       >
         <el-table-column
           type="selection"
@@ -65,7 +66,6 @@
         <el-table-column label="姓名" prop="realname"></el-table-column>
         <el-table-column label="部门名称" prop="departname"></el-table-column>
         <el-table-column label="任职时间" prop="officedate"></el-table-column>
-        <el-table-column label="部门名称" prop="departname"></el-table-column>
         <el-table-column label="岗位名称" prop="stationname"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
@@ -110,7 +110,7 @@
       :title="dialogTitle"
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="dialogVisible"
-      width="23%">
+      width="26%">
       <el-form
         :inline="false"
         size="mini"
@@ -131,7 +131,7 @@
             placeholder="请选择"
             style="width: 100%"
           >
-            <el-option value="1" style="height: auto">
+            <el-option :value="AddEditInfo.departname" style="height: auto;padding:0">
               <el-tree
                 :data="departData"
                 node-key="uId"
@@ -147,7 +147,7 @@
             placeholder="请选择"
             style="width: 100%"
           >
-            <el-option value="2" style="height: auto">
+            <el-option :value="AddEditInfo.dutyname" style="height: auto;padding:0">
               <el-tree
                 :data="dutyData"
                 node-key="uId"
@@ -265,6 +265,7 @@
   export default {
     data(){
       return {
+        listLoading:true,
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,

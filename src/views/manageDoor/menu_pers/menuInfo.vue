@@ -39,12 +39,13 @@
         </el-form>
       </div>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
-        border
+        max-height="600"
       >
         <el-table-column
           type="selection"
@@ -219,6 +220,7 @@
     export default {
       data(){
         return {
+          listLoading:true,
           listQuery: Object.assign({}, defaultListQuery),
           tableData:[],
           total: null,

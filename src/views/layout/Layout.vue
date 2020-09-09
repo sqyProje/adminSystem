@@ -11,6 +11,9 @@
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
+      <div class="footer">
+        河南健康奇点网络科技有限公司
+      </div>
     </div>
   </div>
 </template>
@@ -88,5 +91,17 @@ export default {
     z-index:9;
     width: calc(100% - #{$sideBarWidth});
     transition: width 0.28s
+  }
+  .footer{
+    width: calc(100% - 210px);
+    height: 34px;
+    line-height:34px;
+    font-size: 14px;
+    text-align: center;
+    color: #ffffff;
+    background-color:#304156;
+    position: fixed;
+    bottom: 0;
+    z-index:10000000;
   }
 </style>

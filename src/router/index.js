@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import loginUser from '../views/manageDoor/menu_pers/loginUser'
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -43,6 +44,18 @@ export const constantRouterMap = [
       meta: {title: '首页', icon: 'home',affix: true}
     }]
   },
+  {
+    path: '/loginUser',
+    component: Layout,
+    redirect: '/loginUser',
+    hidden: true,
+    children: [{
+      path: 'loginUser',
+      name: 'loginUser',
+      component: () => import('@/views/manageDoor/menu_pers/loginUser'),
+      meta: {title: '个人信息'}
+    }]
+  }
 ]
 export const asyncRouterMap = [
   {
@@ -525,14 +538,14 @@ export const asyncRouterMap = [
             name: 'appRole',
             component: () => import('@/views/manageDoor/menu_pers/approle'),
             meta: {title: 'App角色管理'}
-          },
-          {
+          }
+         /* {
             path: 'loginUser',
-            name: '个人信息',
+            name: 'loginUser',
             hidden:true,
             component: () => import('@/views/manageDoor/menu_pers/loginUser'),
             meta: {title: '个人信息'}
-          }
+          }*/
         ]
       },
       {

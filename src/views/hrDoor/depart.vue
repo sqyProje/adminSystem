@@ -1,11 +1,12 @@
 <template>
     <div class="app-container">
-      <search-tree
-        :toChildId="listQuery.parentId"
-        :toChildTree="leftTreeData"
-        @childFnToParent="childFnInfo"
-      ></search-tree>
-      <el-col :span="21">
+      <el-row>
+        <search-tree
+          :toChildId="listQuery.parentId"
+          :toChildTree="leftTreeData"
+          @childFnToParent="childFnInfo"
+        ></search-tree>
+        <el-col :xs="16" :sm="18" :md="21">
         <div class="filter-container">
           <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
             <el-form-item>
@@ -32,12 +33,13 @@
             </el-col>
           </el-form>
           <el-table
+            class="basetreetable"
             :data="tableData"
             v-loading="listLoading"
             row-key="uId"
             :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
             size  = "small"
-            border
+            max-height="600"
           >
             <el-table-column
               type="selection"
@@ -88,7 +90,7 @@
           </div>
         </div>
       </el-col>
-
+      </el-row>
       <el-dialog
         :title="dialogTitle"
         :close-on-click-modal="false"      :show-close="false"
@@ -140,7 +142,7 @@
     export default {
       data(){
         return {
-          listLoading:false,
+          listLoading:true,
           listQuery: Object.assign({}, defaultListQuery),
           tableData:[],
           total: null,

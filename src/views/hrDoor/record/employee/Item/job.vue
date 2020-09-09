@@ -9,7 +9,7 @@
       添加</el-button>
     <el-table
       :data="tableData"
-      size  = "small"
+      size  = "small"  max-height="600"
       border
       style="width: 1100px">
       <el-table-column

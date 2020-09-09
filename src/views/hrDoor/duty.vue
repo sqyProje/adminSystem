@@ -5,11 +5,11 @@
       :toChildTree="leftTreeData"
       @childFnToParent="childFnInfo"
     ></search-tree>
-    <el-col :span="21">
+    <el-col :xs="16" :sm="18" :md="21">
     <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="字典名称"></el-input>
+          <el-input v-model="listQuery.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -28,28 +28,19 @@
               v-if="hasPerm('diction:add')"
               @click="handleAdd">
               添加</el-button>
-            <el-button
-              type="success"
-              size="small"
-              @click="handleTree">
-              组织架构</el-button>
           </el-form-item>
         </el-col>
       </el-form>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
-        border
+        max-height="600"
       >
-        <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
         <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="描述" prop="sketch"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <el-button size="mini" round class='label-btn' :type="scope.row.state ? 'warning' : 'success'">
@@ -57,9 +48,10 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-        <el-table-column label="操作" fixed="right"  width="260">
+        <el-table-column label="操作" fixed="right"  width="400">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -76,6 +68,11 @@
               type="danger"
               v-if="hasPerm('duty:deletes')"
               @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              v-if="scope.row.pid =='' "
+              @click="getTemplateRow(scope.$index,scope.row)">组织架构</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -110,7 +107,7 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='职务职责' prop="sketch">
-          <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
+          <el-input type="textarea" v-model="AddEditInfo.sketch"  rows="7"></el-input>
         </el-form-item>
         <el-form-item label='状态'>
           <el-select v-model="AddEditInfo.state" placeholder="状态" style="width: 100%;">
@@ -122,6 +119,9 @@
             >{{item.display_name}}</el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label ='排序'  prop="sort">
+          <el-input type="number" min="0" v-model="AddEditInfo.sort"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
@@ -130,9 +130,10 @@
     </el-dialog>
 
     <!--组织树-->
+   <!-- :show-close="false"-->
     <el-dialog
       title="组织架构树"
-      :close-on-click-modal="false"      :show-close="false"
+      :close-on-click-modal="false"
       :visible.sync="TreeDialogVisible">
       <tree :toChildTree="TreeDataOrg"></tree>
     </el-dialog>
@@ -152,6 +153,7 @@
   export default {
     data(){
       return {
+        listLoading:true,
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
@@ -165,6 +167,7 @@
           name:'',
           sketch:'',
           state:'',
+          sort:''
         },
         stateData:[
           { id: 0, display_name: '启用'},
@@ -173,7 +176,9 @@
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           sketch:[{required: true, trigger: 'blur', message: '请输入职务职责'}],
-        }
+          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+        },
+        RadioSelect:'1'
       }
     } ,
     components:{
@@ -183,9 +188,6 @@
     created(){
       this.initTable();
       this.leftTree()
-
-      //  this.GetDutyLeft()
-
     },
     methods: {
       onSearchList() {
@@ -298,37 +300,30 @@
         }).then(() => {
           DeleteDuty(row.uId)
             .then(response => {
+              this.leftTree()
+              this.initTable()
               Message({
                 message: response.msg,
                 type: 'success',
                 duration: 3 * 1000
               })
-              this.initTable()
+
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
             message: '已取消删除'
           });
         });
-
       },
       canleDialog(){
         this.dialogVisible = false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
-      GetDutyLeft(){
-        GetDutyInfoArray().then(response=>{
-          response.datas.forEach(item=>{
-            this.leftTreeData.push(item)
-          })
-          this.TreeDataOrg=response.datas[0]
-        })
-      },
-      handleTree(){
+      getTemplateRow(index,row){
         this.TreeDialogVisible = true
+        this.TreeDataOrg=row
       },
       childFnInfo(payload){
         this.listQuery.parentId = payload.uId
@@ -338,4 +333,3 @@
   }
 
 </script>
-

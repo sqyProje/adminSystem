@@ -35,6 +35,7 @@
         :data="tableData"
         v-loading="listLoading"
         size  = "small"
+        max-height="600"
         border
       >
         <el-table-column
@@ -154,10 +155,10 @@
   export default {
     data(){
       return {
+        listLoading:true,
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
-        listLoading:false,
         dialogTitle:'',
         dialogVisible: false,
         wealData:[],

@@ -6,7 +6,7 @@
         <template slot="description" >
           <div class="step-row" v-for="child in item.approveStepCourseModels">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content"
-                   v-if=" child.courseStatus !=80 && child.courseStatus != 85 ">
+                  ><!-- v-if=" child.courseStatus !=80 && child.courseStatus != 85 "-->
               <tr>
                 <td style="color:#333">
                   <div class="processing_content_detail">
@@ -15,22 +15,28 @@
                       width: 30px; height: 30px;
                       background-color:#e1e1e1;
                       vertical-align: middle;
-                      text-align:center;margin-right: 10px;  "
+                      text-align:center;margin-right: 10px;"
                       :src=child.courseUserPic
                       fit="fill">
                       <div slot="error" class="image-slot">
                         <el-image :src=logo></el-image>
                       </div>
                     </el-image>
-                      <span v-if="child.courseStatus=='' "></span>
-                      <span v-else-if=" child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span></div>
-                    <div v-if="child.bool" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
-                    <div v-if="child.bool" class="demo-image__error">签名：
+                      <span>{{child.courseUserName}}</span>
+                     <!-- <span v-if="child.courseStatus =='' "></span>
+                      <span v-else-if="child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span></div>-->
+                      <span v-if="child.courseStatus == ''"></span>
+                      <span v-else-if="child.courseStatus!=0">({{child.courseStatus | formatState}})</span>
+                    </div>
+                    <div v-if="!item.bool" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
+                    <div class="demo-image__error">签名：
                       <el-image
-                        v-if="child.picsignatureUrl.length != 0"
-                        style="width: 100px; height: 40px;background-color:#e1e1e1;vertical-align: top"
+                        style="width: 100px; height: 36px;background-color:#e1e1e1;vertical-align: middle"
                         :src=child.picsignatureUrl
                         fit="fill">
+                        <div slot="error" class="image-slot"  style="width: 100px; height: 36px;line-height: 36px;text-align: center">
+                         暂无图片信息
+                        </div>
                       </el-image>
                     </div>
                   </div>
@@ -130,8 +136,8 @@
     margin-bottom:12px;
     margin-top:12px;
   }
-  .demo-image__error{
-  /*  display: inline-block;*/
+  .el-step:last-of-type .el-step__main, .el-step:last-of-type .el-step__description {
+    padding-right: 5%;
   }
   .demo-image__error .image-slot{
     display: flex;
@@ -148,5 +154,9 @@
     text-align: center;
     display: block;
     line-height: 100px;
+  }
+  .demo-image__error  .image-slot img{
+    width:100%;
+    height: 100%;
   }
 </style>

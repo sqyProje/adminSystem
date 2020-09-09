@@ -12,7 +12,7 @@
       <el-table
         :data="tableData"
         v-loading="listLoading"
-        size  = "small"
+        size  = "small"  max-height="600"
         border
       >
         <el-table-column

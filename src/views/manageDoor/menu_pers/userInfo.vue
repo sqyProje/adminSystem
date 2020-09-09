@@ -1,11 +1,13 @@
 <template>
     <div class="app-container">
-      <search-tree
-        :toChildId="listQuery.parentId"
-        :toChildTree="leftTreeData"
-        @childFnToParent="childFnInfo"
-      ></search-tree>
-      <el-col :span="21">
+
+      <el-row>
+        <search-tree
+          :toChildId="listQuery.parentId"
+          :toChildTree="leftTreeData"
+          @childFnToParent="childFnInfo"
+        ></search-tree>
+        <el-col :xs="16" :sm="18" :md="21">
         <div class="filter-container">
         <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
           <el-form-item>
@@ -37,7 +39,7 @@
         <el-table
           :data="tableData"
           v-loading="listLoading"
-          size  = "small"
+          size  = "small"  max-height="600"
           border
         >
           <el-table-column
@@ -94,6 +96,7 @@
         </div>
       </div>
       </el-col>
+      </el-row>
       <!--添加编辑-->
       <el-dialog
         :title="dialogTitle"
@@ -369,6 +372,7 @@
         this.dialogVisible = true
         this.dialogTitle = '编辑'
         this.timer = new Date().getTime()
+        console.log(this.timer)
         GetUser(row.uId)
           .then(response => {
             this.userInfo = response.datas

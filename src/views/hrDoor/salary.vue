@@ -1,12 +1,11 @@
 <template>
   <div class="app-container">
-
     <search-tree
       :toChildId="listQuery.departname"
       :toChildTree=" departData"
       @childFnToParent="childFnInfo"
     ></search-tree>
-    <el-col :span="21">
+    <el-col :xs="16" :sm="18" :md="21">
       <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
@@ -59,12 +58,13 @@
         </el-col>
       </el-form>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
-        border
+        max-height="600"
       >
         <el-table-column label="部门" prop="departname"></el-table-column>
         <el-table-column label="姓名" prop="realname"></el-table-column>
@@ -174,6 +174,7 @@
   export default {
     data(){
       return {
+        listLoading:true,
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,

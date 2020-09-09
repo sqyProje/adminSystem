@@ -17,7 +17,7 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu class="user-dropdown" slot="dropdown">
-          <router-link to="/manageDoor/menu_pers/loginUser">
+          <router-link :to="{path:'/loginUser/loginUser'}">
             <el-dropdown-item>
               个人信息
             </el-dropdown-item>

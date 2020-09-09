@@ -10,7 +10,7 @@
       :before-remove="beforeRemove"
       :on-success = 'handleSuccess'
       list-type="picture-card"
-      :limit="10"
+      :limit="1000"
       :on-exceed="handleExceed"
       :file-list="fileList">
       <i class="el-icon-plus"></i>
@@ -82,7 +82,7 @@
         this.picDialogVisible = true;
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 10 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1000 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
@@ -92,9 +92,9 @@
 </script>
 <style>
   .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
-    width:110px;
-    height:110px;
-    line-height:110px;
+    width:100px;
+    height:100px;
+    line-height:100px;
   }
 </style>
 

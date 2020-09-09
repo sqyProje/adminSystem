@@ -10,45 +10,40 @@
             </el-col>
             <el-col>
               <el-form-item label="用户名">
-                <el-input v-model="loginUserInfo.username"></el-input>
+                <el-input v-model="loginUserInfo.username" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item label="真实姓名">
-                <el-input v-model="loginUserInfo.realname"></el-input>
+                <el-input v-model="loginUserInfo.realname" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col>
-              <el-form-item label="邮箱">
-                <el-input v-model="loginUserInfo.email">
-                <span slot="suffix" @click="openUser">
-                  <svg-icon icon-class="s-edit" class="color-main"></svg-icon>
-                </span>
-                </el-input>
+              <el-form-item label="邮箱" >
+                <el-input v-model="loginUserInfo.email" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item label="身份证号">
-                <el-input v-model="loginUserInfo.idcard">
-                <span slot="suffix" @click="openUser">
-                  <svg-icon icon-class="s-edit" class="color-main"></svg-icon>
-                </span>
-                </el-input>
+                <el-input v-model="loginUserInfo.idcard" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col>
               <el-form-item label="手机号">
-                <el-input v-model="loginUserInfo.phoneno">
+                <el-input v-model="loginUserInfo.phoneno" :disabled="true">
                 <span slot="suffix" @click="PhoneDialogVisible = true">
                   <svg-icon icon-class="s-edit" class="color-main"></svg-icon>
                 </span>
                 </el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input v-model="loginUserInfo.password">
+                <el-input v-model="loginUserInfo.password" :disabled="true">
                 <span slot="suffix" @click="passwordDialogVisible = true">
                   <svg-icon icon-class="s-edit" class="color-main"></svg-icon>
                 </span>
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col>
+            <el-col >
+              <el-form-item >
+                <el-button type="button" class="el-button--primary" @click="openUser">修改基本信息</el-button>
+              </el-form-item>
             </el-col>
           </el-form>
           <!--修改基本信息-->
@@ -61,7 +56,6 @@
             <el-form size="mini" :model="editInfoQuery" label-width="100px">
               <el-form-item label ='头像'>
                 <singleUpload  v-model="editInfoQuery.picpath" @input="picFun"></singleUpload>
-               <!-- <el-input v-model="editInfoQuery.picpath"></el-input>-->
               </el-form-item>
               <el-form-item label ='邮箱'>
                 <el-input v-model="editInfoQuery.email"></el-input>
@@ -81,7 +75,7 @@
             :close-on-click-modal="false"
             :show-close="false"
             :visible.sync="PhoneDialogVisible"
-            width="20%"
+            width="22%"
           >
             <el-form size="mini" :model="editPhoneQuery" :rules="rulesPhone" ref="rulesPhone" label-width="100px">
               <el-form-item label ='原手机号'>
@@ -91,11 +85,11 @@
                 <el-input v-model="editPhoneQuery.phoneno"></el-input>
               </el-form-item>
               <el-form-item label ='验证码' prop="code">
-                <el-col :span="13">
+                <el-col :span="10">
                   <el-input v-model="editPhoneQuery.code"></el-input>
                 </el-col>
-                <el-col :span="9" style="float: right">
-                  <el-button type="primary" size="mini" @click="getCode" :disabled="!sendAuthCode">
+                <el-col :span="14" style="text-align: right">
+                  <el-button type="primary" size="mini" @click="getCode" :disabled="!sendAuthCode" style="padding:7px 5px;">
                     <span  v-show="!sendAuthCode">{{auth_time}}秒过期</span>
                     <span v-show="sendAuthCode">获取验证码</span>
                   </el-button>
@@ -137,10 +131,11 @@
   import {Message} from 'element-ui'
   import {getLoginUserInfo,editInfo,uploadfile,editPhone,getPhoneCode,editPassWord} from '@/api/login'
   import singleUpload from '@/components/Upload/singleImg'
-  import {validmobile} from '@/utils/validate'
+  import {validmobile,validcard,validEmail} from '@/utils/validate'
+  import ElButton from "../../../../node_modules/element-ui/packages/button/src/button.vue";
   export default {
     components: {
-      singleUpload
+      ElButton,singleUpload
     },
     data () {
       const checkphone = (rule, value, callback) => {
@@ -176,6 +171,7 @@
           re_Pwword:'',
           password:'',
         },
+        oldphoneno:'',
         dialogVisible: false,
         PhoneDialogVisible:false,
         passwordDialogVisible:false,
@@ -193,41 +189,64 @@
 
       }
     },
-    created(){
+    mounted(){
      this.getLoginInfo()
+
     },
     methods: {
       getLoginInfo(){
         getLoginUserInfo().then(response=>{
           this.loginUserInfo = response.datas
+        //  Object.keys(this.editInfoQuery).forEach(key => this.editInfoQuery[key]= '');
           this.$store.commit('SET_AVATAR',this.loginUserInfo.picpath)
         })
       },
       openUser() {
-        this.dialogVisible = true
-      //  this.editInfoQuery = this.loginUserInfo
+        getLoginUserInfo().then(response=>{
+          let timer = new Date().getTime()
+          this.editInfoQuery = response.datas
+          this.dialogVisible = true
+        })
+       /* this.timer = new Date().getTime()
         this.editInfoQuery = {
-          picpath: this.loginUserInfo.picpath,
-          email: this.loginUserInfo.email,
-          idcard: this.loginUserInfo.idcard
+          picpath:  this.loginUserInfo.picpath,
+          email:  this.loginUserInfo.email,
+          idcard:  this.loginUserInfo.idcard
         }
-        console.log(this.editInfoQuery.picpath)
+        this.dialogVisible = true
+        console.log('edit')
+        console.log(this.editInfoQuery)*/
       },
       canleDialog() {
         this.dialogVisible = false
         this.PhoneDialogVisible = false
         this.passwordDialogVisible=false
+        Object.keys(this.editInfoQuery).forEach(key => this.editInfoQuery[key]= '');
       },
       editInfoFunc() {
+        if(!validcard(this.editInfoQuery.idcard)) {
+          this.$message.warning('请输入正确的身份证号')
+          return
+        }
+        if(!validEmail(this.editInfoQuery.email)) {
+          this.$message.warning('请输入正确的邮箱号')
+          return
+        }
         editInfo(this.editInfoQuery).then(response => {
           this.dialogVisible = false;
           this.getLoginInfo()
-
         })
+
       },
       getCode(){
+        this.oldphoneno = this.loginUserInfo.phoneno
         getPhoneCode(this.oldphoneno).then(response=>{
           if(response.status === 0){
+            Message({
+              message: response.msg,
+              type: 'success',
+              duration: 3 * 1000
+            })
             this.sendAuthCode = false;
             this.auth_time = 180;
             var auth_timetimer =  setInterval(()=>{
@@ -237,6 +256,12 @@
               clearInterval(auth_timetimer);
                 }
             }, 1000);
+          }else{
+            Message({
+              message: response.msg,
+              type: 'success',
+              duration: 3 * 1000
+            })
           }
         })
       },
@@ -245,12 +270,26 @@
         this.$refs.rulesPhone.validate(valid=>{
           if(valid){
             editPhone(this.editPhoneQuery).then(response =>{
-              this.PhoneDialogVisible = false
-              this.loginUserInfo.phoneno = this.editPhoneQuery.phoneno
-              this.editPhoneQuery = {
-                phoneno:'',
-                code:'',
+              if(response.status === 0){
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+                this.PhoneDialogVisible = false
+                this.loginUserInfo.phoneno = this.editPhoneQuery.phoneno
+                this.editPhoneQuery = {
+                  phoneno:'',
+                  code:'',
+                }
+              }else{
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
               }
+
             })
           }
         })

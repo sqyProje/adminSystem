@@ -37,7 +37,7 @@
       v-loading="listLoading"
       row-key="uId"
       :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
-      size  = "small"
+      size  = "small"  max-height="600"
       border
     >
       <el-table-column
@@ -106,7 +106,7 @@
         ref="FirstMenuInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='图标' >
+        <el-form-item label ='图标' ><!-- :hideUpload="false"-->
           <singleUpload  :value="FirstMenuInfo.imgicon" :urlSign = urlSign @input="picFun"></singleUpload><!--:urlSign = urlSign-->
         </el-form-item>
         <el-form-item label ='名称'  prop="name">
