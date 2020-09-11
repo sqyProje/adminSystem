@@ -46,7 +46,7 @@
     props: {
       value:{
         type:String,
-        default:'http://minio.hnjkqd.com/upload/SignaturePictures/83007959bc0ff06169d522fbda22396.png'
+        default:''
       } ,
       urlSign:{
         type:String,
@@ -139,11 +139,11 @@
   }
 </script>
 <style>
-   .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
+  /* .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
     width: 100px;
     height:100px;
     line-height:100px;
-  }
+  }*/
   .hide .el-upload--picture-card {
     display: none;
   }

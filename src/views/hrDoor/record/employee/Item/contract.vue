@@ -8,7 +8,7 @@
     </el-col>
     <el-col :span="12">
       <el-form-item label="签订时间" prop="signaturedate">
-        <el-date-picker type="date" v-model="AddEditInfo.signaturedate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+        <el-date-picker type="date" v-model="AddEditInfo.signaturedate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
   </el-row>
@@ -56,12 +56,12 @@
   <el-row :gutter="20">
     <el-col :span="12">
       <el-form-item label="到期时间" prop="enddate">
-        <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+        <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
     <el-col :span="12">
       <el-form-item label="继续签时间" prop="continuedate">
-        <el-date-picker type="date" v-model="AddEditInfo.continuedate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+        <el-date-picker type="date" v-model="AddEditInfo.continuedate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
   </el-row>
@@ -79,11 +79,17 @@
   </el-row>
   <el-form-item label="附件" prop="filepath">
     <multiUploadFile
-      @file-url="picPreview"
+      @file-url="FilePreview"
+      @delFile = 'delFilePreview'
       :picArray="picArray">
     </multiUploadFile>
     <el-input v-model="AddEditInfo.filepath" type="hidden"></el-input>
-    <a :href="AddEditInfo.filepath" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileName}}</a>
+    <a
+      v-for="(items,index) in fileIdsArray "
+      :href="items"
+      style="width: 100%;display: inline-block">
+      下载附件{{index+1}} {{items.substring(50,items.length)}}
+    </a>
   </el-form-item>
   <el-form-item size="large">
     <el-button type="primary" @click="UpdateUser">提交</el-button>
@@ -98,8 +104,6 @@
   export default {
     data() {
       return {
-        picArray:[],
-        picPreviewInfo:'',
         AddEditInfo: {
           e_id:'',
           employeeid:'',
@@ -135,6 +139,11 @@
           { id: 0, name: '有效',Continuename:'是'},
           { id: 1, name: '解除',Continuename:'否'},
         ],
+        picArray:'',
+        fileFlag:false,
+        fileIdsArray:[],
+        filePreviewInfo:'',
+        fileString:''
       };
     },
     components:{
@@ -144,22 +153,29 @@
       this.getInfo(this.$route.query.uId)
     },
     methods: {
-      picPreview(value){
-        console.log(value);
-        this.picPreviewInfo += value+','
+      FilePreview(value){
+        this.filePreviewInfo += value+','
+        this.fileIdsArray.push(value)
+      },
+      delFilePreview(value){
+        this.fileIdsArray= this.fileIdsArray.filter((x) => x !== value);
+        this.fileString = this.fileIdsArray.toString()
+        this.filePreviewInfo = this.fileIdsArray.toString()+','
       },
       getInfo(uId){
         GetContractInfo(uId).then(response=>{
           if(response.datas==null){
             return
           }
-          this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas;
+          this.AddEditInfo =  response.datas==null ?  this.AddEditInfo :  response.datas
 
-          this.picArray.push({name:response.datas.fileIds,url:response.datas.fileIds})
+          this.picArray = response.datas.filepath;
+          this.filePreviewInfo = response.datas.filepath+','
+          this.fileIdsArray = response.datas.filepath.split(',')
         })
       },
       UpdateUser() {
-        this.AddEditInfo.filepath =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
+        this.AddEditInfo.filepath =  this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
         console.log(this.AddEditInfo.filepath)
         this.$refs.AddEditInfo.validate(valid => {
           this.AddEditInfo.employeeid=this.$route.query.uId

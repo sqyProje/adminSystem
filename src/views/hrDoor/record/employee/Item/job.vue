@@ -72,16 +72,16 @@
           <el-input v-model="AddEditInfo.company"></el-input>
         </el-form-item>
         <el-form-item label ='入职时间' prop="startdate">
-          <el-date-picker type="date" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='离职时间' prop="enddate">
-          <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='最低收入' prop="lowpay">
-          <el-input v-model="AddEditInfo.lowpay"></el-input>
+          <el-input type="number" v-model="AddEditInfo.lowpay" placeholder="最小为0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" ></el-input>
         </el-form-item>
         <el-form-item label ='最高收入' prop="higpay">
-          <el-input v-model="AddEditInfo.higpay"></el-input>
+          <el-input type="number" v-model="AddEditInfo.higpay"  placeholder="最大为10位数字" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" oninput="if(value.length>10)value=value.slice(0,10)"></el-input>
         </el-form-item>
         <el-form-item label ='工作内容' prop="jobcontent">
           <el-input type="textarea" v-model="AddEditInfo.jobcontent"></el-input>

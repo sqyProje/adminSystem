@@ -130,6 +130,7 @@
             v-model="AddEditInfo.departname"
             placeholder="请选择"
             style="width: 100%"
+            ref="departname"
           >
             <el-option :value="AddEditInfo.departname" style="height: auto;padding:0">
               <el-tree
@@ -145,7 +146,8 @@
           <el-select
             v-model="AddEditInfo.dutyname"
             placeholder="请选择"
-            style="width: 100%"
+            style="width: 100%;padding: 0;"
+            ref="dutyname"
           >
             <el-option :value="AddEditInfo.dutyname" style="height: auto;padding:0">
               <el-tree
@@ -340,7 +342,9 @@
       },
       dutyFu(){
         GetDutyInfoArray().then(response=>{
-          this.dutyData.push(response.datas[0])
+          response.datas.forEach(item=> {
+            this.dutyData.push(item)
+          })
         })
       },
       handleStation(row){
@@ -483,10 +487,12 @@
       departNodeClick(val){
         this.AddEditInfo.departid = val.uId
         this.AddEditInfo.departname = val.name
+        this.$refs.departname.blur();
       },
       dutyNodeClick(val){
         this.AddEditInfo.dutyid = val.uId
         this.AddEditInfo.dutyname = val.name
+        this.$refs.dutyname.blur();
       },
       childFnInfo(payload){
         this.listQuery.departId = payload.uId

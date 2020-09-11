@@ -76,7 +76,7 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='姓名'>
+        <el-form-item label ='姓名'  prop="name">
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='关系' prop="relation">
@@ -85,7 +85,7 @@
         <el-form-item label ='联系方式' prop="phone">
           <el-input v-model="AddEditInfo.phone"></el-input>
         </el-form-item>
-        <el-form-item label ='工作' prop="work">
+        <el-form-item label ='工作'>
           <el-input v-model="AddEditInfo.work"></el-input>
         </el-form-item>
         <el-form-item label ='单位电话'>
@@ -134,7 +134,6 @@
           name: [{ required: true,trigger: 'blur',message: '请输入姓名'}],
           relation: [{ required: true,trigger: 'blur',message: '请输入关系'}],
           phone:[{required: true, trigger: 'blur',validator:checkphone,message: '请输入合法手机号'}],
-          work: [{ required: true,trigger: 'blur',message: '请输入工作'}],
           sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
           nowaddress:[{required: true, trigger: 'blur', message: '请输入现住址'}],
         }

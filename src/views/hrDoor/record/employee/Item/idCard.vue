@@ -20,11 +20,13 @@
           </div>
           <div class="days_area">
             <div class="day week" v-for="week in weeks" :key="week">{{week}}</div>
-            <div class="day"  v-for="(day, index) in days" :key="index" :class="day.gregorian === today ? 'choose_day' : ''">
+            <div class="day"  v-for="(day, index) in days" :key="index"   @click.prevent="chooseThisDay($event,day.gregorian,day.lunar)"><!--:class="day.gregorian === today ? 'choose_day' : ''"-->
               <p>{{day.gregorian}}</p><!-- v-html="day.lunar"-->
-              <span @click.prevent="chooseThisDay($event,day.gregorian,day.lunar)">{{day.lunar}}</span>
+              <span>{{day.lunar}}</span>
             </div>
-          </div></el-card>
+          </div>
+          <el-button type="primary" @click="dataFlag=!dataFlag" style="float: right;margin-bottom: 6px">关闭</el-button>
+          </el-card>
         </div>
       </el-form-item>
     </el-col>
@@ -56,7 +58,7 @@
   <el-row :gutter="20">
     <el-col :span="12">
       <el-form-item label="有效期至" prop="indate">
-        <el-date-picker type="date" v-model="AddEditInfo.indate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+        <el-date-picker type="date" v-model="AddEditInfo.indate"  :editable="false" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
     <el-col :span="12">
@@ -146,7 +148,6 @@
     },
     mounted(){
       this.getInfo(this.$route.query.uId)
-
       const now = new Date()
       this.year = now.getFullYear()
       this.month = now.getMonth() + 1
@@ -163,7 +164,7 @@
       },
       getInfo(uId){
         GetIdCardInfo(uId).then(response=>{
-          this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas
+          this.AddEditInfo = response.datas==null ?  this.AddEditInfo :  response.datas
         })
       },
       focusFun(){
@@ -242,10 +243,10 @@
         const month = new Date()
         month.setFullYear(this.year, this.month, 0) // 此处较之前调整，获取当月
         for (let i = 1; i < day.getDay(); i++) { // 当月第一天距离所在周周一的空白占位
-          this.days.push({ gregorian: '', lunar: '' })
+          this.days.push({ gregorian: '', lunar: '' })//,only:''
         }
         for (let i = 1; i <= month.getDate(); i++) { // 获取当月天数填充日历
-          this.days.push({ gregorian: i, lunar: this.getLunarDay(this.year, this.month, i) })
+          this.days.push({ gregorian: i, lunar: this.getLunarDay(this.year, this.month, i)})//,only: this.getLunarYear(this.year, this.month, i)
         }
       },
       chooseYears (state) { // 改变年份
@@ -267,13 +268,45 @@
         }
       },
       chooseThisDay (e,day,old) { // 选择某天，主要是考虑可以当时间选择器用
-        console.log(e)
-        this.AddEditInfo.lunarbirthdate = e.target.innerText
+       // this.AddEditInfo.lunarbirthdate = e.target.innerText
+        this.AddEditInfo.lunarbirthdate = old
         this.dataFlag = false
        /* if (day > 0) {
           this.today = day
         }*/
       },
+      /*getLunarYear(solarYear, solarMonth, solarDay){
+        const madd = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+        const CalendarData = [0xA4B, 0x5164B, 0x6A5, 0x6D4, 0x415B5, 0x2B6, 0x957, 0x2092F, 0x497, 0x60C96, 0xD4A, 0xEA5, 0x50DA9, 0x5AD, 0x2B6, 0x3126E, 0x92E, 0x7192D, 0xC95, 0xD4A, 0x61B4A, 0xB55, 0x56A, 0x4155B, 0x25D, 0x92D, 0x2192B, 0xA95, 0x71695, 0x6CA, 0xB55, 0x50AB5, 0x4DA, 0xA5B, 0x30A57, 0x52B, 0x8152A, 0xE95, 0x6AA, 0x615AA, 0xAB5, 0x4B6, 0x414AE, 0xA57, 0x526, 0x31D26, 0xD95, 0x70B55, 0x56A, 0x96D, 0x5095D, 0x4AD, 0xA4D, 0x41A4D, 0xD25, 0x81AA5, 0xB54, 0xB6A, 0x612DA, 0x95B, 0x49B, 0x41497, 0xA4B, 0xA164B, 0x6A5, 0x6D4, 0x615B4, 0xAB6, 0x957, 0x5092F, 0x497, 0x64B, 0x30D4A, 0xEA5, 0x80D65, 0x5AC, 0xAB6, 0x5126D, 0x92E, 0xC96, 0x41A95, 0xD4A, 0xDA5, 0x20B55, 0x56A, 0x7155B, 0x25D, 0x92D, 0x5192B, 0xA95, 0xB4A, 0x416AA, 0xAD5, 0x90AB5, 0x4BA, 0xA5B, 0x60A57, 0x52B, 0xA93, 0x40E95]
+        if (!(solarYear < 1921 || solarYear > 2999)) { // 注意看此处限定了年份，设置自己需要的范围即可
+          solarMonth = (parseInt(solarMonth) > 0) ? (solarMonth - 1) : 11
+          const timeArr = [solarYear, solarMonth, solarDay]
+          let TheDate = (timeArr.length !== 3) ? new Date() : new Date(timeArr[0], timeArr[1], timeArr[2])
+          let total, m, n, k
+          let isEnd = false
+          let theDateYear = TheDate.getFullYear()
+          total = (theDateYear - 1921) * 365 + Math.floor((theDateYear - 1921) / 4) + madd[TheDate.getMonth()] + TheDate.getDate() - 38
+          if (theDateYear % 4 === 0 && TheDate.getMonth() > 1) {
+            total++
+          }
+          for (m = 0; ; m++) {
+            k = (CalendarData[m] < 0xfff) ? 11 : 12
+            for (n = k; n >= 0; n--) {
+              if (total <= this.getBit(CalendarData[m], n)) {
+                isEnd = true
+                break
+              }
+              total = total - this.getBit(CalendarData[m], n)
+            }
+            if (isEnd) {
+              break
+            }
+          }
+          let cYear;
+          cYear = 1921 + m
+          return cYear
+        }
+      },*/
       getLunarDay (solarYear, solarMonth, solarDay) { // 拷贝别人又自己调整过的获取农历日期的代码，想要原来的代码估计百度一下就有了
         const madd = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
         const numString = '一二三四五六七八九十'
@@ -324,12 +357,12 @@
             cDayStr = numString.charAt((cDay - 1) % 10)
           }
          cDay= cDay === 1 ?  monString.charAt(cMonth - 1) + '月' : (cDay < 11 ? '初' : (cDay < 20 ? '十' : (cDay < 30 ? '廿' : '三十'))) + cDayStr
-          //return cDay
+         // return cDay
            return cDay= cYear +"年"+monString.charAt(cMonth - 1)+"月"+cDay
          // return cDay = "<span class='hiddenClass' >"+cYear +"年</span><span class='hiddenClass'> "+monString.charAt(cMonth - 1) +"月</span><span>"+cDay+"</span>"
         }
       },
-      getBit (m, n) { // 也是拷贝的，不是很明白这段代码干嘛的，不过很明显是处理二进制数据的
+      getBit (m, n) { // 处理二进制数据的
         return 29 + ((m >> n) & 1)
       }
 

@@ -5,16 +5,16 @@
       name="fileName"
       :action="this.baseURL+'/file/getPicPath'"
       :headers = "headers"
+      :before-upload="beforeAvatarUpload"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
-      :before-remove="beforeRemove"
       :on-success = 'handleSuccess'
       list-type="picture-card"
       :limit="1000"
       :on-exceed="handleExceed"
       :file-list="fileList">
       <i class="el-icon-plus"></i>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1MB</div>
     </el-upload>
     <el-dialog
       :visible.sync="picDialogVisible"
@@ -54,7 +54,7 @@
           this.fileList=[]
         }else{
           const pictureList=this.picArray.split(",")
-          console.log(pictureList)
+        //  console.log(pictureList)
           this.fileList = pictureList.map(item => {
             return {
               url: item
@@ -64,18 +64,32 @@
       }
     },
     methods: {
+      beforeAvatarUpload(file){
+        const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
+        const isLt1M = file.size / 1024 / 1024 < 1;
+        if (!isJPG && !isPNG) {
+          this.$message.warning('上传图片必须是JPG/PNG 格式!');
+          return isJPG && isPNG ;
+        }
+        if (!isLt1M) {
+          this.$message.warning('上传图片大小不能超过 1MB!');
+          return isLt1M;
+        }
+      },
       handleSuccess(response, file, fileList) {
         this.fileList.push({url: response.datas})
         this.$emit('imgUrl',response.datas)
       },
       handleRemove(file, fileList) {
-        let multiUrl = ''
-        fileList.forEach((value,key)=>{
-
-          multiUrl = multiUrl + value.url +','
-        })
-        this.$message.warning('删除成功');
-        this.$emit('delUrl', multiUrl)
+        if (file && file.status==="success") {
+          let multiUrl = ''
+          fileList.forEach((value, key) => {
+            multiUrl = multiUrl + value.url + ','
+          })
+          this.$message.warning('删除成功');
+          this.$emit('delUrl', multiUrl)
+        }
       },
       handlePreview(file) {
         this.dialogImageUrl = file.url;
@@ -91,11 +105,11 @@
   }
 </script>
 <style>
-  .el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
+  /*.el-upload--picture-card,.el-upload-list--picture-card .el-upload-list__item{
     width:100px;
     height:100px;
     line-height:100px;
-  }
+  }*/
 </style>
 
 

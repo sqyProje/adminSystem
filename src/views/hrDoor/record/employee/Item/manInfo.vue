@@ -8,7 +8,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="编号" prop="number">
-            <el-input v-model="AddEditInfo.number"></el-input>
+            <el-input v-model.trim ="AddEditInfo.number"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -59,7 +59,7 @@
       <el-row :gutter="20" v-show="politicsFlag">
         <el-col :span="12">
           <el-form-item label="入党时间">
-            <el-date-picker type="date" v-model="AddEditInfo.partyDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.partyDate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -77,15 +77,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="参加工作时间" prop="jobdate">
-            <el-date-picker type="date" v-model="AddEditInfo.jobdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.jobdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
 
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="离职/退休/停止时间" prop="dimissiondate">
-            <el-date-picker type="date" v-model="AddEditInfo.dimissiondate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-form-item label="离职/退休/停止时间">
+            <el-date-picker type="date" v-model="AddEditInfo.dimissiondate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -116,13 +116,13 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="离职/退休/停止原因" prop="dimissionreason">
+      <el-form-item label="离职/退休/停止原因">
         <el-input type="textarea" v-model="AddEditInfo.dimissionreason"></el-input>
       </el-form-item>
       <el-form-item label="家庭地址" prop="familyaddress">
         <el-input v-model="AddEditInfo.familyaddress"></el-input>
       </el-form-item>
-      <el-form-item label="特长" prop="evaluate">
+      <el-form-item label="特长">
         <el-input type="textarea" v-model="AddEditInfo.evaluate"></el-input>
       </el-form-item>
     </div>
@@ -138,7 +138,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="职称取得时间">
-            <el-date-picker type="date" v-model="AddEditInfo.titleGetDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.titleGetDate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -167,7 +167,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="执业取得时间">
-            <el-date-picker type="date" v-model="AddEditInfo.operaionDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.operaionDate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -184,7 +184,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="全日制毕业时间" prop="allfinishdate">
-            <el-date-picker type="date" v-model="AddEditInfo.allfinishdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.allfinishdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -207,22 +207,22 @@
     <div>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="在职学历" prop="jobeducation">
+          <el-form-item label="在职学历">
             <el-input v-model="AddEditInfo.jobeducation"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="在职学历毕业时间" prop="jobfinishdate">
-            <el-date-picker type="date" v-model="AddEditInfo.jobfinishdate" value-format="yyyy-MM-dd"  style="width: 100%;"></el-date-picker>
+          <el-form-item label="在职学历毕业时间">
+            <el-date-picker type="date" v-model="AddEditInfo.jobfinishdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="在职学历毕业院校" prop="jobuniversity">
+          <el-form-item label="在职学历毕业院校">
             <el-input v-model="AddEditInfo.jobuniversity"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="在职学历毕业专业" prop="jobprofession">
+          <el-form-item label="在职学历毕业专业">
             <el-input v-model="AddEditInfo.jobprofession"></el-input>
           </el-form-item>
         </el-col>
@@ -291,7 +291,6 @@
           operationState:"",
           operationProfession:"",
           operationDate:""
-
         },
         rulesInfo: {
           number: [{ required: true,trigger: 'blur',message: '请输入编号'}],
@@ -299,18 +298,12 @@
           familyaddress:[{ required: true,trigger: 'blur',message: '请输入家庭住址'}],
           phone:[{ required: true,trigger: 'blur', validator: checkphone,message: '请输入联系电话'}],
           politics:[{ required: true,trigger: 'blur',message: '请输入政治面貌'}],
-          evaluate:[{ required: true,trigger: 'blur',message: '请输入评价'}],
           jobdate:[{ required: true,trigger: 'blur',message: '请输入参加工作时间'}],
           alleducation:[{ required: true,trigger: 'blur',message: '请输入全日制学历'}],
           allfinishdate:[{ required: true,trigger: 'blur',message: '请输入全日制毕业时间'}],
           alluniversity:[{ required: true,trigger: 'blur',message: '请输入全日制毕业院校'}],
           allprofession:[{ required: true,trigger: 'blur',message: '请输入全日制毕业专业'}],
-          jobeducation:[{ required: true,trigger: 'blur',message: '请输入在职学历'}],
-          jobfinishdate:[{ required: true,trigger: 'blur',message: '请输入在职学历毕业时间'}],
-          jobuniversity:[{ required: true,trigger: 'blur',message: '请输入在职毕业院校'}],
-          jobprofession:[{ required: true,trigger: 'blur',message: '请输入在职专业'}],
-          dimissiondate:[{ required: true,trigger: 'blur',message: '请输入离职/退休/停止时间'}],
-          dimissionreason:[{ required: true,trigger: 'blur',message: '请输入离职/退休/停止原因'}],
+
           email: [{required: true, trigger: 'blur', validator: checkmail}]
         },
         //政治面貌，人员性质,婚姻状况
@@ -345,6 +338,7 @@
         this.$refs.AddEditInfo.validate(valid => {
           this.AddEditInfo.employeeId=this.$route.query.uId
           if (valid) {
+            console.log(this.AddEditInfo)
             EditEmployeeInfo(this.AddEditInfo).then(response=>{
               if (response.status === 0) {
                 this.$options.methods.getInfo(this.$route.query.uId)
@@ -355,7 +349,6 @@
                 })
               }
             })
-
           }
         })
       },

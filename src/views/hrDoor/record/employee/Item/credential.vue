@@ -119,24 +119,24 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label ='签发时间' prop="issuedate">
-              <el-date-picker type="date" v-model="AddEditInfo.issuedate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" v-model="AddEditInfo.issuedate" value-format="yyyy-MM-dd" :editable="false" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label ='初始注册时间'>
-              <el-date-picker type="date" v-model="AddEditInfo.rootregisterdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" v-model="AddEditInfo.rootregisterdate" value-format="yyyy-MM-dd" :editable="false" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label ='续注册时间' >
-              <el-date-picker type="date" v-model="AddEditInfo.extendregisterdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" v-model="AddEditInfo.extendregisterdate" value-format="yyyy-MM-dd" :editable="false" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label ='失效时间'>
-              <el-date-picker type="date" v-model="AddEditInfo.loseefficacydate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" v-model="AddEditInfo.loseefficacydate" value-format="yyyy-MM-dd" :editable="false" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -155,7 +155,7 @@
         <el-form-item label ='执业情况'><!--证书年审情况-->
           <el-input type="textarea" v-model="AddEditInfo.annualcase"></el-input>
         </el-form-item>
-        <el-form-item label ='执业情况'><!--证书使用情况-->
+        <el-form-item label ='执业范围'><!--证书使用情况-->
           <el-input type="textarea" v-model="AddEditInfo.usecase"></el-input>
         </el-form-item>
         <el-form-item label ='证书变更情况'>
@@ -174,10 +174,16 @@
         <el-form-item label="附件" prop="filepath">
           <multiUploadFile
             @file-url="FilePreview"
+            @delFile = 'delFilePreview'
             :picArray="picArray">
           </multiUploadFile>
           <el-input v-model="AddEditInfo.fileIds" type="hidden"></el-input>
-          <a :href="AddEditInfo.fileIds" style="width: 100%;display: inline-block">下载附件 {{AddEditInfo.fileIds}}</a>
+          <a
+            v-for="(items,index) in fileIdsArray "
+            :href="items"
+            style="width: 100%;display: inline-block">
+            下载附件{{index+1}} {{items.substring(50,items.length)}}
+          </a>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -197,7 +203,7 @@
     data(){
       return{
         tableData:[],
-        picArray:[],
+
         fileList: [],
         dialogTitle:'',
         dialogVisible: false,
@@ -237,7 +243,12 @@
           issueorganization: [{ required: true,trigger: 'blur',message: '请输入签发机构'}],
           number: [{ required: true,trigger: 'blur',message: '请输入证书编号'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
-        }
+        },
+        picArray:'',
+        fileFlag:false,
+        fileIdsArray:[],
+        filePreviewInfo:'',
+        fileString:''
       }
     },
     components:{
@@ -247,10 +258,6 @@
       this.initList(this.$route.query.uId)
     },
     methods:{
-      FilePreview(value){
-        console.log(value);
-        this.AddEditInfo.fileIds += value+','
-      },
       picPreview(value){
         this.picPreviewInfo += value+','
       },
@@ -258,6 +265,17 @@
         this.picPreviewInfo = value
         this.picString = value.substring(0,value.length-1)
         console.log( this.picString);
+      },
+      FilePreview(value){
+        this.filePreviewInfo += value+','
+        this.fileIdsArray.push(value)
+      },
+      delFilePreview(value){
+        this.fileIdsArray= this.fileIdsArray.filter((x) => x !== value);
+        this.fileString = this.fileIdsArray.toString()
+        this.filePreviewInfo = this.fileIdsArray.toString()+','
+        console.log(this.fileIdsArray)
+        console.log(this.filePreviewInfo)
       },
       initList(uId){
         CredentialList(uId).then(response => {
@@ -271,26 +289,35 @@
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
         this.AddEditInfo.state=0
+        this.fileIdsArray =[]
+        this.filePreviewInfo=''
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '编辑'
+        this.fileFlag = true
+        this.fileIdsArray =[]
+        this.filePreviewInfo=''
         GetCredential(row.uId).then(response=>{
           this.AddEditInfo = response.datas
-          this.picString = response.datas.picids;
-          if(response.datas.picids.length==0){
-            this.picPreviewInfo = ''
-            return
+          if(response.datas.picids.length !==0){
+            this.picString = response.datas.picids;
+            this.picPreviewInfo = response.datas.picids+','
           }
-          this.picPreviewInfo = response.datas.picids+','
-          console.log( this.picPreviewInfo)
+          if(response.datas.fileIds.length !==0){
+            this.picArray = response.datas.fileIds;
+            this.filePreviewInfo = response.datas.fileIds+','
+            this.fileIdsArray = response.datas.fileIds.split(',')
+          }
+
         })
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
+            this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
+            this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
             if (this.dialogTitle === '添加') {
-             this.AddEditInfo.picids = this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
               AddCredential(this.AddEditInfo)
                 .then(response => {
                   this.dialogVisible = false
@@ -307,8 +334,6 @@
                   console.log(error);
                 });
             } else {
-              this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
-              console.log(this.AddEditInfo.picids)
               EditCredential(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
                   this.dialogVisible = false
@@ -320,9 +345,6 @@
                   })
                 }
               })
-              .catch(error => {
-                console.log(error);
-              });
             }
           }else{
             Message({
@@ -361,6 +383,9 @@
       canleDialog(){
         this.dialogVisible = false
         this.picString = ''
+        this.fileString = ''
+        this.picArray=''
+        this.fileIdsArray= []
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       }

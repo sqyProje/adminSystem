@@ -74,10 +74,22 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='教育开始时间'  prop="startdate">
-          <el-date-picker type="date" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+            type="date"
+            v-model="AddEditInfo.startdate"
+            :picker-options="startDateLimit"
+            value-format="yyyy-MM-dd"
+            :editable="false"
+            style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='教育结束时间' prop="enddate">
-          <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+          <el-date-picker
+            type="date"
+            v-model="AddEditInfo.enddate"
+            value-format="yyyy-MM-dd"
+            :picker-options="endDateLimit"
+            :editable="false"
+            style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='教育机构'>
           <el-input v-model="AddEditInfo.school"></el-input>
@@ -119,6 +131,7 @@
   import {EduList,AddEdu,GetEdu,EditEdu,DeleteEdu} from '@/api/personnel'
   export default {
     data(){
+
       return{
         tableData:[],
         picString:"",
@@ -145,6 +158,22 @@
           enddate:[{required: true, trigger: 'blur', message: '请输入教育结束时间'}],
           school: [{ required: true,trigger: 'blur',message: '请输入教育机构'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
+        },
+        startDateLimit: {
+          disabledDate: (time) => {
+            let endTime = this.AddEditInfo.enddate;
+            if (endTime) {
+              return time.getTime() > new Date(endTime).getTime();
+            }
+          }
+        },
+        endDateLimit: {
+          disabledDate: (time) => {
+            let beginTime = this.AddEditInfo.startdate;
+            if (beginTime) {
+              return time.getTime() < new Date(beginTime).getTime() - 8.64e7;  //开始和结束可以选择同一天
+            }
+          }
         }
       }
     },
