@@ -105,7 +105,7 @@
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           colour: [{ required: true,trigger: 'blur',message: '请输入背景色'}],
           reqUrl: [{ required: true,trigger: 'blur',message: '请报表路径'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}]
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}]
         }
       }
     } ,
@@ -175,9 +175,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditReport(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -190,9 +188,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

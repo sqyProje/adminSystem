@@ -193,7 +193,7 @@
           lastid:[{required: true, trigger: 'blur', message: '请选择上一部节点'}],
           nextid:[{required: true, trigger: 'blur', message: '请选择下一部节点'}],
           iscondition:[{required: true, trigger: 'blur', message: '请选择条件状态'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
         },
         AllNodeData:[],
         IfElseData:[],
@@ -280,9 +280,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditFlowLineInfo(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -295,9 +293,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
            Message({

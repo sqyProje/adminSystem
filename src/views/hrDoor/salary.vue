@@ -61,19 +61,19 @@
         class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
-        row-key="uId"
-        :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
         max-height="600"
       >
+        <el-table-column label="编号" prop="number"></el-table-column>
         <el-table-column label="部门" prop="departname"></el-table-column>
         <el-table-column label="姓名" prop="realname"></el-table-column>
         <el-table-column label="岗位工资" prop="stationPay"></el-table-column>
         <el-table-column label="薪级工资" prop="gradePay"></el-table-column>
         <el-table-column label="护士津贴" prop="nurseSubsidy"></el-table-column>
-        <el-table-column label="职务" prop="dutySubsidy"></el-table-column>
-        <el-table-column label="独生" prop="aloneSubsidy"></el-table-column>
-        <el-table-column label="医疗和卫生" prop="healthSubsidy"></el-table-column>
+        <el-table-column label="津贴" prop="subsidy"></el-table-column>
+        <el-table-column label="职务" width="88" prop="dutySubsidy"></el-table-column>
+        <el-table-column label="独生" width="55" prop="aloneSubsidy"></el-table-column>
+        <el-table-column label="医疗和卫生" width="88" prop="healthSubsidy"></el-table-column>
         <el-table-column label="其他" prop="otherSubsidy"></el-table-column>
         <el-table-column label="养老保险" prop="oldInsurance"></el-table-column>
         <el-table-column label="医疗保险" prop="medicalInsurance"></el-table-column>
@@ -82,8 +82,16 @@
         <el-table-column label="大病救助" prop="bigIllHelp"></el-table-column>
         <el-table-column label="其他扣除" prop="otherDeduct"></el-table-column>
         <el-table-column label="扣款合计" prop="deductTotal"></el-table-column>
-        <el-table-column label="应发合计" prop="salaryTotal"></el-table-column>
-        <el-table-column label="实发合计" prop="salaryPay"></el-table-column>
+        <el-table-column label="应发合计" fixed="right" >
+          <template slot-scope="scope">
+            {{scope.row.salaryTotal}}
+          </template>
+        </el-table-column>
+        <el-table-column label="实发合计"   fixed="right">
+          <template slot-scope="scope">
+            {{scope.row.salaryPay}}
+          </template>
+        </el-table-column>
       </el-table>
       <div class="pagination-container">
         <el-pagination
@@ -93,7 +101,7 @@
           layout="total, sizes,prev, pager, next,jumper"
           :current-page.sync="listQuery.pageNum"
           :page-size="listQuery.pageSize"
-          :page-sizes="[10,100,200,300]"
+          :page-sizes="[100,200,300]"
           :total="total">
         </el-pagination>
       </div>
@@ -127,6 +135,8 @@
             placeholder="核算开始时间"
             v-model="AddEditInfo.payStartDate"
             value-format="yyyy-MM-dd"
+            :picker-options="startDateLimit"
+            :editable="false"
             style="width:100%"
           ></el-date-picker>
         </el-form-item>
@@ -135,7 +145,9 @@
             type="date"
             placeholder="核算结束时间"
             v-model="AddEditInfo.payEndDate"
-            value-format="yyyy-MM"
+            value-format="yyyy-MM-dd"
+            :picker-options="endDateLimit"
+            :editable="false"
             style="width:100%"
           ></el-date-picker>
         </el-form-item>
@@ -147,6 +159,7 @@
         </el-form-item>
         <el-form-item label ='工资表' prop="file">
           <input type="file"  @change="handleChange($event)" />
+          <el-input type="hidden" v-model="AddEditInfo.file"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -168,7 +181,7 @@
     realName:'',
     departName:'',
     pageNum:1,
-    pageSize:10
+    pageSize:100
   }
 
   export default {
@@ -192,11 +205,27 @@
         },
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请选择表单名称'}],
-          payDate:[{required: true, trigger: 'blur', message: '请选择公司年月'}],
+          payDate:[{required: true, trigger: 'blur', message: '请选择工资年月'}],
           payStartDate:[{required: true, trigger: 'blur', message: '请选择开始核算时间'}],
           payEndDate:[{required: true, trigger: 'blur', message: '请选择结束核算时间'}],
-        //  file:[{ required: true,trigger: 'blur',message: '请选择工资表'}]
+          file:[{ required: true,trigger: 'blur',message: '请选择工资表'}]
         },
+        startDateLimit: {
+          disabledDate: (time) => {
+            let endTime = this.AddEditInfo.payEndDate;
+            if (endTime) {
+              return time.getTime() > new Date(endTime).getTime();
+            }
+          }
+        },
+        endDateLimit: {
+          disabledDate: (time) => {
+            let beginTime = this.AddEditInfo.payStartDate;
+            if (beginTime) {
+              return time.getTime() < new Date(beginTime).getTime() - 8.64e7;  //开始和结束可以选择同一天
+            }
+          }
+        }
       }
     } ,
     created(){
@@ -250,7 +279,7 @@
         this.dialogTitle = '添加'
       },
       handleChange(file){
-        this.File=file.target.files[0]
+        this.AddEditInfo.file=file.target.files[0]
       },
       UpdateUser(){
         let param = new FormData();
@@ -259,8 +288,7 @@
         param.append("payEndDate", this.AddEditInfo.payEndDate);
         param.append("name", this.AddEditInfo.name);
         param.append("sketch", this.AddEditInfo.sketch);
-        param.append("file",  this.File);
-        console.log(param.get("file"));
+        param.append("file",  this.AddEditInfo.file);
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             ExcelImport(param)
@@ -275,9 +303,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
           }else{
             Message({
               message: '参数验证不合法',
@@ -289,7 +315,10 @@
       },
       canleDialog(){
         this.dialogVisible = false
-        this.$refs.AddEditInfo.resetFields();
+        this.picArray='',
+        this.fileIdsArray=[],
+        this.filePreviewInfo='',
+        this.fileString=''
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       ExportFun(){

@@ -88,7 +88,7 @@
         },
         rulesInfo: {
           picpath: [{ required: true,trigger: 'blur',message: '请上传图片'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
         }
       }
     } ,
@@ -158,9 +158,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditBanner(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -173,9 +171,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

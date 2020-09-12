@@ -218,7 +218,7 @@
           isshow: [{ required: true,trigger: 'blur',message: '请选择是否显示摘要'}],
           ismust: [{ required: true,trigger: 'blur',message: '请选择是否必填'}],
           isvalidate:[{ required: true,trigger: 'blur',message: '请选择是否验证'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
           state: [{ required: true,trigger: 'blur',message: '请选择字段状态'}],
         },
         dictionTypeData:[],
@@ -295,9 +295,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditFieldInfo(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -310,9 +308,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

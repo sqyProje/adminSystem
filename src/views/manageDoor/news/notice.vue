@@ -242,7 +242,7 @@
           content: [{ required: true,trigger: 'blur',message: '请输入内容详情'}],
           iscarousel:[{required: true, trigger: 'blur', message: '请选择是否轮播'}],
           carouselcontent:[{required: true, trigger: 'blur', message: '请输入轮播内容'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           enddate:[{required: true, trigger: 'blur', message: '请选择轮播结束时间'}],
           state:[{required: true, trigger: ['blur','change'], message: '请选择状态'}],
         }
@@ -321,9 +321,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditNotice(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -336,9 +334,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

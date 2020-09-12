@@ -175,7 +175,7 @@
           <multiUploadFile
             @file-url="FilePreview"
             @delFile = 'delFilePreview'
-            :picArray="picArray">
+            :fileArray="picArray">
           </multiUploadFile>
           <el-input v-model="AddEditInfo.fileIds" type="hidden"></el-input>
           <a
@@ -244,6 +244,7 @@
           number: [{ required: true,trigger: 'blur',message: '请输入证书编号'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
         },
+        submitFlag:false,
         picArray:'',
         fileFlag:false,
         fileIdsArray:[],
@@ -283,14 +284,13 @@
           this.tableData = response.datas
         })
       },
-      handleAdd(row){
+      handleAdd(){
         this.dialogVisible = !this.dialogVisible
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
         this.AddEditInfo.state=0
-        this.fileIdsArray =[]
-        this.filePreviewInfo=''
+
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
@@ -314,14 +314,30 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
-            this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
-            if (this.dialogTitle === '添加') {
-              AddCredential(this.AddEditInfo)
-                .then(response => {
-                  this.dialogVisible = false
+          if(!this.submitFlag){
+            if (valid) {
+              this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
+              this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
+              if (this.dialogTitle === '添加') {
+                AddCredential(this.AddEditInfo)
+                  .then(response => {
+                    this.dialogVisible = false
+                    this.submitFlag = true
+                    if (response.status === 0) {
+                      this.initList(this.$route.query.uId);
+                      Message({
+                        message: response.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+
+              } else {
+                EditCredential(this.AddEditInfo).then(response => {
                   if (response.status === 0) {
+                    this.dialogVisible = false
+                    this.submitFlag = true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -330,29 +346,18 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
-            } else {
-              EditCredential(this.AddEditInfo).then(response => {
-                if (response.status === 0) {
-                  this.dialogVisible = false
-                  this.initList(this.$route.query.uId);
-                  Message({
-                    message: response.msg,
-                    type: 'success',
-                    duration: 3 * 1000
-                  })
-                }
+              }
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
               })
             }
           }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
+            this.submitFlag = false
           }
+
         })
       },
       handleDelete(row) {
@@ -381,12 +386,15 @@
 
       },
       canleDialog(){
-        this.dialogVisible = false
         this.picString = ''
+        this.picPreviewInfo=''
         this.fileString = ''
         this.picArray=''
+        this.filePreviewInfo=''
         this.fileIdsArray= []
-        this.$refs.AddEditInfo.resetFields();
+        console.log(this.picPreviewInfo)
+        console.log(this.filePreviewInfo)
+        this.dialogVisible = false
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       }
     }

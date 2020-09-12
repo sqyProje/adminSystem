@@ -240,7 +240,7 @@
           lead:[{required: true, trigger: 'blur', message: '请输入负责人'}],
           phone:[{required: true, trigger: 'blur',validator:checkphone, message: '请输入正确的联系方式'}],
           sketch: [{ required: true,trigger: 'blur',message: '请输入简介'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
         }
       }
@@ -310,9 +310,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditRoom(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -325,9 +323,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

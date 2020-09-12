@@ -242,7 +242,7 @@
           reportdays:[{required: true, trigger: 'blur', message: '请输入汇报周期'}],
           reportUserIds:[{required: true, trigger: 'blur', message: '请选择汇报人'}],
           toreportUserIds:[{required: true, trigger: 'blur', message: '请选择被汇报人'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
           state: [{ required: true,trigger: 'blur',message: '请选择状态'}],
         },
         RoleDialogVisible:false,
@@ -321,9 +321,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditReport(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -336,9 +334,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

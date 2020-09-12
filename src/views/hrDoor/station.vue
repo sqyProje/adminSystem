@@ -153,7 +153,7 @@
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           sketch:[{required: true, trigger: 'blur', message: '请输入岗位职责'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
         }
       }
     } ,
@@ -217,9 +217,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditStation(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -232,9 +230,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

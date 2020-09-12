@@ -337,9 +337,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditUser(this.userInfo).then(response => {
                 if (response.status === 0) {
@@ -355,9 +353,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

@@ -54,7 +54,7 @@
           this.fileList=[]
         }else{
           const pictureList=this.picArray.split(",")
-        //  console.log(pictureList)
+          console.log(pictureList)
           this.fileList = pictureList.map(item => {
             return {
               url: item

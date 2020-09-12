@@ -134,9 +134,10 @@
           name: [{ required: true,trigger: 'blur',message: '请输入姓名'}],
           relation: [{ required: true,trigger: 'blur',message: '请输入关系'}],
           phone:[{required: true, trigger: 'blur',validator:checkphone,message: '请输入合法手机号'}],
-          sort: [{ required: true,trigger: 'blur',message: '请输入排序'}],
+          sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
           nowaddress:[{required: true, trigger: 'blur', message: '请输入现住址'}],
-        }
+        },
+        submitFlag :false
       }
     },
     mounted(){
@@ -164,12 +165,28 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            if (this.dialogTitle === '添加') {
-              AddFamily(this.AddEditInfo)
-                .then(response => {
-                  this.dialogVisible = false
+          if(! this.submitFlag){
+            if (valid) {
+              if (this.dialogTitle === '添加') {
+                AddFamily(this.AddEditInfo)
+                  .then(response => {
+                    this.dialogVisible = false
+                    this.submitFlag = true
+                    if (response.status === 0) {
+                      this.initList(this.$route.query.uId);
+                      Message({
+                        message: response.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+
+              } else {
+                EditFamily(this.AddEditInfo).then(response => {
                   if (response.status === 0) {
+                    this.dialogVisible = false
+                    this.submitFlag = true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -178,32 +195,19 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
-            } else {
-              EditFamily(this.AddEditInfo).then(response => {
-                if (response.status === 0) {
-                  this.dialogVisible = false
-                  this.initList(this.$route.query.uId);
-                  Message({
-                    message: response.msg,
-                    type: 'success',
-                    duration: 3 * 1000
-                  })
-                }
+
+              }
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
               })
-                .catch(error => {
-                  console.log(error);
-                });
             }
           }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
+            this.submitFlag = false
           }
+
         })
       },
       handleDelete(row) {

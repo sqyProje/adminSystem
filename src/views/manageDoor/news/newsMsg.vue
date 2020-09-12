@@ -289,7 +289,7 @@
           author:[{required: true, trigger: 'blur', message: '请填写作者'}],
           keyword: [{ required: true,trigger: 'blur',message: '请选择关键字'}],
           isstick:[{required: true, trigger: 'blur', message: '请选择是否置顶'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
         }
       }
@@ -367,9 +367,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditNews(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -382,9 +380,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

@@ -73,7 +73,7 @@
           layout="total, sizes,prev, pager, next,jumper"
           :current-page.sync="listQuery.pageNum"
           :page-size="listQuery.pageSize"
-          :page-sizes="[100,200,300]"
+          :page-sizes="[10,20,30]"
           :total="total">
         </el-pagination>
       </div>
@@ -105,7 +105,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label ='发放时间'  prop="wealtype">
+        <el-form-item label ='发放时间'  prop="paydate">
           <el-date-picker
             type="month"
             placeholder="发放时间"
@@ -179,7 +179,7 @@
           wealtype:[{required: true, trigger: 'blur', message: '请选择导出样式'}],
           payStartDate:[{required: true, trigger: 'blur', message: '请选择开始核算时间'}],
           paydate:[{required: true, trigger: 'blur', message: '请选择发放时间'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           state:[{ required: true,trigger: 'blur',message: '请选择状态'}]
         },
       }
@@ -260,9 +260,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditWealName(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -276,9 +274,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
 
           }else{

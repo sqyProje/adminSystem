@@ -230,7 +230,7 @@
     </div>
   </div>
   <el-form-item size="large">
-    <el-button type="primary" @click="UpdateUser">提交</el-button>
+    <el-button type="primary" @click="UpdateUser" :disabled="submitFlag">提交</el-button>
   </el-form-item>
 </el-form>
 </template>
@@ -309,7 +309,8 @@
         //政治面貌，人员性质,婚姻状况
         politicsData:[],
         propertyData:[],
-        marriageData:[]
+        marriageData:[],
+        submitFlag:false
       };
     },
     mounted(){
@@ -341,12 +342,16 @@
             console.log(this.AddEditInfo)
             EditEmployeeInfo(this.AddEditInfo).then(response=>{
               if (response.status === 0) {
+                this.submitFlag = true
                 this.$options.methods.getInfo(this.$route.query.uId)
                 Message({
                   message: response.msg,
                   type: 'success',
                   duration: 3 * 1000
                 })
+                setTimeout(()=>{
+                  this.submitFlag = false
+                },5000)
               }
             })
           }

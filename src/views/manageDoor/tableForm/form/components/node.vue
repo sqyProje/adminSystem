@@ -200,7 +200,7 @@
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           sketch:[{required: true, trigger: 'blur', message: '请输入简介'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           approvenodetype:[{required: true, trigger: 'blur', message: '请选择审批节点类型'}],
           qdflownodetype:[{required: true, trigger: 'blur', message: '请选择流程类型'}],
         },
@@ -312,9 +312,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditFlowNodeInfo(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -327,9 +325,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
             FlowNodeDrop(this.$route.query.form_id).then(res=>{})
           }else{

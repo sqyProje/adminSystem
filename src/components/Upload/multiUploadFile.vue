@@ -22,7 +22,7 @@
     name: 'multiUpload',
     props: {
       //图片属性数组
-      picArray:String,
+      fileArray:String,
       //最大上传图片数量
       maxCount: {
         type: Number,
@@ -40,12 +40,12 @@
       };
     },
     watch:{
-      'picArray'(){
+      'fileArray'(){
         if(this.picArray.length<=0){
           this.fileList=[]
         }else{
-        // this.fileList=this.picArray
-          const pictureList=this.picArray.split(",")
+        // this.fileList=this.fileArray
+          const pictureList=this.fileArray.split(",")
           console.log(pictureList)
           this.fileList = pictureList.map((item,key) => {
             return {

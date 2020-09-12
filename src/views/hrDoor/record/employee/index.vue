@@ -410,9 +410,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditEmployee(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -425,9 +423,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

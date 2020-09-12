@@ -93,7 +93,7 @@
     <singleUpload  v-model="AddEditInfo.versopath" @input="versoPicFun"></singleUpload>
   </el-form-item>
   <el-form-item size="large">
-    <el-button type="primary" @click="UpdateUser">提交</el-button>
+    <el-button type="primary" @click="UpdateUser" :disabled="submitFlag">提交</el-button>
   </el-form-item>
 </el-form>
 </template>
@@ -140,6 +140,7 @@
           { id: 0, display_name: '启用' },
           { id: 1, display_name: '禁用' }
         ],
+        submitFlag:false
       };
     },
 
@@ -181,12 +182,16 @@
           if (valid) {
             EditIdCardInfo(this.AddEditInfo).then(response=>{
               if (response.status === 0) {
+                this.submitFlag = true
                 this.$options.methods.getInfo(this.$route.query.uId)
                 Message({
                   message: response.msg,
                   type: 'success',
                   duration: 3 * 1000
                 })
+                setTimeout(()=>{
+                  this.submitFlag = false
+                },5000)
               }
             })
 

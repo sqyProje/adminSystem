@@ -159,8 +159,10 @@
           school: [{ required: true,trigger: 'blur',message: '请输入教育机构'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
         },
+        submitFlag:false,
         startDateLimit: {
           disabledDate: (time) => {
+            console.log(time,this.AddEditInfo.enddate)
             let endTime = this.AddEditInfo.enddate;
             if (endTime) {
               return time.getTime() > new Date(endTime).getTime();
@@ -213,13 +215,29 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            this.AddEditInfo.picPaths = this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
-            if (this.dialogTitle === '添加') {
-              AddEdu(this.AddEditInfo)
-                .then(response => {
-                  this.dialogVisible = false
+          if(! this.submitFlag) {
+            if (valid) {
+              this.AddEditInfo.picPaths = this.picPreviewInfo.substring(0, this.picPreviewInfo.length - 1)
+              if (this.dialogTitle === '添加') {
+                AddEdu(this.AddEditInfo)
+                  .then(response => {
+                    this.dialogVisible = false
+                    this.submitFlag =true
+                    if (response.status === 0) {
+                      this.initList(this.$route.query.uId);
+                      Message({
+                        message: response.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+
+              } else {
+                EditEdu(this.AddEditInfo).then(response => {
                   if (response.status === 0) {
+                    this.dialogVisible = false
+                    this.submitFlag =true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -228,31 +246,17 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
+              }
             } else {
-              EditEdu(this.AddEditInfo).then(response => {
-                if (response.status === 0) {
-                  this.dialogVisible = false
-                  this.initList(this.$route.query.uId);
-                  Message({
-                    message: response.msg,
-                    type: 'success',
-                    duration: 3 * 1000
-                  })
-                }
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
               })
-                .catch(error => {
-                  console.log(error);
-                });
             }
           }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
+            this.submitFlag =false
           }
         })
       },

@@ -3,8 +3,8 @@
     <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
-          <el-form-item label ='名称'>
-            <el-select v-model="listQuery.wealNameId" placeholder="名称">
+          <el-form-item label =''>
+            <el-select v-model="listQuery.wealNameId" placeholder="表单名称">
               <el-option
                 v-for="item in wealNameData"
                 :key="item.uId"
@@ -98,9 +98,10 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-          <el-form-item label ='选择员工'>
-            <el-button size="small" v-on:click.native="userRole" type="primary">选择员工</el-button>
-          </el-form-item>
+        <el-form-item label ='选择员工' prop="employeeIds" v-if="editEmployeed">
+          <el-input type="hidden" v-model="AddEditInfo.employeeIds" style="width: 0;height: 0;"></el-input>
+          <el-button size="small" v-on:click.native="userRole" type="primary">选择员工</el-button>
+        </el-form-item>
         <el-form-item label ='表单名称'  prop="wealNameId">
           <el-select v-model="AddEditInfo.wealNameId" placeholder="表单名称" :disabled="disabledFlag" style="width:100%">
             <el-option
@@ -115,10 +116,10 @@
           <el-input type="number" v-model="AddEditInfo.grantStandard" :min="0.00" :step="0.01"></el-input>
         </el-form-item>
         <el-form-item label ='排序'>
-          <el-input type="number" v-model="AddEditInfo.sort" :min="0" :disabled="disabledFlag"></el-input>
+          <el-input type="number" v-model="AddEditInfo.sort" :min="0"></el-input>
         </el-form-item>
         <el-form-item label ='状态'>
-          <el-select v-model="AddEditInfo.state" placeholder="状态" :disabled="disabledFlag" style="width: 100%;">
+          <el-select v-model="AddEditInfo.state" placeholder="状态" style="width: 100%;">
             <el-option
               v-for="item in stateData"
               :label="item.display_name"
@@ -211,7 +212,7 @@
           employeeIds: [{ required: true,trigger: 'blur',message: '请选择员工'}],
           wealNameId:[{required: true, trigger: 'blur', message: '请选择名称'}],
           grantStandard:[{required: true, trigger: 'blur', message: '请输入发放标准'}],
-          sort:[{required: true, trigger: 'blur', message: '请输入排序'}],
+          sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           state:[{ required: true,trigger: 'blur',message: '请选择状态'}]
         },
         wealName:'',
@@ -221,7 +222,8 @@
         defaultProps: {
           children: 'children',
           label: 'name',
-        }
+        },
+        editEmployeed:true
       }
     } ,
     created(){
@@ -246,6 +248,8 @@
           return '外聘'
         }else if(value===70){
           return '编内'
+        }else{
+          return ' '
         }
       }
     },
@@ -286,10 +290,11 @@
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
         this.disabledFlag = true
+        this.editEmployeed = false
         this.dialogTitle = '编辑'
         GetWeal(row.uId).then(response=>{
           this.AddEditInfo.uId=response.datas.uId
-          this.AddEditInfo.employeeIds=response.datas.employeeid
+          this.AddEditInfo.employeeIds=response.datas.employeeid.split(',')
           this.AddEditInfo.sort=response.datas.sort
           this.AddEditInfo.state=response.datas.state
           this.AddEditInfo.wealNameId= response.datas.wealnameid
@@ -309,7 +314,6 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
-                    this.leftTree()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -317,16 +321,13 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               this.AddEditInfo.grantstandard = this.AddEditInfo.grantStandard
               EditWeal(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
-                  this.leftTree()
                   Message({
                     message: response.msg,
                     type: 'success',
@@ -334,9 +335,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
 
           }else{
@@ -407,7 +406,7 @@
             })
             res.childMenu.forEach((child,two)=>{
               this.roleData[key].children.push({id:two,name:child.name,children:[]})
-              console.log( this.roleData[key].children[two])
+            //  console.log( this.roleData[key].children[two])
               child.employee.forEach((three)=>{
                 this.roleData[key].children[two].children.push({id:three.uId,name:three.realname,selected:three.selected})
               })
@@ -422,6 +421,7 @@
         })
       },
       UpdateRoleMenu(){
+        debugger
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
         checkedKeys =  checkedKeys.filter((value)=>{
           return value.length >= 3

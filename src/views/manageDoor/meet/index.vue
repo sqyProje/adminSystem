@@ -364,9 +364,7 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
+
             } else {
               EditMeet(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -379,9 +377,7 @@
                   })
                 }
               })
-                .catch(error => {
-                  console.log(error);
-                });
+
             }
           }else{
             Message({

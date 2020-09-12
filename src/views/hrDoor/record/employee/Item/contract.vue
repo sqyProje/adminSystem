@@ -81,7 +81,7 @@
     <multiUploadFile
       @file-url="FilePreview"
       @delFile = 'delFilePreview'
-      :picArray="picArray">
+      :fileArray="picArray">
     </multiUploadFile>
     <el-input v-model="AddEditInfo.filepath" type="hidden"></el-input>
     <a
@@ -92,7 +92,7 @@
     </a>
   </el-form-item>
   <el-form-item size="large">
-    <el-button type="primary" @click="UpdateUser">提交</el-button>
+    <el-button type="primary" @click="UpdateUser" :disabled="submitFlag">提交</el-button>
   </el-form-item>
 </el-form>
 </template>
@@ -139,6 +139,7 @@
           { id: 0, name: '有效',Continuename:'是'},
           { id: 1, name: '解除',Continuename:'否'},
         ],
+        submitFlag:false,
         picArray:'',
         fileFlag:false,
         fileIdsArray:[],
@@ -179,19 +180,28 @@
         console.log(this.AddEditInfo.filepath)
         this.$refs.AddEditInfo.validate(valid => {
           this.AddEditInfo.employeeid=this.$route.query.uId
-          if (valid) {
-            EditContractInfo(this.AddEditInfo).then(response=>{
-              if (response.status === 0) {
-                this.$options.methods.getInfo(this.$route.query.uId)
-                Message({
-                  message: response.msg,
-                  type: 'success',
-                  duration: 3 * 1000
-                })
-              }
-            })
-
-          }
+            if (valid) {
+              EditContractInfo(this.AddEditInfo).then(response => {
+                if (response.status === 0) {
+                  this.submitFlag = true
+                  this.$options.methods.getInfo(this.$route.query.uId)
+                  Message({
+                    message: response.msg,
+                    type: 'success',
+                    duration: 3 * 1000
+                  })
+                  setTimeout(()=>{
+                    this.submitFlag = false
+                  },5000)
+                }
+              })
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
         })
       },
 

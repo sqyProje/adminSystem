@@ -57,7 +57,8 @@
     </el-table>
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"      :show-close="false"
+      :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="dialogVisible"
       width="23%">
       <el-form
@@ -72,10 +73,14 @@
           <el-input v-model="AddEditInfo.company"></el-input>
         </el-form-item>
         <el-form-item label ='入职时间' prop="startdate">
-          <el-date-picker type="date" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd"
+                          :picker-options="startDateLimit"
+                          :editable="false" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='离职时间' prop="enddate">
-          <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd"
+                          :picker-options="endDateLimit"
+                          :editable="false" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='最低收入' prop="lowpay">
           <el-input type="number" v-model="AddEditInfo.lowpay" placeholder="最小为0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" ></el-input>
@@ -141,7 +146,24 @@
           higpay:[{required: true, trigger: 'blur', message: '请输入最高收入'}],
           jobcase:[{required: true, trigger: 'blur', message: '请输入工作表现'}],
           state:[{required: true, trigger: 'blur', message: '请选择状态'}],
-        }
+        },
+        startDateLimit: {
+          disabledDate: (time) => {
+            let endTime = this.AddEditInfo.enddate;
+            if (endTime) {
+              return time.getTime() > new Date(endTime).getTime();
+            }
+          }
+        },
+        endDateLimit: {
+          disabledDate: (time) => {
+            let beginTime = this.AddEditInfo.startdate;
+            if (beginTime) {
+              return time.getTime() < new Date(beginTime).getTime() - 8.64e7;  //开始和结束可以选择同一天
+            }
+          }
+        },
+        submitFlag:false
       }
     },
     mounted(){
@@ -163,6 +185,7 @@
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
+
         this.dialogTitle = '编辑'
         GetJob(row.uId).then(response=>{
           this.AddEditInfo = response.datas
@@ -170,12 +193,28 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            if (this.dialogTitle === '添加') {
-              AddJob(this.AddEditInfo)
-                .then(response => {
-                  this.dialogVisible = false
+          if (!this.submitFlag) {
+            if(valid){
+              if (this.dialogTitle === '添加') {
+                AddJob(this.AddEditInfo)
+                  .then(response => {
+                    if (response.status === 0) {
+                      this.initList(this.$route.query.uId);
+                      this.dialogVisible = false
+                      this.submitFlag = true
+                      Message({
+                        message: response.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+
+              } else {
+                EditJob(this.AddEditInfo).then(response => {
                   if (response.status === 0) {
+                    this.dialogVisible = false
+                    this.submitFlag = true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -184,31 +223,16 @@
                     })
                   }
                 })
-                .catch(error => {
-                  console.log(error);
-                });
-            } else {
-              EditJob(this.AddEditInfo).then(response => {
-                if (response.status === 0) {
-                  this.dialogVisible = false
-                  this.initList(this.$route.query.uId);
-                  Message({
-                    message: response.msg,
-                    type: 'success',
-                    duration: 3 * 1000
-                  })
-                }
+              }
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
               })
-                .catch(error => {
-                  console.log(error);
-                });
             }
           }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
+            this.submitFlag = false
           }
         })
       },
