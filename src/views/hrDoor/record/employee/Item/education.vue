@@ -131,11 +131,11 @@
   import {EduList,AddEdu,GetEdu,EditEdu,DeleteEdu} from '@/api/personnel'
   export default {
     data(){
-
       return{
         tableData:[],
         picString:"",
         picPreviewInfo:'',
+        picIdsArray:[],
         dialogTitle:'',
         dialogVisible: false,
         AddEditInfo:{
@@ -194,6 +194,7 @@
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
+        this.submitFlag = false
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
@@ -202,42 +203,33 @@
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '编辑'
+        this.submitFlag = false
         GetEdu(row.uId).then(response=>{
           this.AddEditInfo = response.datas
           this.picString = response.datas.picPaths;
+          this.picIdsArray = response.datas.picPaths.split(',')
           if(response.datas.picPaths.length==0){
             this.picPreviewInfo = ''
             return
           }
           this.picPreviewInfo = response.datas.picPaths+','
-          console.log( this.picPreviewInfo)
+        //  console.log( this.picPreviewInfo)
         })
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if(! this.submitFlag) {
-            if (valid) {
-              this.AddEditInfo.picPaths = this.picPreviewInfo.substring(0, this.picPreviewInfo.length - 1)
-              if (this.dialogTitle === '添加') {
-                AddEdu(this.AddEditInfo)
-                  .then(response => {
-                    this.dialogVisible = false
-                    this.submitFlag =true
-                    if (response.status === 0) {
-                      this.initList(this.$route.query.uId);
-                      Message({
-                        message: response.msg,
-                        type: 'success',
-                        duration: 3 * 1000
-                      })
-                    }
-                  })
-
-              } else {
-                EditEdu(this.AddEditInfo).then(response => {
+          if(this.submitFlag){
+            return
+          }
+          this.submitFlag = true
+          if (valid) {
+            this.AddEditInfo.picPaths = this.picPreviewInfo.substring(0, this.picPreviewInfo.length - 1)
+            if (this.dialogTitle === '添加') {
+              AddEdu(this.AddEditInfo)
+                .then(response => {
+                  this.dialogVisible = false
+                  this.submitFlag =true
                   if (response.status === 0) {
-                    this.dialogVisible = false
-                    this.submitFlag =true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -247,16 +239,28 @@
                   }
                 })
 
-              }
             } else {
-              Message({
-                message: '参数验证不合法',
-                type: 'error',
-                duration: 3 * 1000
+              EditEdu(this.AddEditInfo).then(response => {
+                if (response.status === 0) {
+                  this.dialogVisible = false
+                  this.submitFlag =true
+                  this.initList(this.$route.query.uId);
+                  Message({
+                    message: response.msg,
+                    type: 'success',
+                    duration: 3 * 1000
+                  })
+                }
               })
+
             }
-          }else{
+          } else {
             this.submitFlag =false
+            Message({
+              message: '参数验证不合法',
+              type: 'error',
+              duration: 3 * 1000
+            })
           }
         })
       },
@@ -293,12 +297,14 @@
       },
       picPreview(value){
         this.picPreviewInfo += value+','
-        console.log( this.picPreviewInfo);
+        this.picIdsArray.push(value)
       },
       delUrlPreview(value){
-        this.picPreviewInfo = value
-        this.picString = value.substring(0,value.length-1)
-        console.log( this.picString);
+        this.picIdsArray= this.picIdsArray.filter((x)=>{
+          return x !==value
+        })
+        this.picString = this.picIdsArray.toString()
+        this.picPreviewInfo = this.picIdsArray.toString()+','
       },
     }
   }

@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <el-button size="small" type="primary" @click="QDFlowInfo">表单流程信息</el-button>
+    <el-button size="small" type="warning" @click="prev">返回</el-button>
     <el-dialog
       title="表单流程"
       :close-on-click-modal="false"      :show-close="false"
@@ -238,6 +239,9 @@
           })
         })
       },
+      prev(){
+        this.$router.push({name:'form'})
+      }
     }
   }
 

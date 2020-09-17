@@ -166,6 +166,7 @@
         </el-form-item>
         <el-form-item label ='图集'>
           <multiUploadImg
+            ref="multiImg"
             @imgUrl="picPreview"
             @delUrl = "delUrlPreview"
             :picArray="picString"
@@ -173,6 +174,7 @@
         </el-form-item>
         <el-form-item label="附件" prop="filepath">
           <multiUploadFile
+            ref="fileFile"
             @file-url="FilePreview"
             @delFile = 'delFilePreview'
             :fileArray="picArray">
@@ -203,11 +205,11 @@
     data(){
       return{
         tableData:[],
-
         fileList: [],
         dialogTitle:'',
         dialogVisible: false,
         picString:"",
+        picIdsArray:[],
         picPreviewInfo:'',
         AddEditInfo:{
           employeeid:"",
@@ -246,7 +248,6 @@
         },
         submitFlag:false,
         picArray:'',
-        fileFlag:false,
         fileIdsArray:[],
         filePreviewInfo:'',
         fileString:''
@@ -261,22 +262,25 @@
     methods:{
       picPreview(value){
         this.picPreviewInfo += value+','
+        this.picIdsArray.push(value)
       },
       delUrlPreview(value){
-        this.picPreviewInfo = value
-        this.picString = value.substring(0,value.length-1)
-        console.log( this.picString);
+        this.picIdsArray= this.picIdsArray.filter((x)=>{
+          return x !==value
+        })
+        this.picString = this.picIdsArray.toString()
+        this.picPreviewInfo = this.picIdsArray.toString()+','
       },
       FilePreview(value){
         this.filePreviewInfo += value+','
         this.fileIdsArray.push(value)
       },
       delFilePreview(value){
-        this.fileIdsArray= this.fileIdsArray.filter((x) => x !== value);
+        this.fileIdsArray= this.fileIdsArray.filter((x) => {
+          return  x !== value
+        } );
         this.fileString = this.fileIdsArray.toString()
         this.filePreviewInfo = this.fileIdsArray.toString()+','
-        console.log(this.fileIdsArray)
-        console.log(this.filePreviewInfo)
       },
       initList(uId){
         CredentialList(uId).then(response => {
@@ -286,6 +290,7 @@
       },
       handleAdd(){
         this.dialogVisible = !this.dialogVisible
+        this.submitFlag = false
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
@@ -294,8 +299,8 @@
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
+        this.submitFlag=false
         this.dialogTitle = '编辑'
-        this.fileFlag = true
         this.fileIdsArray =[]
         this.filePreviewInfo=''
         GetCredential(row.uId).then(response=>{
@@ -303,6 +308,7 @@
           if(response.datas.picids.length !==0){
             this.picString = response.datas.picids;
             this.picPreviewInfo = response.datas.picids+','
+            this.picIdsArray = response.datas.picids.split(',')
           }
           if(response.datas.fileIds.length !==0){
             this.picArray = response.datas.fileIds;
@@ -314,30 +320,18 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if(!this.submitFlag){
-            if (valid) {
-              this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
-              this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
-              if (this.dialogTitle === '添加') {
-                AddCredential(this.AddEditInfo)
-                  .then(response => {
-                    this.dialogVisible = false
-                    this.submitFlag = true
-                    if (response.status === 0) {
-                      this.initList(this.$route.query.uId);
-                      Message({
-                        message: response.msg,
-                        type: 'success',
-                        duration: 3 * 1000
-                      })
-                    }
-                  })
-
-              } else {
-                EditCredential(this.AddEditInfo).then(response => {
+          if(this.submitFlag){
+            return
+          }
+          this.submitFlag = true
+          if (valid) {
+            this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
+            this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
+            if (this.dialogTitle === '添加') {
+              AddCredential(this.AddEditInfo)
+                .then(response => {
+                  this.dialogVisible = false
                   if (response.status === 0) {
-                    this.dialogVisible = false
-                    this.submitFlag = true
                     this.initList(this.$route.query.uId);
                     Message({
                       message: response.msg,
@@ -346,16 +340,27 @@
                     })
                   }
                 })
-              }
-            }else{
-              Message({
-                message: '参数验证不合法',
-                type: 'error',
-                duration: 3 * 1000
+
+            } else {
+              EditCredential(this.AddEditInfo).then(response => {
+                if (response.status === 0) {
+                  this.dialogVisible = false
+                  this.initList(this.$route.query.uId);
+                  Message({
+                    message: response.msg,
+                    type: 'success',
+                    duration: 3 * 1000
+                  })
+                }
               })
             }
           }else{
             this.submitFlag = false
+            Message({
+              message: '参数验证不合法',
+              type: 'error',
+              duration: 3 * 1000
+            })
           }
 
         })
@@ -392,8 +397,8 @@
         this.picArray=''
         this.filePreviewInfo=''
         this.fileIdsArray= []
-        console.log(this.picPreviewInfo)
-        console.log(this.filePreviewInfo)
+        this.$refs.multiImg.parentClickClear()
+        this.$refs.fileFile.parentClickClear()
         this.dialogVisible = false
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       }

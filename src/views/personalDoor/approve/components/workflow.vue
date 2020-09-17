@@ -9,7 +9,7 @@
                   ><!-- v-if=" child.courseStatus !=80 && child.courseStatus != 85 "-->
               <tr>
                 <td style="color:#333">
-                  <div class="processing_content_detail">
+                  <div class="processing_content_detail" :class="{'lastDetail':index==lastDetail}">
                     <div><el-image
                       style="
                       width: 30px; height: 30px;
@@ -35,7 +35,7 @@
                         :src=child.picsignatureUrl
                         fit="fill">
                         <div slot="error" class="image-slot"  style="width: 100px; height: 36px;line-height: 36px;text-align: center">
-                         暂无图片信息
+                         暂无签名信息
                         </div>
                       </el-image>
                     </div>
@@ -47,7 +47,7 @@
         </template>
       </el-step>
     </el-steps>
-    <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
+    <el-button style="margin-top: 12px;margin-bottom:100px;" type="warning" size="medium" @click="prev">返回</el-button>
   </div>
 
 </div>
@@ -62,6 +62,7 @@
       return {
         logo:logo,
         workData:[],
+        lastDetail:''
       };
     },
     filters:{
@@ -95,7 +96,8 @@
     },
     created(){
       WorkFlow(this.$route.query.u_id).then(response=>{
-         this.workData= response.datas
+        this.workData= response.datas
+        this.lastDetail = this.workData.length-1
         })
     },
     methods: {
@@ -106,9 +108,6 @@
   };
 </script>
 <style scoped>
-  .el-step__description{
-    padding-right: 150px;
-  }
   .approvalProcess{
     color: #000;
     font-size: 14px;
@@ -126,8 +125,8 @@
     width:100%;
     padding: 10px;
     font-size: 14px;
-
   }
+
   .processing_content_detail div{
     margin-bottom: 3px;
   }
@@ -136,8 +135,8 @@
     margin-bottom:12px;
     margin-top:12px;
   }
-  .el-step:last-of-type .el-step__main, .el-step:last-of-type .el-step__description {
-    padding-right: 5%;
+  .lastDetail{
+    width:90%!important;
   }
   .demo-image__error .image-slot{
     display: flex;

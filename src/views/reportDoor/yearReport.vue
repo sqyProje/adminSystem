@@ -79,12 +79,13 @@
             title: false,
             tooltip: {},
             legend: {
-              data: waitData,
+              data: legend,
               top: 30
             },
             xAxis: {
               data: res.datas.xMonths
             },
+            color : [ '#56D6BC', '#F29B76', '#00B7EE', '#439928', '#FFA800', 'indigo', 'purple' ],
             yAxis: {},
             series:waitData
           };

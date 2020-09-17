@@ -61,7 +61,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                type="info"
+                type="primary"
                 v-if="hasPerm('user:role')"
                 @click="UserAppRole(scope.row)">App角色</el-button>
               <el-button
@@ -128,7 +128,7 @@
           <el-form-item label ='邮箱'>
             <el-input v-model="userInfo.email"></el-input>
           </el-form-item>
-          <el-form-item label ='部门' prop="departId">
+          <el-form-item label ='部门' prop="departid">
             <el-select v-model="mineStatus" placeholder="请选择" style="width: 178px;">
               <el-option :value="mineStatusValue" style="height: auto">
                 <el-tree
@@ -211,15 +211,15 @@
     }
   export default {
     data() {
-      const validmobile = (rule, value, callback) => {
-        if (!value) {
+      const checkphone = (rule, value, callback) => {
+        if (!validmobile(value)) {
           callback(new Error('请输入正确的手机号'))
         } else {
           callback()
         }
       };
-      const validcard = (rule, value, callback) => {
-        if (!value) {
+      const checkcard = (rule, value, callback) => {
+        if (!validcard(value)) {
           callback(new Error('请输入正确的身份证号'))
         } else {
           callback()
@@ -258,8 +258,8 @@
         deleteListArray:[],
         rulesInfo: {
           realname: [{ required: true,trigger: 'blur',message: '请输入真实姓名'}],
-          idcard:[{required: true, trigger: 'blur', validator:validcard}],
-          phoneno:[{required:true,trigger:'blur',validator:validmobile}],
+          idcard:[{required: true, trigger: 'blur', validator:checkcard,message: '请输入正确的身份证号'}],
+          phoneno:[{required:true,trigger:'blur',validator:checkphone, message: '请输入正确的联系方式'}],
           departid: [{ required: true,trigger: 'change',message: '请选择部门'}],
           state: [{ required: true,trigger: 'change',message: '请选择状态'}],
         },

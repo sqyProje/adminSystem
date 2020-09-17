@@ -48,7 +48,7 @@
         layout="total, sizes,prev, pager, next,jumper"
         :current-page.sync="listQuery.pageNum"
         :page-size="listQuery.pageSize"
-        :page-sizes="[30,40,50]"
+        :page-sizes="[50,100,150]"
         :total="total">
       </el-pagination>
     </div>
@@ -111,7 +111,7 @@
     userName: '',
     postKey:'',
     pageNum:1,
-    pageSize:30
+    pageSize:50
   }
     export default {
       data(){

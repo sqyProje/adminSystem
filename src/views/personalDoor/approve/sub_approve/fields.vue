@@ -111,7 +111,7 @@
           <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
               v-for="item in firstItem.ItemData"
-              :key="item.uId"
+              :key="item.name"
               :label="item.name"
               :value="item.name">
             </el-option>
@@ -131,9 +131,9 @@
           <el-select v-model="domain.fieldValue" multiple  :placeholder="domain.valimessage" style="width: 100%" >
             <el-option
               v-for="item in ManyItem.ItemData"
-              :key="item.uId"
+              :key="item.name"
               :label="item.name"
-              :value="item.uId">
+              :value="item.name">
             </el-option>
           </el-select>
         </el-form-item>
@@ -181,7 +181,7 @@
           <el-select v-model="domain.fieldValue" placeholder="请选择" style="width: 100%;">
             <el-option
               v-for="item in SexData"
-              :key="item.uId"
+              :key="item.name"
               :label="item.name"
               :value="item.name">
             </el-option>
@@ -214,6 +214,7 @@
         >
           <multiUploadFile
             @file-url="FilePreview"
+            @delFile = 'delFilePreview'
             :picArray="[]">
           </multiUploadFile>
         </el-form-item>
@@ -271,6 +272,9 @@
       return {
         FileArray:[],
         picPreviewInfo:'',
+        picIdsArray:[],
+        filePreviewInfo:'',
+        fileIdsArray:[],
         dynamicValidateForm: {
           domains: [],
         },
@@ -295,13 +299,13 @@
       GetSubInfo(this.$route.query.form_id)
         .then(response=>{
           response.datas.forEach((item,index)=> {
-            if(item.isdrop===1){
+            if(item.isdrop===1){//单选
               dictionType(item.listId).then(res=>{
                 this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
               })
               console.log(this.OnlyDataMany)
             }
-            if(item.isdrop===2){
+            if(item.isdrop===2){//多选
               dictionType(item.listId).then(res=>{
                 this.ManyData.push({ItemData:res.datas,dId:item.listId})
               })
@@ -326,28 +330,40 @@
         })
     },
     methods:{
-      FilePreview(value){
+      FilePreview(value){ //文件
+        this.fileIdsArray.push(value)
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 160){
-            item.fieldValue = value
+            item.fieldValue = this.fileIdsArray.toString()
           }
         })
       },
-      picPreview(value){
-        this.picPreviewInfo += value+','
+      delFilePreview(value){
+        this.fileIdsArray= this.fileIdsArray.filter((x)=>{
+          return x !==value
+        })
+        this.dynamicValidateForm.domains.forEach((item,index)=>{
+          if(item.fieldtype === 160){
+            item.fieldValue = this.fileIdsArray.toString()
+          }
+        })
+      },
+
+      picPreview(value){ //图片
+        this.picIdsArray.push(value)
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 150){
-            item.fieldValue += value+','
-            console.log(item.fieldValue)
+            item.fieldValue = this.picIdsArray.toString()
           }
         })
       },
       delUrlPreview(value){
-        this.picPreviewInfo = value
+        this.picIdsArray= this.picIdsArray.filter((x)=>{
+          return x !==value
+        })
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 150){
-            item.fieldValue += value.substring(0,value.length-1)
-            console.log(item.fieldValue)
+            item.fieldValue = this.picIdsArray.toString()
           }
         })
       },
@@ -366,17 +382,10 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 150){
-            data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:item.fieldValue.substring(0, item.fieldValue.length - 1)
-            })
-          }else{
-            data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:item.fieldValue
-            })
-          }
+          data.tableFieldSubModels.push({
+            tableFieldId:item.uId,
+            tableFieldValue:item.fieldValue.toString()
+          })
         })
       //  console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
@@ -426,17 +435,10 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 150){
-            data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:item.fieldValue.substring(0, item.fieldValue.length - 1)
-            })
-          }else{
-            data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:item.fieldValue
-            })
-          }
+          data.tableFieldSubModels.push({
+            tableFieldId:item.uId,
+            tableFieldValue:item.fieldValue
+          })
         })
         if(this.AddEditInfo.UserId.length>0){
           AddFormInfo(data).then(res => {

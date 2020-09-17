@@ -22,7 +22,7 @@ Vue.use(Vue2OrgTree)
 
 Vue.use(VueTinymce)
 
-Vue.config.productionTip = true // true 生产环境 false阻止vue在启动时生成生成提示 开发环境
+Vue.config.productionTip = false // true 生产环境 false阻止vue在启动时生成生成提示 开发环境
 Vue.prototype.$echarts = echarts;
 Vue.prototype.baseURL = process.env.BASE_API
 Vue.prototype.hasPerm = hasPermission

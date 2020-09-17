@@ -1,7 +1,7 @@
 <template> 
   <div><!-- :class="{hide:hideUpload}"-->
     <el-upload
-      name="fileName"
+       name="fileName"
       :multiple='false'
       :limit="limitCount"
       :action=" this.baseURL+'/file/getFilePath'"
@@ -12,7 +12,7 @@
       :before-upload="beforeUploadFile"
       :file-list="fileList">
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传文件且支持.xlsx，.xls，.zip，.rar，.doc，.docx文件，大小不超过20Mb</div>
+      <div slot="tip" class="el-upload__tip">只能上传文件且支持xlsx，xls，zip，rar，doc，docx文件，大小不超过20Mb</div>
     </el-upload>
   </div>
 </template>
@@ -41,12 +41,12 @@
     },
     watch:{
       'fileArray'(){
-        if(this.picArray.length<=0){
+        if(this.fileArray.length<=0){
           this.fileList=[]
         }else{
         // this.fileList=this.fileArray
           const pictureList=this.fileArray.split(",")
-          console.log(pictureList)
+         // console.log(pictureList)
           this.fileList = pictureList.map((item,key) => {
             return {
               url: item,
@@ -79,7 +79,6 @@
         }
       },
       handleRemove(file, fileList) {
-        console.log(fileList)
         this.fileList = fileList
         if (file && file.status==="success") {
           let multiUrl = ''
@@ -87,7 +86,7 @@
             multiUrl = multiUrl + value.url + ','
           })
           this.$message.warning('删除成功');
-          this.$emit('delFile', file.url)
+          this.$emit('delFile', decodeURIComponent(file.url))
         }
       },
       handleExceed (files, fileList) {
@@ -96,6 +95,10 @@
       // 文件上传失败时的钩子
       handleError(err, file, fileList) {
         this.$message.error('文件上传失败');
+      },
+      parentClickClear(){
+      //  this.fileArray=''
+        this.fileList=[]
       }
     }
   }

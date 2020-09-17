@@ -1,50 +1,48 @@
 <template>
-  <div class="ToReport">
+  <div>
     <div class="tittle">
-      <b>去汇报</b>
+      <b>编辑汇报</b>
     </div>
-    <el-form :model="neirong" ref="neirong" label-width="150px" class="demo-ruleForm">
-      <el-form-item style="width: 700px" label="主题">
-        <el-input v-model="neirong.title"></el-input>
-      </el-form-item>
-      <el-form-item style="width: 700px" label="内容详情">
-        <Editor :curValue="neirong.content" @input="newContent"></Editor>
-      </el-form-item>
-      <!--  @change="stationTrigger" -->
-      <el-form-item style="width: 700px" label="收件人" >
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="neirong.realname"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入内容"
-          @select="handleSelect"
-        ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" @click="submitForm('neirong')">发送</el-button>
-        <el-button @click="resetForms('neirong')">保存为草稿</el-button>
-        <el-button @click="resetForm()">关闭</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="ToReport" style="width:700px ">
+      <el-form :model="ruleForm" size="mini" ref="ruleForm":rules="rulesInfo" label-width="200px" class="demo-ruleForm">
+        <el-form-item  label="标题" prop="title">
+          <el-input v-model="ruleForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="内容">
+          <Editor v-model="ruleForm.content" :curValue="ruleForm.content" @input="newContent"></Editor>
+        </el-form-item>
+        <el-form-item label="被汇报人" prop="toReportId">
+          <el-select v-model="ruleForm.toReportId" filterable placeholder="请选择被汇报人" style="width: 100%">
+            <el-option
+              v-for="item in reportMan"
+              :key="item.uId"
+              :label="item.realname"
+              :value="item.uId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="ruleForm.state">
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">提交</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="success" @click="submitForm('ruleForm')">保存</el-button>
+          <el-button @click="resetForm('ruleForm')">关闭</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
 import Editor from "@/components/Tinymce/Editor";
-import {
-  ToReport,
-  DraftEditor,
-  getToReport,
-  addReport,
-  editReport,
-  editReports,
-} from "@/api/personalDoor";
+import {ToReport,DraftEditor,getToReport,addReport,editReport,editReports} from "@/api/personalDoor";
 
 export default {
   data() {
     return {
-      state2: "",
-      tableData: [],
       editorOption: {
         modules: {
           toolbar: [
@@ -53,12 +51,12 @@ export default {
           ],
         },
       },
-      neirong: {
-        title: "",
-        content: "",
-        toRealname: "",
-      },
-      stationData: [],
+      ruleForm: {},
+      reportMan: [],
+      rulesInfo: {
+        title: [{ required: true,trigger: 'blur',message: '请输入标题'}],
+        toReportId:[{ required: true,trigger: 'blur',message: '请选择被汇报人'}]
+      }
     };
   },
   components: {
@@ -66,7 +64,7 @@ export default {
   },
   created() {
     getToReport().then((response) => {
-      this.stationData = response.datas;
+      this.reportMan = response.datas;
     });
   },
   mounted() {
@@ -75,81 +73,48 @@ export default {
   methods: {
     editReport1(uId) {
       editReport(uId).then((res) => {
-        this.neirong = res.datas != null ? res.datas : [];
+        this.ruleForm = {
+          uId:res.datas.uId,
+          title:res.datas.title,
+          content:res.datas.content,
+          toReportId:res.datas.toreportuserid,
+          state:res.datas.state,
+        };
       });
     },
-      handleSelect(item) {
-      this.naieong = item;
-    },
-    querySearch(queryString, cb) {
-      getToReport().then(({ datas }) => {
-        for (var i = 0; i < datas.length; i++) {
-          datas[i].value = datas[i].realname;
-          datas[i].id = datas[i].uId;
-        }
-        cb(datas);
-      });
-    },
-    submitForm(formName) {},
     resetForm(formName) {
       this.$router.back();
     },
-    // 保存草稿
-    resetForms() {
-      let ruleFormss = {
-        title: this.neirong.title,
-        content: this.neirong.content,
-        toReportId: this.naieong.id,
-        state: 0,
-        uId: this.neirong.uId,
-      };
-      this.$refs.neirong.validate((valid) => {
-        editReports(ruleFormss).then((response) => {
-          this.$router.back(-1);
-        });
-      });
-    },
-    // 发送信件
+    // 保存
     submitForm() {
-      let ruleFormss = {
-        title: this.neirong.title,
-        content: this.neirong.content,
-        toReportId: this.naieong.id,
-        state: 1,
-        uId: this.neirong.uId,
-      };
-      this.$refs.neirong.validate((valid) => {
-        editReports(ruleFormss).then((response) => {
-          this.$router.back(-1);
-        });
+      this.$refs.ruleForm.validate((valid) => {
+        if(valid){
+          editReports(this.ruleForm).then((response) => {
+            this.$router.back(-1);
+          });
+        }
       });
     },
     newContent(val) {
-      this.neirong.content = val;
+      this.ruleForm.content = val;
     },
   },
 };
 </script>
 
 <style scoped>
-.tittle {
-  padding: 10px;
-  border-bottom: 1px solid #cccccc;
-  margin-bottom: 10px;
-}
-.ToReport {
-  width: 100%;
-  height: 785px;
-  border: 5px solid #f5f5f5;
-  border-radius: 5px 5px 0px 0px;
-}
-.bom-box {
-  text-align: center;
-  font-size: 12px;
-  height: 60px;
-  line-height: 60px;
-  background-color: #f5f5f5;
-}
+  .tittle {
+    padding: 10px;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 10px;
+  }
+  .ToReport {
+    width: 100%;
+    height: 785px;
+
+    border-radius: 5px 5px 0px 0px;
+  }
+
 </style>
 
 

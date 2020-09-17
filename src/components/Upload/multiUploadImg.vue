@@ -1,6 +1,7 @@
 <template> 
   <div>
     <el-upload
+      ref="Upload"
       class="upload-demo"
       name="fileName"
       :action="this.baseURL+'/file/getPicPath'"
@@ -54,7 +55,7 @@
           this.fileList=[]
         }else{
           const pictureList=this.picArray.split(",")
-          console.log(pictureList)
+        //  console.log(this.fileList)
           this.fileList = pictureList.map(item => {
             return {
               url: item
@@ -87,8 +88,11 @@
           fileList.forEach((value, key) => {
             multiUrl = multiUrl + value.url + ','
           })
+          console.log(file,fileList)
+          this.fileList = fileList
+
           this.$message.warning('删除成功');
-          this.$emit('delUrl', multiUrl)
+          this.$emit('delUrl', file.url)
         }
       },
       handlePreview(file) {
@@ -101,6 +105,10 @@
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
+      parentClickClear(){
+      //  this.picArray=''
+        this.fileList=[]
+      }
     }
   }
 </script>

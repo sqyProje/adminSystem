@@ -50,8 +50,8 @@
         </el-table-column>
         <el-table-column label="序号" prop="number"></el-table-column>
         <el-table-column label="表单名称" prop="name"></el-table-column>
-        <el-table-column label="部门" prop="departName"></el-table-column>
         <el-table-column label="姓名" prop="realName"></el-table-column>
+        <el-table-column label="部门" prop="departName"></el-table-column>
         <el-table-column label="发放标准" prop="grantstandard"></el-table-column>
         <el-table-column label="人员性质" prop="property">
           <template slot-scope="scope">

@@ -53,7 +53,7 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='封面'  prop="picpath">
+        <el-form-item label ='图片'  prop="picpath">
           <singleUpload  v-model="AddEditInfo.picpath" @input="picFun"></singleUpload>
         </el-form-item>
         <el-form-item label ='排序'  prop="sort">

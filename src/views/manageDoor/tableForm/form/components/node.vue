@@ -97,7 +97,7 @@
             <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
           </el-form-item>
           <el-form-item label='流程类型'  prop="qdflownodetype">
-            <el-select v-model="AddEditInfo.qdflownodetype" placeholder="流程类型" style="width: 100%;">
+            <el-select v-model="AddEditInfo.qdflownodetype" @change="flowType" placeholder="流程类型" style="width: 100%;">
               <el-option
                 v-for="item in qdflownodetypeData"
                 :label="item.enumValue"
@@ -107,12 +107,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label='审批节点'  prop="approvenodetype">
-            <el-select v-model="AddEditInfo.approvenodetype" @change="approveChange" placeholder="审批节点" style="width: 100%;">
+            <el-select v-model="AddEditInfo.approvenodetype" @change="approveChange" :disabled="flowTypeFlag" placeholder="审批节点" style="width: 100%;">
               <el-option
                 v-for="item in approvenodetypeData"
                 :label="item.enumValue"
                 :value="item.enumKey"
-                :key="item.enumKey">
+                :key="item.enumKey"
+                :disabled="item.enumKey==1&&(AddEditInfo.qdflownodetype!==10 ||AddEditInfo.qdflownodetype!==30 )">
                 {{item.enumValue}}</el-option>
             </el-select>
           </el-form-item>
@@ -137,7 +138,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label ='排序' prop="sort">
-            <el-input v-model="AddEditInfo.sort" type="number"></el-input>
+            <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
           </el-form-item>
           <el-form-item label='状态'>
             <el-select v-model="AddEditInfo.state" style="width: 100%;">
@@ -210,6 +211,7 @@
         userDropData:[],
         approveFlag:false,
         userFlag:false,
+        flowTypeFlag:false,
         addInfo:{
           id:'',
           name:'',
@@ -366,6 +368,20 @@
         this.dialogVisible = false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+      },
+      //流程类型
+      flowType(value){
+        this.approveFlag=false
+        this.userFlag =false
+        this.AddEditInfo.approveroleid=''
+        this.AddEditInfo.userid=''
+        if(value===10 || value===30){
+          this.flowTypeFlag=true
+          this.AddEditInfo.approvenodetype=1
+        }else{
+          this.flowTypeFlag=false
+          this.AddEditInfo.approvenodetype=''
+        }
       },
       approveChange(value){
         console.log(value)

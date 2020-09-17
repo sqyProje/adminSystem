@@ -1,16 +1,15 @@
 <template>
-  <div>
+  <div  class="app-container">
     <!-- 匿名信 -->
     <div class="sousuo">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="主题名称">
-          <el-input v-model="listQuery.title" placeholder="主题关键字"></el-input>
+        <el-form-item label="标题">
+          <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
-       
       </el-form>
     </div>
     <div class="my-Report">
@@ -21,6 +20,7 @@
         :cell-style="{padding:'1px'}"
         :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
         :data="myReport"
+        height="449"
         style="width: 100%"
       >
         <el-table-column prop="title" label="标题"></el-table-column>
@@ -28,7 +28,7 @@
         <el-table-column prop="realname" label="姓名"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick1(scope.row)" type="text" size="small">打开</el-button>
+            <el-button @click="handleClick1(scope.row)" type="text" size="small">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +65,6 @@ export default {
     };
   },
   methods: {
- 
     // 打开匿名信详情
     handleClick1(row) {
       this.$router.push({ name: "anonletterDetails", query: { uId: row.uId } });
@@ -107,10 +106,8 @@ export default {
 <style scoped>
 .my-Report {
   width: 90%;
-  height: 760px;
   border-radius: 10px 10px 0 0;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .sousuo {

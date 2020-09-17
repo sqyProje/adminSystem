@@ -2,45 +2,45 @@
   <!-- 整个盒子 -->
   <div class="app-container root-box">
     <!-- 上半部分 -->
-    <div class="top-root">
-      <!-- 轮播图 -->
-      <div class="block left-box">
-        <el-carousel height="360px">
-          <el-carousel-item v-for="(item,i) in list" :key="i">
-            <img style="width: 100%;height:100%" :src="item.picpath" alt />
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <!--公告  -->
-      <div class="right-box">
-        <div class="gonggao-box">
-          <div style="height:30px;line-height:30px;">公告</div>
-          <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-            <el-form-item label="公告搜索">
-              <el-input v-model="listQuery.title" placeholder="请输入关键字"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <el-table
-          :row-style="{height:'20px'}"
-          :header-row-style="{height:'20px'}"
-          :cell-style="{padding:'1px'}"
-          :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
-          :data="AnnounceList"
-          style="width: 100%;height: 256px"
-        >
-          <el-table-column prop="title" width="230" label="标题" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column prop="sketch" label="简介" width="250" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column prop="publishDate" width="230" label="发布时间"></el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button @click="NoticeDetails(scope.row)" type="text" size="small">打开</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+    <el-row :gutter="10" style="margin-left: -5px">
+      <el-col :span="12"> <!-- 轮播图 -->
+        <div class="block left-box">
+          <el-carousel height="360px">
+            <el-carousel-item v-for="(item,i) in list" :key="i">
+              <img style="width: 100%;height:100%" :src="item.picpath" alt />
+            </el-carousel-item>
+          </el-carousel>
+        </div></el-col>
+      <el-col :span="12"> <!--公告  -->
+        <div class="right-box">
+          <div class="gonggao-box">
+            <div style="height:30px;line-height:30px;">公告</div>
+            <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+              <el-form-item >
+                <el-input v-model="listQuery.title" placeholder="请输入关键字"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+          <el-table
+            :row-style="{height:'20px'}"
+            :header-row-style="{height:'20px'}"
+            :cell-style="{padding:'1px'}"
+            :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
+            :data="AnnounceList"
+            style="width: 100%;height: 256px"
+          >
+            <el-table-column prop="title" width="230" label="标题" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="sketch" label="简介" width="250" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="publishDate" width="230" label="发布时间"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button @click="NoticeDetails(scope.row)" type="text" size="small">详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
           <el-pagination
             background
             @size-change="handleSizeChange"
@@ -51,110 +51,106 @@
             :total="total"
             style="margin-top:20px;text-align: center"
           ></el-pagination>
-      </div>
-    </div>
+        </div></el-col>
+    </el-row>
     <!-- 下半部分 -->
     <div class="new-content">
-      <div>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane
-            v-for="(item,i) in newsType"
-            :key="i"
-            :id="item.uId"
-            :label="item.name"
-            :name="item.name"
-          >
-            <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
-              <el-form-item label="新闻搜索">
-                <el-input v-model="newQuery.title" placeholder="请输入关键字"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
-              </el-form-item>
-            </el-form>
-            <div class="top-root" v-if="newsList.length!=0" style="height: 343px">
-              <div v-for="(item,i) in newsList" :key="item.i">
-                <div v-if="i==0">
-                  <div>
-                    <img class="img-box" :src="item.picPath" alt />
-                  </div>
-                  <div class="biaoti">{{item.title}}</div>
-                  <div class="neirong">{{item.sketch}}</div>
-                  <div style="height:30px;display: flex;	margin-top: 30px; -webkit-box-pack: justify; -webkit-justify-content: space-between;-ms-flex-pack:justify ;justify-content: space-between;">
-                    <span class="btn-size">{{item.publishDate}}</span>
-                    <span class="btn-box btn-size"@click="SeeDetails(item)">查看详情 >></span>
-                  </div>
-                </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane
+          v-for="(item,i) in newsType"
+          :key="i"
+          :id="item.uId"
+          :label="item.name"
+          :name="item.name"
+        >
+          <el-form :inline="true" size="mini" :model="newQuery" class="demo-form-inline">
+            <el-form-item>
+              <el-input v-model="newQuery.title" placeholder="请输入关键字"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
+            </el-form-item>
+          </el-form>
+          <div  v-if="newsList.length!=0" style="display: flex">
+            <div class="firstnew" v-for="(item,i) in newsList" :key="i" v-if="i==0">
+              <div class="img-box">
+                <img  :src="item.picPath" alt />
               </div>
-              <div>
-                <div v-for="(item,i) in newsList" :key="item.i">
-                  <div style="cursor:pointer" class="bom-boxs top-root" @click="SeeDetails(item)" v-if="i!=0">
-                    <div>
-                      <img src="../../assets/images/lingwps.png" alt />
-                    </div>
-                    <div class="news-title">{{item.title}}</div>
-                    <div class="el-icon-arrow-right"></div>
-                  </div>
-                </div>
+              <div class="biaoti ellipsis">{{item.title}}</div>
+              <div class="neirong ellipsis">{{item.sketch}}</div>
+              <div style="height:30px;display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between;-ms-flex-pack:justify ;justify-content: space-between;">
+                <span class="btn-size">{{item.publishDate}}</span>
+                <span class="btn-box btn-size"@click="SeeDetails(item)">查看详情 >></span>
               </div>
             </div>
-            <div v-if="newsList.length==0" style="height:343px;text-align: center;line-height:343px ;">
-              暂无数据
+            <div class="news-other">
+              <div class="newitem" v-for="(item,i) in newsList" :key="i" v-if="i!==0" @click="SeeDetails(item)" >
+                <img class="new-img" src="../../assets/images/lingwps.png"  />
+                <div class="news-title ellipsis">{{item.title}}</div>
+                <div class="right-icon"> > </div>
+              </div>
             </div>
-            <el-pagination
-              background
-              @size-change="handleSizeChanges"
-              @current-change="handleCurrentChanges"
-              layout="total,prev, pager, next"
-              :current-page.sync="newQuery.pageNum"
-              :page-size="newQuery.pageSize"
-              :total="newstotal"
-              style="margin-top:20px;text-align: center"
-            ></el-pagination>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
+          </div>
+          <div v-if="newsList.length==0" style="height:343px;text-align: center;line-height:343px ;">
+            暂无数据
+          </div>
+          <el-pagination
+            background
+            @size-change="handleSizeChanges"
+            @current-change="handleCurrentChanges"
+            layout="total,prev, pager, next"
+            :current-page.sync="newQuery.pageNum"
+            :page-size="newQuery.pageSize"
+            :total="newstotal"
+            style="margin-top:10px;text-align: center"
+          ></el-pagination>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <!--图表-->
-    <div class="top-root" style="margin-top: 10px;">
-      <div class="block left-box">
-        <div class="lineInfo">
-          <div class="selectTitle"><em></em><span>我发起的及已通过的</span></div>
-          <el-form size="mini"  class="selectYear demo-form-inline">
-            <el-form-item label="">
-            <el-select v-model="value" clearable placeholder="请选择年份" @change="selectYear">
-              <el-option
-                v-for="item in options"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div  id="approveLine" style="height: 300px"></div>
+      <el-row :gutter="10" style="margin:10px -5px 40px -5px">
+        <el-col :span="12">
+          <div class="block left-box">
+            <div class="lineInfo">
+              <div class="selectTitle"><em></em><span>我发起的及已通过的</span></div>
+              <el-form size="mini"  class="selectYear demo-form-inline">
+                <el-form-item label="">
+                <el-select v-model="value" placeholder="请选择年份" @change="selectYear">
+                  <el-option
+                    v-for="item in options"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                  </el-option>
+                </el-select>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div  id="approveLine" style="height: 300px"></div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="right-box">
+            <div class="lineInfo">
+              <div class="selectTitle"><em></em><span>我的审批状态</span></div>
+              <el-form size="mini"  class="selectYear demo-form-inline">
+                <el-form-item label="">
+                  <el-select v-model="pievalue" placeholder="请选择年份" @change="selectPieYear">
+                    <el-option
+                      v-for="item in options"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div  id="approvePie" style="height: 300px"></div>
+          </div>
+        </el-col>
+      </el-row>
       </div>
-      <div class="right-box">
-        <div class="lineInfo">
-          <div class="selectTitle"><em></em><span>我的审批状态</span></div>
-          <el-form size="mini"  class="selectYear demo-form-inline">
-            <el-form-item label="">
-              <el-select v-model="pievalue" clearable placeholder="请选择年份" @change="selectPieYear">
-                <el-option
-                  v-for="item in options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div  id="approvePie" style="height: 300px"></div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -355,18 +351,6 @@
 </script>
 
 <style scoped>
-  .news-title{
-    height: 18px;
-    width:700px;
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-  }
-  .img-box {
-    width: 608px;
-    height: 250px;
-    background-size: 100% 100%;
-  }
   .gonggao-box {
     display: flex;
     justify-content: space-between;
@@ -374,37 +358,40 @@
   }
   .root-box {
     background-color: #f1f1f1;
-    padding:10px 10px 100px;
-
   }
-  .top-root {
-    display: flex;
-    justify-content: space-between;
-  }
-  .left-box {
-    width: 50%;
-    height: 380px;
-    margin-right: 10px;
+  .left-box,.right-box {
     padding: 10px;
     background: rgba(255, 255, 255, 1);
   }
-  .right-box {
-    width: 50%;
-    height: 380px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 1);
-    position: relative;
+  .firstnew{
+    width: 608px;
+    overflow: hidden;
+  }
+  .img-box {
+    width: 608px;
+    height: 250px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .img-box img{
+    width:100%;
+    height: 100%;
   }
   .new-content {
     height: 510px;
     margin-top: 10px;
     padding: 10px;
     background: rgba(255, 255, 255, 1);
+  }
+  .ellipsis{
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .biaoti {
     width: 516px;
-    height: 23px;
+    height: 24px;
+    line-height:24px;
     font-size: 22px;
     font-weight: bold;
     color: rgba(0, 0, 0, 1);
@@ -413,12 +400,11 @@
   .neirong {
     width: 608px;
     font-size: 14px;
+    height: 16px;
+    line-height: 16px;
     color: rgba(76, 76, 76, 1);
     margin-bottom: 10px;
     padding-right: 22px;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-
   }
   .btn-box {
     width: 100px;
@@ -434,14 +420,32 @@
     color: rgba(153, 153, 153, 1);
     line-height: 30px;
   }
-  .el-icon-arrow-right {
-    padding-left: 200px;
+  .news-other{
+    margin-left: 20px;
+    width:calc(100% - 608px) ;
   }
-  .bom-boxs {
-    margin: 10px;
-    margin-top: 15px;
-    width: 1000px;
+  .newitem{
+    display: flex;
+    cursor: pointer;
+    height: 36px;
+    line-height: 36px;
   }
+  .new-img{
+    height: 20px;
+    margin-right: 10px;
+    margin-top:8px;
+    flex: 0 1 20px;
+  }
+  .news-title{
+    flex: 1;
+  }
+  .right-icon {
+    flex: 0 1 20px;
+    color: #999999;
+    font-size: 20px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  }
+
   .lineInfo{
     display: flex;
     height: 24px;

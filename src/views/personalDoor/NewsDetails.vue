@@ -6,12 +6,12 @@
       <div class="title-style">
         <b>{{neirong.title}}</b>
       </div>
+      <div class="news-date">创建时间：{{neirong.createdate}}</div>
       <div class="news-content" v-html="neirong.content"></div>
-      <div class="news-date">{{neirong.createdate}}</div>
     </div>
   </div>
 </template>
-      
+
 <script>
 import { newsdetails } from "@/api/personalDoor";
 export default {
@@ -39,28 +39,25 @@ export default {
 </script>
 
 <style scoped>
-.title-style {
-  font-size: 38px;
-  text-align: center;
-}
-.root-box {
-  width: 1690px;
-  padding: 20px;
-}
-.news-content {
-  padding-top: 20px;
-  width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-}
-.news-date {
-  padding-left: 80%;
-  margin-top: 10px;
-}
-.fanhui {
-  margin: 10px;
-  margin-left: 30px;
-  color: green;
-}
+  .title-style{
+    font-size: 30px;
+    text-align: center;
+  }
+  .root-box{
+    width: 1690px;
+    padding: 20px;
+  }
+  .news-content{
+    padding-top: 20px;
+    width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .news-date{
+    text-align: center;
+    color:#999999;
+    font-size: 14px;
+    margin-top: 10px;
+  }
 
 </style>

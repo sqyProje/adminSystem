@@ -86,7 +86,8 @@
 
     <el-dialog
       :title="dialogTitle"
-      :close-on-click-modal="false"      :show-close="false"
+      :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="dialogVisible"
       width="35%">
       <el-form
@@ -97,10 +98,10 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='名称'  prop="name">
+        <el-form-item label ='名称' prop="name">
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
-        <el-form-item label="汇报类型">
+        <el-form-item label="汇报类型" prop="reporttype">
           <el-select
             v-model="AddEditInfo.reporttype"
             placeholder="汇报类型"
@@ -114,8 +115,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label='去汇报类型' prop="typename">
-          <el-select v-model="AddEditInfo.toreporttype" placeholder="去汇报类型" style="width: 100%;">
+        <el-form-item label='去汇报类型' prop="toreporttype">
+          <el-select v-model="AddEditInfo.toreporttype" placeholder="去汇报类型" style="width: 100%;" @change="toReportFun">
             <el-option
               v-for="item in toreportData"
               :label="item.display_name"
@@ -124,17 +125,19 @@
             >{{item.display_name}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label ='汇报周期'  prop="reportdays">
-          <el-input v-model="AddEditInfo.reportdays" placeholder="汇报周期（天）" ></el-input>
+        <el-form-item label ='汇报周期' prop="reportdays">
+          <el-input type="number" v-model="AddEditInfo.reportdays" placeholder="汇报周期（天）" min="0"></el-input>
         </el-form-item>
-        <el-form-item label ='汇报人员'>
+        <el-form-item label ='汇报人员' prop="reportUserIds">
+          <el-input type="hidden" v-model="AddEditInfo.reportUserIds" style="width: 0;height: 0;"></el-input>
           <el-button size="small" v-on:click.native="userRole" type="primary">选择汇报人员</el-button>
         </el-form-item>
-        <el-form-item label ='被汇报人员'>
+        <el-form-item label ='被汇报人员' prop="toreportUserIds">
+          <el-input type="hidden" v-model="AddEditInfo.toreportUserIds" style="width: 0;height: 0;"></el-input>
           <el-button size="small" v-on:click.native="userRoleTo" type="primary">选择被汇报人员</el-button>
         </el-form-item>
-        <el-form-item label ='排序'  prop="sort">
-          <el-input v-model="AddEditInfo.sort"></el-input>
+        <el-form-item label ='排序' prop="sort">
+          <el-input type="number" v-model="AddEditInfo.sort" min="0"></el-input>
         </el-form-item>
         <el-form-item label='状态'>
           <el-select v-model="AddEditInfo.state" placeholder="状态" style="width: 100%;">
@@ -172,10 +175,12 @@
         </span>
     </el-dialog>
     <el-dialog
-      title="选择被汇报人员"
-      :close-on-click-modal="false"      :show-close="false"
+      title="选择被汇报人员其中之一"
+      :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="RoleDialogVisibleTo"
       width="33%">
+      <!--:check-strictly="true" 父子是否关联-->
       <el-tree
         :data="roleDataTo"
         show-checkbox
@@ -185,11 +190,36 @@
         :default-checked-keys="resourceCheckedKeyTo"
         :props="defaultProps">
       </el-tree>
+
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialogTo">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenuTo">确 定</el-button>
         </span>
     </el-dialog>
+    <el-dialog
+      title="选择被汇报人员单选个人"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="radioFlag"
+      width="33%">
+      <!--:check-strictly="true" 父子是否关联-->
+      <el-tree
+        ref="fileTree"
+        :data="roleDataTo"
+        :check-strictly="true"
+        :show-checkbox="true"
+        :default-expanded-keys="resourceCheckedKeyTo"
+        :default-checked-keys="resourceCheckedKeyTo"
+        @check-change="checkChange"
+        :props="defaultProps"
+         node-key="id">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+          <el-button size="small" type="" @click="RoleCanleDialogTo">取 消</el-button>
+          <el-button size="small" type="primary" @click="RoleCanleDialogTo">确 定</el-button>
+        </span>
+    </el-dialog>
+
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -254,7 +284,13 @@
         defaultProps: {
           children: 'childrenMenu',
           label: 'name',
-        }
+        },
+
+        /*单选个人*/
+        radioFlag:false,
+        fileTree: [],
+        leafCheckArr: [],
+        oldCheckKey: '',
       }
 
     } ,
@@ -394,7 +430,7 @@
         checkedKeys =  checkedKeys.filter((value)=>{
           return value !== undefined
         })
-        console.log(checkedKeys)
+      //  console.log(checkedKeys)
         this.AddEditInfo.reportUserIds = checkedKeys.toString()
 
         this.RoleDialogVisible = false
@@ -408,18 +444,41 @@
       },
       /*被汇报人员*/
       userRoleTo(){
-        this.RoleDialogVisibleTo = true
-        GetToReportUser(this.AddEditInfo.uId).then(response=>{
-          this.roleDataTo = response.datas
-          this.parseJson(this.roleDataTo)
-          this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
+        if(this.AddEditInfo.toreporttype===10){ //单选
+          this.radioFlag=true
+          this.RoleDialogVisibleTo=false
+          GetToReportUser(this.AddEditInfo.uId).then(response=>{
+            this.roleDataTo = response.datas
+            this.parseJson(this.roleDataTo)
+            this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
+            console.log( this.resourceCheckedKeyTo)
+            //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
+            this.$nextTick(()=>{
+              this.$refs.fileTree.setCheckedKeys(this.resourceCheckedKeyTo)
+            })
 
-        //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
-          this.$nextTick(()=>{
-            this.$refs.roleDataTo.setCheckedKeys(this.resourceCheckedKeyTo)
           })
+        }else if(this.AddEditInfo.toreporttype===20){ //多选
+          this.radioFlag=false
+          this.RoleDialogVisibleTo=true
+          GetToReportUser(this.AddEditInfo.uId).then(response=>{
+            this.roleDataTo = response.datas
+            this.parseJson(this.roleDataTo)
+            this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
+            console.log( this.resourceCheckedKeyTo)
+            //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
+            this.$nextTick(()=>{
+              this.$refs.roleDataTo.setCheckedKeys(this.resourceCheckedKeyTo)
+            })
 
-        })
+          })
+        }else{
+          Message({
+            type: 'warning',
+            message: '请先选择去汇报类型'
+          });
+          return
+        }
       },
       UpdateRoleMenuTo(){
         let checkedKeys = this.$refs.roleDataTo.getCheckedKeys();
@@ -427,13 +486,14 @@
           return value !== undefined
         })
         this.AddEditInfo.toreportUserIds = checkedKeys.toString()
-        console.log(this.AddEditInfo.toreportUserIds)
+        //console.log(this.AddEditInfo.toreportUserIds)
         this.RoleDialogVisibleTo = false
         this.resourceCheckedKeyTo=[]
         this.roleDataTo = []
       },
       RoleCanleDialogTo(){
         this.RoleDialogVisibleTo = false
+        this.radioFlag = false
         this.resourceCheckedKeyTo=[]
         this.roleDataTo = []
       },
@@ -460,7 +520,7 @@
             }
             if (item.user && Array.isArray(item.user)) {
               item.user.forEach(function (child) {
-                item[key] .push( {id:child.uId,name:child.realname,selected:child.selected,})
+                item[key] .push( {id:child.uId,name:child.realname,selected:child.selected})
                 toParse(item[key])
               })
             }
@@ -470,7 +530,52 @@
           return arr
         }
         return toParse(arr)
-      }
+      },
+      toReportFun(event){
+        if(event==10){
+          this.AddEditInfo.toreporttype=10
+          Message({
+            type: 'warning',
+            message: '只能选择单个被汇报人员'
+          });
+        }else{
+          this.AddEditInfo.toreporttype=20
+          Message({
+            type: 'warning',
+            message: '能选择单个或多个被汇报人员'
+          });
+        }
+
+      },
+      /*单选个人*/
+      checkChange(a,b,c) {
+        this.leafCheckArr = this.$refs.fileTree.getCheckedKeys()
+        console.log(this.leafCheckArr)
+        let arr = []
+        this.leafCheckArr.forEach(item => {
+          arr.push(item)
+        })
+        if (this.leafCheckArr.length > 1) {
+          arr = this.leafCheckArr.filter(item => {
+            return item !== undefined && item !==this.AddEditInfo.toreportUserIds
+          })
+        }
+        console.log(arr)
+        if(arr.length>1){
+          Message({
+            type: 'warning',
+            message: '只能选择单人，请先取消'
+          });
+        }
+        else {
+          this.AddEditInfo.toreportUserIds = arr.join('')
+          console.log(this.AddEditInfo.toreportUserIds)
+
+          this.$refs.fileTree.setCheckedKeys([]);
+          this.$refs.fileTree.setCheckedKeys([this.AddEditInfo.toreportUserIds]);
+        }
+      },
+
     }
   }
 

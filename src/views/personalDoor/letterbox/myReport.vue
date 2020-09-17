@@ -9,10 +9,8 @@
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
-        <el-button type="primary" size="mini" @click="newanonletters" v-if="tuoqian.bool==false" plain
-          icon="el-icon-plus">去汇报</el-button>
-        <el-button type="danger" size="mini" @click="newanonletters" v-if="tuoqian.bool==true" plain
-          icon="el-icon-plus">已经拖欠{{tuoqian.days}}天!请及时进行工作汇报</el-button>
+        <el-button type="primary" size="mini" @click="newanonletters" plain icon="el-icon-plus">去汇报</el-button>
+        <el-link type="danger" size="mini" v-if="tuoqian.bool==true">已经拖欠{{tuoqian.days}}天!请及时进行工作汇报</el-link>
       </el-form>
     </div>
     <div class="my-Report">
@@ -24,7 +22,7 @@
         <el-table-column prop="reportRealName" label="发件人"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick1(scope.row)" type="text" size="small">打开</el-button>
+            <el-button @click="handledetails(scope.row)" type="text" size="small">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -34,7 +32,7 @@
           :page-size="listQuery.pageSize" :page-sizes="[10,20,30]" :total="total"></el-pagination>
       </div>
     </div>
-   
+
   </div>
 </template>
 <script>
@@ -55,13 +53,17 @@
         tuoqian: [],
       };
     },
+    created() {
+      this.initTable();
+      defaultReport().then(res => {
+        this.tuoqian = res.datas
+      })
+    },
     methods: {
-      
       newanonletters(row) {
         this.$router.push({ name: "gohuibao", query: {} });
       },
-      
-      handleClick1(row) {
+      handledetails(row) {
         this.$router.push({ name: "detailsList", query: { uId: row.uId } });
       },
       onSearchList() {
@@ -74,9 +76,6 @@
             this.myReport = response.datas.list;
             this.total = response.datas.total;
           })
-          .catch((error) => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -92,12 +91,7 @@
         this.initTable();
       },
     },
-    created() {
-      this.initTable();
-      defaultReport().then(res => {
-        this.tuoqian = res.datas
-      })
-    },
+
   };
 </script>
 

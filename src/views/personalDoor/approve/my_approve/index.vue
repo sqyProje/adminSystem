@@ -6,7 +6,7 @@
           <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.approvestatus" placeholder="审批状态">
+          <el-select v-model="listQuery.approveStatus" placeholder="审批状态">
             <el-option value="" label="全部">全部</el-option>
             <el-option
               v-for="item in approveStatusData"
@@ -95,7 +95,7 @@
   import {InitMyList,repeal} from '@/api/approve'
   const defaultListQuery = {
     name: '',
-    approvestatus:'',
+    approveStatus:'',
     pageNum:1,
     pageSize:10
   }

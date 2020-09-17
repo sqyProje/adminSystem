@@ -5,7 +5,7 @@
         <el-form-item>
           <el-input v-model="listQuery.name" placeholder="名称"></el-input>
         </el-form-item>
-        <el-form-item label='所属分类'>
+        <el-form-item>
           <el-select v-model="listQuery.approveType" placeholder="所属分类" style="width: 100%;">
             <el-option
               v-for="item in dictionTypeData"

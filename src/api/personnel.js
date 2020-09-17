@@ -512,3 +512,48 @@ export function wealExcel(params) {
     responseType: 'blob',
   })
 }
+/*年度考核*/
+export function YearCheckList(params) {
+  return request({
+    url: '/yearCheck/list',
+    method: 'get',
+    params: params
+  })
+}
+export function AddYearCheck(params) {
+  return request({
+    url: '/yearCheck/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetYearCheck(params) {
+  return request({
+    url: '/yearCheck/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditYearCheck(params) {
+  return request({
+    url: '/yearCheck/edit',
+    method: 'post',
+    data: params
+  })
+}
+export function DeleteYearCheck(params) {
+  return request({
+    url: '/yearCheck/deletes?array='+params,
+    method: 'post'
+  })
+}
+export function yearCheckExport() {
+  return request({
+    url: '/yearCheck/export',
+    method: 'get',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    responseType: 'blob',
+  })
+}
+

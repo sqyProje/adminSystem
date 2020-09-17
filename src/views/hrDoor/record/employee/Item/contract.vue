@@ -159,7 +159,9 @@
         this.fileIdsArray.push(value)
       },
       delFilePreview(value){
-        this.fileIdsArray= this.fileIdsArray.filter((x) => x !== value);
+        this.fileIdsArray= this.fileIdsArray.filter((x) =>{
+        return  x !== value
+        } );
         this.fileString = this.fileIdsArray.toString()
         this.filePreviewInfo = this.fileIdsArray.toString()+','
       },

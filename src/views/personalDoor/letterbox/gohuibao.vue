@@ -3,26 +3,32 @@
     <div class="tittle">
       <b>去汇报</b>
     </div>
-    <div class="ToReport">
-      <el-form :model="ruleForm" ref="ruleForm" label-width="200px" class="demo-ruleForm">
-        <el-form-item size="mini" style="width: 700px" label="主题" prop="theme">
-          <el-input v-model="ruleForm.theme"></el-input>
+    <div class="ToReport" style="width:700px ">
+      <el-form :model="ruleForm" size="mini"ref="ruleForm":rules="rulesInfo" label-width="200px" class="demo-ruleForm">
+        <el-form-item  label="标题" prop="title">
+          <el-input v-model="ruleForm.title" maxlength="50" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item style="width: 700px" label="内容" prop="substance">
-          <Editor v-model="ruleForm.substance" :curValue="ruleForm.substance" @input="newContent"></Editor>
+        <el-form-item label="内容">
+          <Editor v-model="ruleForm.content" :curValue="ruleForm.content" @input="newContent"></Editor>
         </el-form-item>
-           <el-form-item style="width: 700px" label="收件人" prop="name">
-        <el-autocomplete
-          popper-class="my-autocomplete"
-          v-model="state2.realname"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入内容"
-          @select="handleSelect"
-        ></el-autocomplete>
-      </el-form-item>
+         <el-form-item label="被汇报人" prop="toReportId">
+           <el-select v-model="ruleForm.toReportId" filterable placeholder="请选择被汇报人" style="width: 100%">
+             <el-option
+               v-for="item in reportMan"
+               :key="item.uId"
+               :label="item.realname"
+               :value="item.uId">
+             </el-option>
+           </el-select>
+         </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group v-model="ruleForm.state">
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">提交</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item>
-          <el-button type="success" icon="el-icon-s-promotion" @click="submitForm('ruleForm')">发送</el-button>
-          <el-button @click="resetForms('ruleForm')">保存为草稿</el-button>
+          <el-button type="success" @click="submitForm('ruleForm')">保存</el-button>
           <el-button @click="resetForm('ruleForm')">关闭</el-button>
         </el-form-item>
       </el-form>
@@ -31,18 +37,17 @@
 </template>
 <script>
 import { Message, MessageBox } from "element-ui";
-import {
-  getToReport,
-  addReport,
-  defaultReport
-} from "@/api/personalDoor";
+import {getToReport,addReport} from "@/api/personalDoor";
 import Editor from '@/components/Tinymce/Editor'
 export default {
   data() {
     return {
-      ruleForm: {},
-      state2: [],
-      tableData: [],
+      ruleForm: {
+        title:'',
+        content:'',
+        toReportId:'',
+        state:1,
+      },
       editorOption: {
         modules: {
           toolbar: [
@@ -51,72 +56,41 @@ export default {
           ],
         },
       },
-      defaultReports:[]
+      reportMan:[],
+      rulesInfo: {
+        title: [{ required: true,trigger: 'blur',message: '请输入标题'}],
+        toReportId:[{ required: true,trigger: 'blur',message: '请选择被汇报人'}]
+      }
     };
   },
-  components:{
-      Editor
-    },
-  created() {
-    defaultReport().then(res=>{
-
-      this.defaultReports = res.datas
-    })
-  },
+  components:{Editor},
   mounted() {
-    
+    getToReport().then((res) => {
+      this.reportMan=res.datas
+    });
   },
   methods: {
     resetForm(formName) {
       this.$router.back();
     },
-    handleSelect(item) {
-      this.state2 = item;
-    },
-    querySearch(queryString, cb) {
-      getToReport().then(({ datas }) => {
-        for (var i = 0; i < datas.length; i++) {
-          datas[i].value = datas[i].realname;
-          datas[i].id = datas[i].uId;
-        }
-        cb(datas);
-      });
-    },
-    // 保存草稿
-    resetForms() {
-      let ruleFormss = {
-        title: this.ruleForm.theme,
-        content: this.tableData.content,
-        toReportId: this.state2.id,
-        state: 0,
-      };
-      this.$refs.ruleForm.validate((valid) => {
-        addReport(ruleFormss).then((response) => {
-          this.$router.back(-1)
-        });
-      });
-    },
     // 发送信件
     submitForm() {
-      let ruleFormss = {
-        title: this.ruleForm.theme,
-        content: this.tableData.content,
-        toReportId: this.state2.id,
-        state: 1,
-      }; 
       this.$refs.ruleForm.validate((valid) => {
-        addReport(ruleFormss).then((response) => {
-          defaultReport().then(()=>{
-            this.$router.back(-1)
-          })
-        });
+        if(valid){
+          addReport(this.ruleForm).then((response) => {
+            if(response.status==0){
+              this.$router.back(-1)
+            }
+          });
+        }
+
       });
     },
     newContent(val){
-        this.tableData.content= val
+        this.ruleForm.content= val
       }
   },
-  
+
 };
 </script>
 

@@ -2,8 +2,8 @@
   <div>
     <div class="sousuo">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="信件名称">
-          <el-input v-model="listQuery.title" placeholder="信件关键字"></el-input>
+        <el-form-item label="标题">
+          <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
@@ -27,7 +27,7 @@
         <el-table-column prop="reportRealName" label="发件人"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick1(scope.row)" type="text" size="small">打开</el-button>
+            <el-button @click="handleClick1(scope.row)" type="text" size="small">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +44,7 @@
         ></el-pagination>
       </div>
     </div>
-   
+
   </div>
 </template>
 <script>
@@ -69,7 +69,7 @@ export default {
     newanonletters(row) {
       this.$router.push({ name: "newanonletter", query: {} });
     },
- 
+
     handleClick1(row) {
       this.$router.push({ name: "bianjihuibao", query: { uId: row.uId } });
     },

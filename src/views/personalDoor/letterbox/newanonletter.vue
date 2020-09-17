@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="tittle">
-      <b>匿名信</b>
+      <b>发起新的匿名信</b>
     </div>
     <div class="ToReport">
-      <el-form :model="ruleForm" ref="ruleForm" label-width="200px" class="demo-ruleForm">
-        <el-form-item size="mini" style="width: 700px;" label="主题" prop="theme">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="200px" :rules="rulesInfo" size="small" class="demo-ruleForm">
+        <el-form-item size="mini" style="width: 700px;" label="标题" prop="theme">
           <el-input v-model="ruleForm.theme"></el-input>
         </el-form-item>
         <el-form-item style="width: 700px" label="内容" prop="substance">
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script >
-// import {  MessageBox,} from "element-ui";
+import {Message} from 'element-ui'
 import { toLetter } from "@/api/personalDoor";
 import Editor from "@/components/Tinymce/Editor";
 export default {
@@ -39,6 +39,7 @@ export default {
         theme: "",
       },
       token: "",
+      rulesInfo: {theme: [{ required: true,trigger: 'blur',message: '请输入标题'}]}
     };
   },
   methods: {
@@ -50,9 +51,17 @@ export default {
       };
 
       this.$refs.ruleForm.validate((valid) => {
-        toLetter(ruleFormss).then((response) => {
-          this.$router.back(-1);
-        });
+        if(valid){
+          toLetter(ruleFormss).then((response) => {
+            this.$router.back(-1);
+          });
+        }else{
+          Message({
+            type: 'error',
+            message: '验证参数不合法'
+          });
+        }
+
       });
     },
     resetForm() {

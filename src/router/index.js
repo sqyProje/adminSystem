@@ -151,12 +151,6 @@ export const asyncRouterMap = [
         ]
       },
       {
-        path:'webNews',
-        name:'webNews',
-        component:()=>import('@/views/personalDoor/webNews'),
-        meta:{title:'新闻公告',noCache: true}
-      },
-      {
         path:'AnnouncementNewsDetails',
         name:'AnnouncementNewsDetails',
         component:()=>import('@/views/personalDoor/AnnouncementNewsDetails'),
@@ -260,7 +254,7 @@ export const asyncRouterMap = [
             path:'newanonletter',
             name:'newanonletter',
             component:()=>import('@/views/personalDoor/letterbox/newanonletter'),
-            meta:{title:'发起新的的匿名信',noCache: true},
+            meta:{title:'发起新的匿名信',noCache: true},
             hidden: true
           },
           {
@@ -313,21 +307,21 @@ export const asyncRouterMap = [
         component: ()=> import('@/views/hrDoor/record/index'),
         meta: {title: '档案管理', noCache: true},
         redirect:'/hrDoor/record/employee',
-        children:[{
-          path: 'employee',
-          name: 'employee',
-          component: () => import('@/views/hrDoor/record/employee'),
-          meta: {title: '人员管理', noCache: true},
-        },
+        children:[
+          {
+            path: 'employee',
+            name: 'employee',
+            component: () => import('@/views/hrDoor/record/employee'),
+            meta: {title: '人员管理', noCache: true},
+          },
           {
             path: 'msgApprove',
-            name: 'msgApprove',
+            name: 'year_check',
             component: () => import('@/views/hrDoor/record/employee/msgApprove'),
-            meta: {title: '信息审核', noCache: true},
+            meta: {title: '年度考核', noCache: true},
           },
           {
             path: 'detail',
-
             name: 'detail',
             component: () => import('@/views/hrDoor/record/employee/detail'),
             meta: {title: '详细信息'},

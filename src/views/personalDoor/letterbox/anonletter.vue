@@ -34,7 +34,7 @@
         <el-table-column prop="realname" label="姓名"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick1(scope.row)" type="text" size="small">打开</el-button>
+            <el-button @click="handleClick1(scope.row)" type="text" size="small">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,7 +51,7 @@
         ></el-pagination>
       </div>
     </div>
-    
+
   </div>
 </template>
 <script>

@@ -13,7 +13,7 @@
           </td>
           <td  class="fieldValues">{{item.fieldValues}}</td>
         </tr>
-        <tr>
+        <tr v-show="imgTitle.length>0">
           <td class="fieldName">
             {{imgTitle}}
           </td>
@@ -27,7 +27,7 @@
           ></el-image>
           </td>
         </tr>
-        <tr>
+        <tr v-show="fileTitle.length>0">
           <td class="fieldName">
             {{fileTitle}}
           </td>
@@ -127,7 +127,7 @@
         </el-form>
       </div>
       <div style="text-align: center;">
-        <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
+        <el-button style="margin-top: 12px;margin-bottom:100px;" type="warning" size="medium" @click="prev">返回</el-button>
       </div>
     </div>
   </div>

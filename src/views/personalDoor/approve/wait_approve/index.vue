@@ -2,12 +2,12 @@
   <div class="app-container">
     <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="listQuery.name" placeholder="名称"></el-input>
+        <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="listQuery.approvestatus" placeholder="审批状态">
+        <el-select v-model="listQuery.approveStatus" placeholder="当前状态">
           <el-option value="20" label="审批中">审批中</el-option>
-          <el-option value="55" label="代领任务">代领任务</el-option>
+          <el-option value="55" label="待领任务">待领任务</el-option>
         </el-select>
       </el-form-item>
       <el-form-item>

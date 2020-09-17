@@ -1,15 +1,16 @@
 <template >
 <div>
-<el-button style="margin:10px" @click="backtrack" type="primary" >返回</el-button> 
+<el-button style="margin:10px" @click="backtrack" type="primary" >返回</el-button>
 
   <div style="cursor:pointer" class="root-box">
-      <div class="title-style"><b>{{neirong.title}}</b></div>
-      <div class="news-content" v-html="neirong.content"></div>
-      <div class="news-date">{{neirong.createdate}}</div>
+    <div class="title-style"><b>{{neirong.title}}</b></div>
+    <div class="news-date">创建时间：{{neirong.createdate}}</div>
+
+    <div class="news-content" v-html="neirong.content"></div>
   </div>
   </div>
 </template>
-      
+
 <script>
 
 import {noticedetails} from "@/api/personalDoor";
@@ -29,8 +30,6 @@ export default {
       this.$router.back()
     }
   },
-  created(){
-  },
    mounted() {
     this.details1(this.$route.query.uId);
   },
@@ -40,7 +39,7 @@ export default {
 
 <style scoped>
 .title-style{
-    font-size: 38px;
+    font-size: 30px;
     text-align: center;
 }
 .root-box{
@@ -54,12 +53,10 @@ export default {
   text-align: center;
 }
 .news-date{
-  padding-left: 80%;
+  text-align: center;
+  color:#999999;
+  font-size: 14px;
   margin-top: 10px;
 }
-.fanhui{
-  margin: 10px;
-  margin-left: 30px;
-  color: green;
-}
+
 </style>

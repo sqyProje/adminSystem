@@ -400,7 +400,6 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       newContent(val){
-        console.log(val)
         this.AddEditInfo.content= val
       }
     }

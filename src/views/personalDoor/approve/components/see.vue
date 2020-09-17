@@ -13,7 +13,7 @@
           </td>
           <td  class="fieldValues">{{item.fieldValues}}</td>
         </tr>
-        <tr>
+        <tr v-show="imgTitle.length>0">
           <td class="fieldName">
             {{imgTitle}}
           </td>
@@ -27,12 +27,14 @@
           ></el-image>
           </td>
         </tr>
-        <tr>
+        <tr v-show="fileTitle.length>0">
           <td class="fieldName">
             {{fileTitle}}
           </td>
           <td class="fieldValues">
-            <a :href="fileHref">{{fileHref}}</a>
+            <div v-for="(item,key) in fileHref" :key="key" style="height: 26px;line-height: 26px">
+              <a :href="item" >{{item}}</a><br>
+            </div>
           </td>
         </tr>
       </table>
@@ -88,7 +90,7 @@
         </tr>
       </table>
       <div style="text-align: center;">
-        <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
+        <el-button style="margin-top: 12px;margin-bottom:100px;" type="warning" size="medium" @click="prev">返回</el-button>
       </div>
     </div>
   </div>
@@ -159,7 +161,8 @@
             this.imgArray= item.fieldValues.split(',')
           }else if(item.fieldType === 160){
             this.fileTitle = item.fieldName
-            this.fileHref = decodeURIComponent(item.fieldValues)
+           let Href  = decodeURIComponent(item.fieldValues)
+            this.fileHref=Href.split(',')
           }else{
             this.ProcessData.push(item)
           }
@@ -196,7 +199,7 @@
     min-height: 38px;
     line-height: 38px;
     color: #595959;
-
+    word-break: break-all;
   }
   .fieldName{
     width: 200px;

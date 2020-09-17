@@ -159,7 +159,7 @@
 
 </script>
 
-<style rel="stylesheet/stylus" >
+<style rel="stylesheet/stylus" scoped>
   .progress-container{
     width: 800px;
     margin: 20px auto 50px;
@@ -184,6 +184,7 @@
     min-height: 38px;
     line-height: 38px;
     color: #595959;
+    word-break: break-all;
   }
   .fieldName{
     width: 200px;
