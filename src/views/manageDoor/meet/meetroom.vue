@@ -6,16 +6,16 @@
           <el-input v-model="listQuery.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.maxPeople" placeholder="容纳人数"></el-input>
+          <el-input type="number" v-model="listQuery.maxPeople" placeholder="容纳人数" min="0"></el-input>
         </el-form-item>
         <el-form-item>
           <el-select v-model="listQuery.type" placeholder="会议类型">
             <el-option
               v-for="item in stateData"
-              :label="item.name"
+              :label="item.type_name"
               :value="item.id"
               :key = "item.id"
-            >{{item.name}}</el-option>
+            >{{item.type_name}}</el-option>
           </el-select>
         </el-form-item>
 
@@ -53,7 +53,7 @@
         <el-table-column label="容纳人数" prop="maxpeople"></el-table-column>
         <el-table-column label="负责人" prop="lead"></el-table-column>
         <el-table-column label="联系电话" prop="phone"></el-table-column>
-        <el-table-column label="会议室类型">
+        <el-table-column label="会议类型">
           <template slot-scope="scope">
             <el-button size="mini" round class='label-btn' :type="scope.row.type ? 'success' : 'warning'">
               {{scope.row.type ? "线上" :"线下"}}
@@ -116,7 +116,7 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='容纳人数'  prop="maxpeople">
-          <el-input v-model="AddEditInfo.maxpeople"></el-input>
+          <el-input type="number" v-model="AddEditInfo.maxpeople" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="12">
@@ -145,7 +145,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='排序' prop="sort">
-              <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -165,18 +165,6 @@
             >{{item.display_name}}</el-option>
           </el-select>
         </el-form-item>
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-form-item label ='创建时间'>
-              <el-input v-model="AddEditInfo.createdate" :disabled="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label ='更新时间'>
-              <el-input v-model="AddEditInfo.updatedate" :disabled="true"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
@@ -348,6 +336,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

@@ -139,9 +139,7 @@
     },
     data () {
       const checkphone = (rule, value, callback) => {
-        console.log(value)
         if (!validmobile(value)) {
-          console.log(validmobile(value))
           callback(new Error('请输入正确的手机号'))
         } else {
           callback()
@@ -197,7 +195,6 @@
       getLoginInfo(){
         getLoginUserInfo().then(response=>{
           this.loginUserInfo = response.datas
-        //  Object.keys(this.editInfoQuery).forEach(key => this.editInfoQuery[key]= '');
           this.$store.commit('SET_AVATAR',this.loginUserInfo.picpath)
         })
       },
@@ -207,21 +204,15 @@
           this.editInfoQuery = response.datas
           this.dialogVisible = true
         })
-       /* this.timer = new Date().getTime()
-        this.editInfoQuery = {
-          picpath:  this.loginUserInfo.picpath,
-          email:  this.loginUserInfo.email,
-          idcard:  this.loginUserInfo.idcard
-        }
-        this.dialogVisible = true
-        console.log('edit')
-        console.log(this.editInfoQuery)*/
       },
+
       canleDialog() {
         this.dialogVisible = false
         this.PhoneDialogVisible = false
         this.passwordDialogVisible=false
-        Object.keys(this.editInfoQuery).forEach(key => this.editInfoQuery[key]= '');
+        Object.keys(this.editPhoneQuery).forEach(key => this.editPhoneQuery[key]= '');
+        Object.keys(this.editPassQuery).forEach(key => this.editPassQuery[key]= '');
+
       },
       editInfoFunc() {
         if(!validcard(this.editInfoQuery.idcard)) {
@@ -266,7 +257,6 @@
         })
       },
       editPhoneFunc(){
-        console.log(this.editPhoneQuery)
         this.$refs.rulesPhone.validate(valid=>{
           if(valid){
             editPhone(this.editPhoneQuery).then(response =>{

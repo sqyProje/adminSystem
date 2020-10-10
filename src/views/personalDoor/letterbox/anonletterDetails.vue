@@ -11,7 +11,7 @@
       <div class="Information-style">时&nbsp;&nbsp;&nbsp;&nbsp;间:&nbsp;&nbsp;{{neirong.createdate}}</div>
     </div>
 
-   
+
       <!-- <Editor :curValue="neirong.content" @input="newContent"></Editor> -->
       <div class="neirong-box" v-html="neirong.content"></div>
   </div>
@@ -47,15 +47,10 @@ export default {
 </script>
 
 <style scoped>
-.bom-box {
-  text-align: center;
-  font-size: 12px;
-  height: 60px;
-  line-height: 60px;
-  background-color: #f5f5f5;
-}
 .root-box {
-  margin: 5px;
+  margin: 10px;
+
+  background-color: #f1f1f1;
 }
 .title-box {
   height: 50px;
@@ -79,7 +74,7 @@ export default {
   color: rgba(151, 151, 151, 1);
 }
 .neirong-box {
-  height: 665px;
+  min-height: 665px;
   padding: 50px;
 }
 span{

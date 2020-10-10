@@ -45,7 +45,7 @@
           :rules="domain.ismust ?{
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
-        >
+        ><!--天-->
           <el-date-picker
             v-model="domain.fieldValue"
             type="date"
@@ -62,7 +62,7 @@
           :rules="domain.ismust ?{
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
-        >
+        ><!--秒-->
           <el-date-picker
             v-model="domain.fieldValue"
             type="datetime"
@@ -199,6 +199,7 @@
           <multiUploadImg
             @imgUrl="picPreview"
             @delUrl = "delUrlPreview"
+            ref="multiImg"
             :picArray="''"
           ></multiUploadImg>
         <!--  <el-input v-model="domain.fieldValue" :placeholder="domain.valimessage"></el-input>-->
@@ -213,6 +214,7 @@
         }:[]"
         >
           <multiUploadFile
+            ref="fileFile"
             @file-url="FilePreview"
             @delFile = 'delFilePreview'
             :picArray="[]">
@@ -303,7 +305,6 @@
               dictionType(item.listId).then(res=>{
                 this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
               })
-              console.log(this.OnlyDataMany)
             }
             if(item.isdrop===2){//多选
               dictionType(item.listId).then(res=>{
@@ -374,6 +375,11 @@
       //提交审批
       submitForm() {
         if(this.submitFlag){
+          Message({
+            message:'请勿重复提交',
+            type: 'error',
+            duration: 3 * 1000
+          })
           return
         }
         this.submitFlag=true
@@ -427,6 +433,14 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        if(this.$refs.fileFile && this.$refs.multiImg){
+          this.$refs.multiImg[0].fileList=[]
+          this.$refs.fileFile[0].fileList=[]
+        }else if(this.$refs.multiImg){
+          this.$refs.multiImg[0].fileList=[]
+        }else if(this.$refs.fileFile){
+          this.$refs.fileFile[0].fileList=[]
+        }
       },
       UpdateUser(){
         const data={
@@ -468,6 +482,7 @@
         this.submitFlag=false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+
       },
     }
   }

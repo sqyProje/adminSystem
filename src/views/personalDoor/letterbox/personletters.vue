@@ -106,18 +106,15 @@ export default {
 <style scoped>
 .my-Report {
   width: 90%;
+  height: 760px;
   border-radius: 10px 10px 0 0;
   margin: 0 auto;
+  overflow: hidden;
 }
-
 .sousuo {
   width: 90%;
   margin: 0 auto;
   margin-top: 10px;
-}
-
-el-table {
-  border-radius: 25px;
 }
 </style>
 

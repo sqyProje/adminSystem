@@ -41,12 +41,12 @@
             {{scope.row.reporttype===10 ? "自由汇报" :"规则汇报"}}
           </template>
         </el-table-column>
-        <el-table-column label="被汇报类型">
+        <el-table-column label="去汇报类型">
           <template slot-scope="scope">
             {{scope.row.toreporttype===10 ? "单独个人" :"其中之一"}}
           </template>
         </el-table-column>
-        <el-table-column label="汇报类型（天）" prop="reportdays"></el-table-column>
+        <el-table-column label="汇报周期（天）" prop="reportdays"></el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
@@ -329,8 +329,7 @@
         this.dialogVisible = !this.dialogVisible
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
-        this.AddEditInfo.isstick=0
-        this.AddEditInfo.state=0
+        this.AddEditInfo.state=1
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
@@ -395,6 +394,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

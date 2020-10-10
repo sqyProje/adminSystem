@@ -24,3 +24,11 @@ export function yearApprovePie(params) {
     method: 'get'
   })
 }
+//报表平台
+
+export function reportForm() {
+  return request({
+    url: '/reportFormList/list',
+    method: 'get'
+  })
+}

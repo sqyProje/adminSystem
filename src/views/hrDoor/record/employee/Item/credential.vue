@@ -295,6 +295,9 @@
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
         this.AddEditInfo.state=0
+        this.$refs.multiImg.parentClickClear()
+        this.$refs.fileFile.parentClickClear()
+        this.fileIdsArray=[]
 
       },
       handleEdit(row) {
@@ -327,6 +330,7 @@
           if (valid) {
             this.AddEditInfo.picids =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
             this.AddEditInfo.fileIds = this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
+            debugger
             if (this.dialogTitle === '添加') {
               AddCredential(this.AddEditInfo)
                 .then(response => {

@@ -28,6 +28,7 @@
         :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
         :data="myReport"
         style="width: 100%"
+        height="449"
       >
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createdate" label="日期"></el-table-column>
@@ -132,10 +133,6 @@ export default {
   width: 90%;
   margin: 0 auto;
   margin-top: 10px;
-}
-
-el-table {
-  border-radius: 25px;
 }
 </style>
 

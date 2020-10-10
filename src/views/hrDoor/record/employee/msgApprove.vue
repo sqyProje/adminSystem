@@ -141,7 +141,7 @@
       >
         <el-row>
           <el-col :span=12>
-            <el-form-item label='编号' prop="number">
+            <el-form-item label='个人编号' prop="number">
               <el-input v-model.trim="AddEditInfo.number"  placeholder ='编号'></el-input>
             </el-form-item>
           </el-col>

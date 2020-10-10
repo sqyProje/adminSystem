@@ -38,12 +38,9 @@
       this.initTable();
     },
     methods: {
-      onSearchList() {
-        this.initTable()
-      },
       initTable() {
         this.listLoading = true
-        OweReportList(this.listQuery).then(response => {
+        OweReportList().then(response => {
           this.listLoading = false
           this.tableData = response.datas
         })

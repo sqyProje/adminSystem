@@ -225,6 +225,7 @@
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.listQuery.qdFlowId=this.$route.query.form_id
         this.initTable()
       },
       handleSizeChange(val) {

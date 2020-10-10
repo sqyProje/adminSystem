@@ -51,7 +51,7 @@
         :inline="false"
         size="mini"
         :model="AddEditInfo"
-        label-width="80px"
+        label-width="120px"
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
@@ -64,8 +64,11 @@
         <el-form-item label ='背景色'  prop="colour">
           <el-input v-model="AddEditInfo.colour"></el-input>
         </el-form-item>
-        <el-form-item label ='报表路径'  prop="reqUrl">
+        <el-form-item label ='App报表路径'  prop="reqUrl">
           <el-input v-model="AddEditInfo.reqUrl"></el-input>
+        </el-form-item>
+        <el-form-item label ='Web报表路径'  prop="webReqUrl">
+          <el-input v-model="AddEditInfo.webReqUrl"></el-input>
         </el-form-item>
         <el-form-item label ='排序'  prop="sort">
           <el-input v-model="AddEditInfo.sort"></el-input>
@@ -98,13 +101,15 @@
           name:'',
           colour:'',
           reqUrl:'',
+          webReqUrl:'',
           sort:'',
         },
         rulesInfo: {
-          picpath: [{ required: true,trigger: 'blur',message: '请上传图片'}],
+          picUrl: [{ required: true,trigger: 'blur',message: '请上传封面'}],
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           colour: [{ required: true,trigger: 'blur',message: '请输入背景色'}],
-          reqUrl: [{ required: true,trigger: 'blur',message: '请报表路径'}],
+          reqUrl: [{ required: true,trigger: 'blur',message: '请输入App报表路径报表路径'}],
+          webReqUrl: [{ required: true,trigger: 'blur',message: '请输入Web报表路径报表路径'}],
           sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}]
         }
       }

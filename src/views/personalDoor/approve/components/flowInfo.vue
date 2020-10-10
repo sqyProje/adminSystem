@@ -235,7 +235,7 @@
       },
       UpdateUser(){
       if(this.ApproveUserData.length > 0){
-        if(this.AddEditInfo.approveUserId<0){
+        if(this.AddEditInfo.approveUserId<=0){
           Message({
             message: '请选择用户',
             type: 'error',
@@ -267,16 +267,16 @@
       }else{
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
-            ToApprove(this.AddEditInfo).then(response => {
-              if (response.status === 0) {
-                Message({
-                  message: response.msg,
-                  type: 'success',
-                  duration: 3 * 1000
-                })
-                this.$router.push({name:'wait_approve'})
-              }
-            })
+          ToApprove(this.AddEditInfo).then(response => {
+            if (response.status === 0) {
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+              this.$router.push({name:'wait_approve'})
+            }
+          })
           }else{
             Message({
               message: '参数验证不合法',
@@ -286,7 +286,6 @@
           }
         })
       }
-
   },
     }
   }

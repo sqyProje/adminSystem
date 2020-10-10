@@ -1,8 +1,9 @@
 <template>
-  <div class="root-box">
-    <div class="top-root" style="margin-top: 10px;">
-      <div class="block left-box">
-        <div class="lineInfo">
+  <div class="app-container root-box">
+    <el-row :gutter="10" style="margin:0px -5px 10px -5px">
+      <el-col :span="12">
+        <div class="bg-color">
+          <div class="lineInfo">
           <div class="selectTitle"><em></em><span>各部门审批通过折线统计图</span></div>
           <el-form size="mini"  class="selectYear demo-form-inline">
             <el-form-item label="">
@@ -19,30 +20,35 @@
         </div>
         <div  id="approveLine" style="height: 300px"></div>
       </div>
-      <div class="right-box">
-        <div class="lineInfo">
-          <div class="selectTitle"><em></em><span>各审批类型审批通过汇总图</span></div>
-          <el-form size="mini"  class="selectYear demo-form-inline">
-            <el-form-item label="">
-              <el-select v-model="pievalue" clearable placeholder="请选择年份" @change="selectPieYear">
-                <el-option
-                  v-for="item in options"
-                  :key="item"
-                  :label="item"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
+      </el-col>
+      <el-col :span="12">
+        <div class="bg-color">
+          <div class="lineInfo">
+            <div class="selectTitle"><em></em><span>各审批类型审批通过汇总图</span></div>
+            <el-form size="mini"  class="selectYear demo-form-inline">
+              <el-form-item label="">
+                <el-select v-model="pievalue" clearable placeholder="请选择年份" @change="selectPieYear">
+                  <el-option
+                    v-for="item in options"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div  id="approvePie" style="height: 300px"></div>
         </div>
-        <div  id="approvePie" style="height: 300px"></div>
-      </div>
+      </el-col>
+    </el-row>
+    <div>
     </div>
   </div>
 </template>
 
 <script>
-  import {yearApproveLine,yearApprovePie} from "@/api/ecahrt";
+  import {yearApproveLine,yearApprovePie} from "@/api/reportInfo";
   const date = new Date;
   export default {
     data() {
@@ -146,29 +152,15 @@
   };
 </script>
 
-<style>
+<style scoped>
   .root-box {
     background-color: #f1f1f1;
     padding: 10px 10px 100px;
     min-height: 800px;
   }
-  .top-root {
-    display: flex;
-    justify-content: space-between;
-  }
-  .left-box {
-    width: 50%;
-    height: 380px;
-    margin-right: 10px;
+  .bg-color{
     padding: 10px;
     background: rgba(255, 255, 255, 1);
-  }
-  .right-box {
-    width: 50%;
-    height: 380px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 1);
-    position: relative;
   }
   .lineInfo{
     display: flex;

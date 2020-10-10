@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="success" @click="submitForm('ruleForm')">保存</el-button>
-          <el-button @click="resetForm('ruleForm')">关闭</el-button>
+          <el-button @click="resetForm('ruleForm')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>

@@ -47,15 +47,10 @@ export default {
 </script>
 
 <style scoped>
-.bom-box {
-  text-align: center;
-  font-size: 12px;
-  height: 60px;
-  line-height: 60px;
-  background-color: #f5f5f5;
-}
+
 .root-box {
-  margin: 5px;
+  margin: 10px;
+  background-color: #f1f1f1;
 }
 .title-box {
   height: 50px;

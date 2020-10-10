@@ -252,7 +252,6 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
-                    this.leftTree()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -263,10 +262,10 @@
 
             } else {
               EditWealName(this.AddEditInfo).then(response => {
+                debugger
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
-                  this.leftTree()
                   Message({
                     message: response.msg,
                     type: 'success',
@@ -300,6 +299,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

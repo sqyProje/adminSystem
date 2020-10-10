@@ -64,7 +64,7 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='排序' prop="sort">
-          <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
+          <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
         </el-form-item>
         <el-form-item label ='描述'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>

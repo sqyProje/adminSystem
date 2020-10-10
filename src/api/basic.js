@@ -83,3 +83,26 @@ export function GetLog(params) {
     method: 'get',
   })
 }
+/*版本控制*/
+
+export function VersionList(params) {
+  return request({
+    url: '/appVersion/list',
+    method: 'get',
+    params: params
+  })
+}
+
+export function GetVersion(params) {
+  return request({
+    url: '/appVersion/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditVersion(params) {
+  return request({
+    url: '/appVersion/edit',
+    method: 'post',
+    data: params
+  })
+}

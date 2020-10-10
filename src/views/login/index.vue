@@ -1,13 +1,15 @@
 <template>
   <div>
     <el-card class="login-form-layout">
-      <el-form autoComplete="on"
-               :model="loginForm"
-               :rules="loginRules"
-               ref="loginForm"
-               label-position="left"
-               v-show="loginFormFlag"
-      >
+      <div v-show="loginFormFlag">
+        <div class="refresh" @click="refreshCode" v-show="refreshFlag">
+          <div class="color-text">
+            <img :src="refresh_bg" alt="">
+            <div>请点击刷新二维码</div>
+          </div>
+
+        </div>
+        <img :src="loginFormFlag&&CodeFlag==true ? code_bg : codephone" class="code" @click="handleCode">
         <div style="text-align: center">
           <svg t="1585901382243" class="icon" icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                p-id="3417" width="200" height="200">
@@ -17,69 +19,66 @@
           </svg>
         </div>
         <h2 class="login-title color-main">汝州市骨科医院OA</h2>
-        <el-form-item prop="username">
-          <el-input name="username"
-                    type="text"
-                    v-model="loginForm.username"
-                    autoComplete="on"
-                    placeholder="请输入用户名">
-          <span slot="prefix">
-            <svg-icon icon-class="user" class="color-main"></svg-icon>
-          </span>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input name="password"
-                    :type="pwdType"
-                    @keyup.enter.native="handleLogin"
-                    v-model="loginForm.password"
-                    autoComplete="on"
-                    placeholder="请输入密码">
+        <!--登录-->
+        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" v-show="loginFormFlag&&CodeFlag">
+          <el-form-item prop="username">
+            <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on"  placeholder="请输入用户名/手机号">
+              <span slot="prefix"><svg-icon icon-class="user" class="color-main"></svg-icon></span>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码">
           <span slot="prefix">
             <svg-icon icon-class="password" class="color-main"></svg-icon>
           </span>
-          <span slot="suffix" @click="showPwd">
+              <span slot="suffix" @click="showPwd">
             <svg-icon icon-class="eye" class="color-main"></svg-icon>
           </span>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="code">
-          <el-col :span="15">
-            <el-input name="code"
-                      type="text"
-                      v-model="loginForm.code"
-                      autoComplete="off"
-                      placeholder="请输入验证码">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-col :span="15">
+              <el-input name="code" v-model="loginForm.code" autoComplete="off" placeholder="请输入验证码">
           <span slot="prefix">
               <svg-icon icon-class="ums" class="color-main"></svg-icon>
           </span>
-            </el-input>
-          </el-col>
-          <el-col :span="9">
-            <img :src="imgCode" alt="加载失败" style="float: right" width="80" height="40" @click="changeImgCode">
-          </el-col>
-        </el-form-item>
-        <el-form-item style="margin-bottom: 60px;text-align: center">
-          <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
-            登录
-          </el-button>
-        </el-form-item>
-        <el-button style="float: left; margin-bottom: 10px;color: #9fa2a8"
-                   type="text"
-                   @click = 'registerFormFlagFun'
-        >注册账号</el-button>
-        <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
-                   type="text"
-                   @click = 'passFormFlagFun'
-        >忘记密码</el-button>
-      </el-form>
+              </el-input>
+            </el-col>
+            <el-col :span="9">
+              <img :src="imgCode" alt="加载失败" style="float: right" width="80" height="40" @click="changeImgCode">
+            </el-col>
+          </el-form-item>
+          <el-form-item style="margin-bottom: 60px;text-align: center">
+            <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
+              登录
+            </el-button>
+          </el-form-item>
+          <el-button style="float: left; margin-bottom: 10px;color: #9fa2a8"
+                     type="text"
+                     @click = 'registerFormFlagFun'
+          >注册账号</el-button>
+          <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
+                     type="text"
+                     @click = 'passFormFlagFun'
+          >忘记密码</el-button>
+        </el-form>
+        <!--登录结束-->
+      </div>
+
+       <!--二维码登录-->
+      <div  v-show="!CodeFlag" style="text-align: center">
+        <img :src="loginCode" alt="">
+        <div>请使用最新版手机端OA扫码</div>
+      </div>
+      <!--二维码登录结束-->
+
+
       <!--忘记密码start-->
       <el-form
         v-show="passFormFlag"
         :rules="PasswordRules"
         ref="ForgetPasswordQuery"
         :model="ForgetPasswordQuery"
-        label-width="80px"
         >
         <div style="text-align: center">
           <svg t="1585901382243" class="icon" icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -90,12 +89,12 @@
           </svg>
         </div>
         <h2 class="login-title color-main">设置新密码</h2>
-        <el-form-item prop="phone" label="手机号">
-          <el-input v-model="ForgetPasswordQuery.phone" ></el-input>
+        <el-form-item prop="phone">
+          <el-input v-model="ForgetPasswordQuery.phone" placeholder="请输入手机号"  autoComplete="off" ></el-input>
         </el-form-item>
-        <el-form-item prop="code" label="验证码">
+        <el-form-item prop="code">
           <el-col :span="10">
-            <el-input v-model="ForgetPasswordQuery.code"></el-input>
+            <el-input v-model="ForgetPasswordQuery.code"  placeholder="请输入验证码"  autoComplete="off" ></el-input>
           </el-col>
           <el-col :span="14" >
             <el-button type="primary" size="middle" @click="getCode" :disabled="!sendAuthCode" style="float: right">
@@ -104,8 +103,8 @@
             </el-button>
           </el-col>
         </el-form-item>
-        <el-form-item prop="password" label="新密码">
-          <el-input type="password" v-model="ForgetPasswordQuery.password"></el-input>
+        <el-form-item prop="password">
+          <el-input type="password" v-model="ForgetPasswordQuery.password" placeholder="请输入新密码"  autoComplete="off" ></el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px;text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="ForgetPassWord">
@@ -124,7 +123,6 @@
         ref="registerQuery"
         :rules="registerQueryRules"
         :model="registerQuery"
-        label-width="80px"
       >
         <div style="text-align: center">
           <svg t="1585901382243" class="icon" icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -135,18 +133,18 @@
           </svg>
         </div>
         <h2 class="login-title color-main">注册账号</h2>
-        <el-form-item prop="username" label="用户名">
-          <el-input v-model="registerQuery.username"></el-input>
+        <el-form-item prop="username">
+          <el-input v-model="registerQuery.username" autoComplete="off"  placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item prop="password" label="密码">
-          <el-input type="password" v-model="registerQuery.password"></el-input>
+        <el-form-item prop="password">
+          <el-input type="password" v-model="registerQuery.password" autoComplete="off" placeholder="请输入密码"></el-input>
         </el-form-item>
-        <el-form-item prop="phone" label="手机号">
-          <el-input v-model="registerQuery.phone"></el-input>
+        <el-form-item prop="phone">
+          <el-input v-model="registerQuery.phone" autoComplete="off" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item prop="code" label="验证码">
+        <el-form-item prop="code">
           <el-col :span="10">
-            <el-input v-model="registerQuery.code"></el-input>
+            <el-input v-model="registerQuery.code" autoComplete="off" placeholder="请输入验证码"></el-input>
           </el-col>
           <el-col :span="14" >
             <el-button type="primary" size="middle" @click="getRegiestCodeFun" :disabled="!sendAuthCode" style="float: right">
@@ -156,7 +154,7 @@
           </el-col>
         </el-form-item>
 
-        <el-form-item style="margin-bottom: 60px;text-align: center">
+        <el-form-item style="margin-bottom: 20px;text-align: center">
           <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="registerUserFunc">
             注册
           </el-button>
@@ -172,11 +170,14 @@
   </div>
 </template>
 <script>
-  import {Message} from 'element-ui'
+  import {Message,MessageBox} from 'element-ui'
   import {isvalidUsername} from '@/utils/validate';
   import {setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
-  import {getPassCode,ForgetPW,getPhoneCode,getRegiestCode,registerUser} from '@/api/login'
+  import code_bg from '@/assets/images/code.png'
+  import refresh_bg from '@/assets/images/refresh.png'
+  import codephone from '@/assets/images/codephone.png'
+  import {getPassCode,ForgetPW,getPhoneCode,getRegiestCode,registerUser,handQRCode} from '@/api/login'
   import md5 from 'js-md5';
   export default {
     name: 'login',
@@ -194,8 +195,8 @@
         },
         PasswordRules:{
           phone: [{required: true, trigger: 'blur', message: '请输入手机号'}],
-          password: [{required: true, trigger: 'blur', message: '请输入密码'}],
-          code: [{required: true, trigger: 'blur', message: '请输入验证码'}]
+          code: [{required: true, trigger: 'blur', message: '请输入验证码'}],
+          password: [{required: true, trigger: 'blur', message: '请输入新密码'}]
         },
         registerQueryRules:{
           username: [{required: true, trigger: 'blur', message: '请输入用户名'}],
@@ -222,7 +223,15 @@
         sendAuthCode:true,
         auth_time:0,
         imgCode:this.baseURL+'/sys/getValidateCode',
-        login_center_bg
+        uuids:'',
+        loginCode:'',
+        login_center_bg,
+        code_bg,
+        refresh_bg,
+        codephone,
+        CodeFlag:true,
+        timeCode:'',
+        refreshFlag:false
       }
     },
     created() {
@@ -235,6 +244,7 @@
       if(this.loginForm.password === undefined||this.loginForm.password==null){
         this.loginForm.password = '';
       }
+
     },
     methods: {
       showPwd() {
@@ -276,10 +286,14 @@
       passFormFlagFun(){
         this.loginFormFlag = !this.loginFormFlag
         this.passFormFlag = !this.passFormFlag
+       /* this.CodeFlag=!this.CodeFlag*/
+        Object.keys(this.ForgetPasswordQuery).forEach(key => this.ForgetPasswordQuery[key]= '');
       },
       registerFormFlagFun(){
         this.loginFormFlag = !this.loginFormFlag
         this.registerFormFlag = !this.registerFormFlag
+       /* this.CodeFlag=!this.CodeFlag*/
+        Object.keys(this.registerQuery).forEach(key => this.registerQuery[key]= '');
       },
       handleLogin() {
         let loginFormMd={
@@ -370,12 +384,65 @@
               })
           }
         })
+      },
+      QRCode(){
+        handQRCode(this.uuids).then(res=>{
+          console.log(res)
+         if(res.status ===0){
+           location.reload()
+           localStorage.setItem("loginToken", res.datas)
+         }else if(res.status===1002){
+           this.refreshFlag=true
+           clearInterval(this.timeCode) //清理定时任务
+         }
+        })
+      },
+      //验证码登录
+      handleCode(){
+        if(this.CodeFlag){
+          this.CodeFlag=false
+          let s = [];
+          let hexDigits = "0123456789abcdef";
+          for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+          }
+          s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+          s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+          s[8] = s[13] = s[18] = s[23] = "-";
+          this.uuids = s.join("");
+          this.loginCode=this.baseURL+'/QRCode/code?uId='+this.uuids
+          this.timeCode=setInterval(() => {
+            this.QRCode()
+          }, 5000)
+        }else{
+          this.CodeFlag=true
+          clearInterval(this.timeCode) //清理定时任务
+        }
+      },
+      refreshCode(){
+        this.refreshFlag=false
+        this.loginFormFlag=true
+        this.CodeFlag=true
+        this.handleCode()
       }
     }
   }
 </script>
 
 <style scoped>
+  .code{
+    width:50px;
+    height: 50px;
+    position: absolute;
+    right:0;
+    top:0;
+    z-index: 10;
+    -webkit-transition: all .2s cubic-bezier(0.25,.5,.5,.9);
+    transition: all .2s cubic-bezier(0.25,.5,.5,.9);
+  }
+  .code:hover{
+    transform: scale(1.1);
+  }
   .login-form-layout {
     position: absolute;
     left: 0;
@@ -384,11 +451,9 @@
     margin: 140px auto;
     border-top: 10px solid #409EFF;
   }
-
   .login-title {
     text-align: center;
   }
-
   .login-center-layout {
     background: #409EFF;
     width: auto;
@@ -396,5 +461,22 @@
     max-width: 100%;
     max-height: 100%;
     margin-top: 200px;
+  }
+  .refresh{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    width: 360px;
+    height: 483px;
+    z-index: 35;
+  }
+  .color-text{
+    margin-top:215px;
+  }
+  .refresh img{
+    width:30px;
+    height:30px;
   }
 </style>

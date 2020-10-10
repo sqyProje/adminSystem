@@ -31,9 +31,22 @@
           <div
             v-for="(item,index) in scope.row.tableFieldValueModels"
             :key="index">
-            <div style="height: 24px;line-height: 24px">
+            <div v-if="item.fieldType!=150 && item.fieldType!=160" style="height: 24px;line-height: 24px">
               <el-link :underline="false">{{item.fieldName}}：</el-link>
               <el-link type="info" :underline="false">{{item.fieldValues}}</el-link>
+            </div>
+            <div v-if="item.fieldType==150" >
+              <el-link :underline="false">{{item.fieldName}}：</el-link>
+              <el-image v-for="(img,keys) in item.fieldValues.split(',')"
+                        style="width: 100px; height: 100px"
+                        :src="img"
+                        :key="keys"
+                        fit="cover"></el-image>
+            </div>
+            <div v-if="item.fieldType==160">
+              <el-link :underline="false">{{item.fieldName}}：</el-link>
+              <el-link type="info" :underline="false" v-for="(filetext,keys) in item.fieldValues.split(',')" :key="keys">
+                {{filetext.substring(50,filetext.length)}}<span v-if="keys!= item.fieldValues.split(',').length-1">，</span></el-link>
             </div>
           </div>
         </template>

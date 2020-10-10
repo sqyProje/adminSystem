@@ -141,4 +141,11 @@ export function logout() {
     }
   })
 }
+//二维码登录
+export function handQRCode(params){
+  return request({
+    url:'/QRCode/handQRCode?uId='+params,
+    type:'get',
+  })
+}
 

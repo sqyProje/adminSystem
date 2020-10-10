@@ -55,7 +55,22 @@ export const constantRouterMap = [
       component: () => import('@/views/manageDoor/menu_pers/loginUser'),
       meta: {title: '个人信息'}
     }]
+  },
+  {
+    path: '/finance',
+    component: Layout,
+    redirect: '/finance',
+    hidden: true,
+    children: [
+      {
+        path:'finance',
+        name: 'finance',
+        component: () => import('@/views/reportDoor/finance'),
+        meta: {title: '报表数据', noCache: true,hidden: true }
+      }
+    ]
   }
+
 ]
 export const asyncRouterMap = [
   {
@@ -168,7 +183,7 @@ export const asyncRouterMap = [
         path:'webMeeting',
         component: ()=> import('@/views/personalDoor/webMeeting/index'),
         redirect:'/personalDoor/webMeeting/mymeetting',
-        name:'webMyMeeting',
+        name:'MyMeeting',
         meta:{title:'我的会议'},
         children:[
           {
@@ -375,14 +390,8 @@ export const asyncRouterMap = [
         path: 'checkReport',
         name: 'checkReport',
         component: () => import('@/views/reportDoor/checkReport'),
-        meta: {title: '核算报表',  noCache: true}
-      },
-     /* {
-        path: 'financeReport',
-        name: 'financeReport',
-        component: () => import('@/views/reportDoor/financeReport'),
-        meta: {title: '财务报表',  noCache: true}
-      }*/
+        meta: {title: '报表平台',  noCache: true}
+      }
     ]
   },
   {

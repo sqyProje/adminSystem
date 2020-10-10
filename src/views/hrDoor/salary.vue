@@ -296,6 +296,9 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
+                    PayName().then(res=>{
+                      this.payData=res.datas
+                    })
                     Message({
                       message: response.msg,
                       type: 'success',

@@ -117,7 +117,7 @@
         <el-form-item label ='简介'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
-        <el-form-item label='所属分类'>
+        <el-form-item label='所属分类' prop="approvetypename">
           <el-select v-model="AddEditInfo.approvetypename" placeholder="所属分类" style="width: 100%;">
             <el-option
               v-for="item in dictionTypeData"
@@ -127,11 +127,12 @@
               {{item.name}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label ='用户树'>
+        <el-form-item label ='用户树' prop="usersView">
+          <el-input type='hidden' v-model="AddEditInfo.usersView" style="width: 0;height: 0;"></el-input>
           <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
         </el-form-item>
         <el-form-item label ='排序'>
-          <el-input v-model="AddEditInfo.sort"></el-input>
+          <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
         </el-form-item>
         <el-form-item label='状态'>
           <el-select v-model="AddEditInfo.state" style="width: 100%;">
@@ -206,7 +207,8 @@
         ],
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
-          type:[{required: true, trigger: 'blur', message: '请选择所属分类'}],
+          approvetypename:[{required: true, trigger: 'blur', message: '请选择所属分类'}],
+          usersView:[{ required: true,trigger: 'blur',message: '请选择用户'}]
         },
         dictionTypeData:[],
         RoleDialogVisible:false,
@@ -329,6 +331,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

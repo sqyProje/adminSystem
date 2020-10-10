@@ -30,9 +30,8 @@ export function EditInfo(params) {
 }
 export function DeleteInfo(params) {
   return request({
-    url: '/qdFlow/deletes?array='+params,
+    url: '/tableForm/deletes?array='+params,
     method: 'post',
-
   })
 }
 //字段管理

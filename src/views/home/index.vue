@@ -17,7 +17,7 @@
             <div style="height:30px;line-height:30px;">公告</div>
             <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
               <el-form-item >
-                <el-input v-model="listQuery.title" placeholder="请输入关键字"></el-input>
+                <el-input v-model="listQuery.title" placeholder="请输入标题"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onSubmit" size="mini">查询</el-button>
@@ -71,39 +71,47 @@
               <el-button type="primary" @click="newsSubmit" size="mini">查询</el-button>
             </el-form-item>
           </el-form>
-          <div  v-if="newsList.length!=0" style="display: flex">
-            <div class="firstnew" v-for="(item,i) in newsList" :key="i" v-if="i==0">
-              <div class="img-box">
-                <img  :src="item.picPath" alt />
-              </div>
-              <div class="biaoti ellipsis">{{item.title}}</div>
-              <div class="neirong ellipsis">{{item.sketch}}</div>
-              <div style="height:30px;display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between;-ms-flex-pack:justify ;justify-content: space-between;">
-                <span class="btn-size">{{item.publishDate}}</span>
-                <span class="btn-box btn-size"@click="SeeDetails(item)">查看详情 >></span>
-              </div>
-            </div>
-            <div class="news-other">
-              <div class="newitem" v-for="(item,i) in newsList" :key="i" v-if="i!==0" @click="SeeDetails(item)" >
-                <img class="new-img" src="../../assets/images/lingwps.png"  />
-                <div class="news-title ellipsis">{{item.title}}</div>
-                <div class="right-icon"> > </div>
-              </div>
-            </div>
+          <div  v-if="newsList.length!=0">
+            <el-row :gutter="10" style="margin:10px -5px -10px -5px">
+              <el-col :span="9">
+                <div class="firstnew" v-for="(item,i) in newsList" :key="i" v-if="i==0">
+                  <div class="img-box">
+                    <img  :src="item.picPath" alt />
+                  </div>
+                  <div class="biaoti ellipsis">{{item.title}}</div>
+                  <div class="neirong ellipsis">{{item.sketch}}</div>
+                  <div style="height:30px;display: flex; -webkit-box-pack: justify; -webkit-justify-content: space-between;-ms-flex-pack:justify ;justify-content: space-between;">
+                    <span class="btn-size">{{item.publishDate}}</span>
+                    <span class="btn-box btn-size"@click="SeeDetails(item)">查看详情 >></span>
+                  </div>
+                </div>
+              </el-col>
+              <el-col :span="15">
+                <div class="news-other">
+                  <div class="newitem" v-for="(item,i) in newsList" :key="i" v-if="i!==0" @click="SeeDetails(item)" >
+                    <img class="new-img" src="../../assets/images/lingwps.png"  />
+                    <div class="news-title ellipsis">{{item.title}}</div>
+                    <div class="right-icon"> > </div>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-pagination
+                background
+                @size-change="handleSizeChanges"
+                @current-change="handleCurrentChanges"
+                layout="total,prev, pager, next"
+                :current-page.sync="newQuery.pageNum"
+                :page-size="newQuery.pageSize"
+                :total="newstotal"
+                style="margin-top:10px;text-align: center"
+              ></el-pagination>
+            </el-row>
           </div>
           <div v-if="newsList.length==0" style="height:343px;text-align: center;line-height:343px ;">
             暂无数据
           </div>
-          <el-pagination
-            background
-            @size-change="handleSizeChanges"
-            @current-change="handleCurrentChanges"
-            layout="total,prev, pager, next"
-            :current-page.sync="newQuery.pageNum"
-            :page-size="newQuery.pageSize"
-            :total="newstotal"
-            style="margin-top:10px;text-align: center"
-          ></el-pagination>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -152,10 +160,9 @@
       </el-row>
       </div>
 </template>
-
 <script>
   import {NewsDetails,slideshow,newsType,AnnounceList,newsList} from "@/api/personalDoor";
-  import {myApproveLine,myApprovePie} from "@/api/ecahrt";
+  import {myApproveLine,myApprovePie} from "@/api/reportInfo";
   const defaultListQuery = {
     title: "",
     pageNum: 1,
@@ -363,22 +370,15 @@
     padding: 10px;
     background: rgba(255, 255, 255, 1);
   }
-  .firstnew{
-    width: 608px;
-    overflow: hidden;
-  }
   .img-box {
-    width: 608px;
     height: 250px;
     margin-bottom: 10px;
-    overflow: hidden;
   }
   .img-box img{
     width:100%;
     height: 100%;
   }
   .new-content {
-    height: 510px;
     margin-top: 10px;
     padding: 10px;
     background: rgba(255, 255, 255, 1);
@@ -389,7 +389,6 @@
     white-space: nowrap;
   }
   .biaoti {
-    width: 516px;
     height: 24px;
     line-height:24px;
     font-size: 22px;
@@ -398,7 +397,6 @@
     margin-bottom: 10px;
   }
   .neirong {
-    width: 608px;
     font-size: 14px;
     height: 16px;
     line-height: 16px;
@@ -414,6 +412,7 @@
     border-radius: 2px;
     display: inline-block;
     text-align: center;
+    cursor: pointer;
   }
   .btn-size {
     font-size: 14px;
@@ -422,7 +421,6 @@
   }
   .news-other{
     margin-left: 20px;
-    width:calc(100% - 608px) ;
   }
   .newitem{
     display: flex;

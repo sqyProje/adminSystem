@@ -79,6 +79,7 @@
       }
     },
     mounted(){
+      console.log(this.urlSign)
       if(this.value==undefined){
         this.fileList=[]
         this.hideUpload = false

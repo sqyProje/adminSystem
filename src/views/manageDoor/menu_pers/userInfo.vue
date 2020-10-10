@@ -47,6 +47,7 @@
             width="55">
           </el-table-column>
           <el-table-column label="真实姓名" prop="realname"></el-table-column>
+          <el-table-column label="用户名" prop="username"></el-table-column>
           <el-table-column label="手机号" prop="phoneno"></el-table-column>
           <el-table-column label="部门" prop="departName"></el-table-column>
           <el-table-column label="身份证号" prop="idcard"></el-table-column>
@@ -125,24 +126,25 @@
           <el-form-item label ='手机号' prop="phoneno">
             <el-input v-model="userInfo.phoneno"></el-input>
           </el-form-item>
-          <el-form-item label ='邮箱'>
+          <el-form-item label ='邮箱' prop="email">
             <el-input v-model="userInfo.email"></el-input>
           </el-form-item>
           <el-form-item label ='部门' prop="departid">
-            <el-select v-model="mineStatus" placeholder="请选择" style="width: 178px;">
-              <el-option :value="mineStatusValue" style="height: auto">
+            <el-select v-model="mineStatus" ref="departid" placeholder="请选择" style="width: 178px;">
+              <el-option :value="mineStatusValue" style="height: auto;padding:0">
                 <el-tree
                   :data="menuInfoArray"
                   node-key="uId"
                   ref="roleData"
+                  default-expand-all
                   @node-click="handleNodeClick"
                   :props="defaultProps">
                 </el-tree>
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label='用户状态' prop="state">
-            <el-select v-model="userInfo.state" placeholder="用户状态" style="width: 178px;">
+          <el-form-item label='用户状态'>
+            <el-select v-model="userInfo.state" placeholder="用户状态" :disabled="stateFlag ? false : true" style="width: 178px;">
               <el-option
                 v-for="item in stateData"
                 :label="item.display_name"
@@ -154,7 +156,7 @@
           <el-form-item label ='签名'>
             <singleUpload
               v-model="userInfo.picSignatureUrl"
-              urlSign="file/getSignaturePath"
+              urlSign="/file/getSignaturePath"
               @input="SignpicFun"></singleUpload>
           </el-form-item>
         </el-form>
@@ -195,13 +197,11 @@
   import { Message, MessageBox } from 'element-ui'
   import singleUpload from '@/components/Upload/singleImg'
   import SearchTree from '@/components/LeftSearchTree/searchtree'
-  import {validmobile,validcard} from '@/utils/validate'
+  import {validmobile,validcard,validEmail} from '@/utils/validate'
   import {UserAppRoleGet,UserAppRoleUpdate} from '@/api/appmenu'
   import {UserList, AddUser, GetUser, EditUser,departDrop,UserRole,updateRole,DeleteUser}
     from '@/api/menu-pers'
   import {GetDepartInfoArray} from '@/api/personnel'
-
-
   const defaultListQuery = {
       realname: '',
       phoneno: '',
@@ -221,6 +221,13 @@
       const checkcard = (rule, value, callback) => {
         if (!validcard(value)) {
           callback(new Error('请输入正确的身份证号'))
+        } else {
+          callback()
+        }
+      };
+      const checkemail=(rule, value, callback) => {
+        if (!validEmail(value)) {
+          callback(new Error('请输入正确的邮箱'))
         } else {
           callback()
         }
@@ -261,7 +268,7 @@
           idcard:[{required: true, trigger: 'blur', validator:checkcard,message: '请输入正确的身份证号'}],
           phoneno:[{required:true,trigger:'blur',validator:checkphone, message: '请输入正确的联系方式'}],
           departid: [{ required: true,trigger: 'change',message: '请选择部门'}],
-          state: [{ required: true,trigger: 'change',message: '请选择状态'}],
+          email:[{ required: true,trigger: 'blur',validator:checkemail,}]
         },
         filterText:'',
         mineStatus:'',
@@ -275,6 +282,7 @@
           children: 'childMenu',
           label: 'name'
         },
+        stateFlag:false
       }
     },
     components:{
@@ -311,13 +319,12 @@
       },
       SignpicFun(data){
         this.userInfo.picSignatureUrl = data
-
       },
       addUserDialog(){
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '添加'
         Object.keys(this.userInfo).forEach(key => this.userInfo[key]= '');
-        this.userInfo.state=0
+        this.stateFlag=false
         this.timer = new Date().getTime()
       },
       UpdateUser(){
@@ -368,7 +375,7 @@
         this.dialogVisible = true
         this.dialogTitle = '编辑'
         this.timer = new Date().getTime()
-        console.log(this.timer)
+        this.stateFlag=true
         GetUser(row.uId)
           .then(response => {
             this.userInfo = response.datas
@@ -468,6 +475,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})
@@ -495,6 +505,7 @@
       handleNodeClick(val){
         this.mineStatus = val.name
         this.userInfo.departid = val.uId
+        this.$refs.departid.blur();
       },
       childFnInfo(payload){
         this.listQuery.departid = payload.uId

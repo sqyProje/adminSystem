@@ -138,7 +138,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label ='排序' prop="sort">
-            <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
+            <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
           </el-form-item>
           <el-form-item label='状态'>
             <el-select v-model="AddEditInfo.state" style="width: 100%;">
@@ -258,8 +258,8 @@
           });
       },
       handleResetSearch() {
-        this.listQuery.qdFlowId = this.$route.query.form_id
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.listQuery.qdFlowId = this.$route.query.form_id
         this.initTable()
       },
       handleSizeChange(val) {

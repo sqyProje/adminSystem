@@ -6,10 +6,10 @@
           <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.toLike" placeholder="点赞数"></el-input>
+          <el-input type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="listQuery.toLike" placeholder="点赞数（小于等于）"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="listQuery.toBrowse" placeholder="浏览量"></el-input>
+          <el-input type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="listQuery.toBrowse" placeholder="浏览量（小于等于）"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -134,7 +134,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label='新闻类型'>
+            <el-form-item label='新闻类型' prop="type">
               <el-select v-model="AddEditInfo.type" placeholder="状态" style="width: 100%;">
                 <el-option
                   v-for="item in TypeData"
@@ -162,24 +162,24 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label ='排序' prop="sort">
-              <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label ='点赞量'>
-              <el-input v-model="AddEditInfo.tolike" type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.tolike" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label ='浏览量'>
-              <el-input v-model="AddEditInfo.tobrowse" type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.tobrowse" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label ='转发量'>
-              <el-input v-model="AddEditInfo.totranspond"  type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.totranspond"  type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -405,6 +405,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

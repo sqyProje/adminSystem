@@ -157,7 +157,7 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label ='排序' prop="sort">
-              <el-input v-model="AddEditInfo.sort" type="number" min="0"></el-input>
+              <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -359,6 +359,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})

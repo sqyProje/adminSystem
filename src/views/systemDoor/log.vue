@@ -22,7 +22,7 @@
     <el-table
       :data="tableData"
       v-loading="listLoading"
-      size  = "small"  max-height="600"
+      size  = "small"  max-height="650"
       border
     >
       <el-table-column label="操作账户" prop="operUsername" width="150"></el-table-column>

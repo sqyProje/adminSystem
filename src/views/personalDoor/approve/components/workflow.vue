@@ -23,13 +23,13 @@
                       </div>
                     </el-image>
                       <span>{{child.courseUserName}}</span>
-                     <!-- <span v-if="child.courseStatus =='' "></span>
-                      <span v-else-if="child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span></div>-->
-                      <span v-if="child.courseStatus == ''"></span>
-                      <span v-else-if="child.courseStatus!=0">({{child.courseStatus | formatState}})</span>
+                      <span v-if="child.courseStatus =='' "></span>
+                      <span v-else-if="child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span>
+                      <!--<span v-if="child.courseStatus == ''"></span>
+                      <span v-else-if="child.courseStatus!=0">({{child.courseStatus | formatState}})</span>-->
                     </div>
-                    <div v-if="!item.bool" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
-                    <div class="demo-image__error">签名：
+                    <div v-if="!item.bool && child.courseSketch.length >0" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
+                    <div class="demo-image__error" v-if="!item.bool && child.picsignatureUrl.length>0">签名：
                       <el-image
                         style="width: 100px; height: 36px;background-color:#e1e1e1;vertical-align: middle"
                         :src=child.picsignatureUrl

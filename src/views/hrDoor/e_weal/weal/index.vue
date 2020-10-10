@@ -98,8 +98,8 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label ='选择员工' prop="employeeIds" v-if="editEmployeed">
-          <el-input type="hidden" v-model="AddEditInfo.employeeIds" style="width: 0;height: 0;"></el-input>
+        <el-form-item label ='选择员工' prop="employeeIds" v-if="editEmployeed"><!--v-if="editEmployeed"-->
+         <!-- <el-input type="hidden" v-model="AddEditInfo.employeeIds" style="width: 0;height: 0;"></el-input>-->
           <el-button size="small" v-on:click.native="userRole" type="primary">选择员工</el-button>
         </el-form-item>
         <el-form-item label ='表单名称'  prop="wealNameId">
@@ -286,6 +286,7 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.AddEditInfo.state=1
+        this.editEmployeed = true
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
@@ -361,6 +362,9 @@
                 type: 'success',
                 duration: 3 * 1000
               })
+              let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+              let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+              this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
             .catch(error=>{console.log(error)})
@@ -402,13 +406,13 @@
           response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})
             res.employee.forEach((child)=>{
-              this.roleData[key].children.push({id:child.uId,name:child.realname,selected:child.selected})
+              this.roleData[key].children.push({id:child.uId,name:child.realname,children:[]})
             })
             res.childMenu.forEach((child,two)=>{
               this.roleData[key].children.push({id:two,name:child.name,children:[]})
             //  console.log( this.roleData[key].children[two])
               child.employee.forEach((three)=>{
-                this.roleData[key].children[two].children.push({id:three.uId,name:three.realname,selected:three.selected})
+                this.roleData[key].children[two].children.push({id:three.uId,name:three.realname})
               })
             })
           })

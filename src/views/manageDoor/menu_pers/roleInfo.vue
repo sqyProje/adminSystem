@@ -213,7 +213,7 @@
         },
         handleResetSearch() {
           this.listQuery = Object.assign({}, defaultListQuery);
-          initTable()
+          this.initTable();
         },
 
         handleSizeChange(val) {
@@ -290,6 +290,9 @@
                   type: 'success',
                   duration: 3 * 1000
                 })
+                let totalPage = Math.ceil((this.total - 1)/this.listQuery.pageSize);
+                let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
+                this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
                 this.initTable()
               })
           }).catch(() => {

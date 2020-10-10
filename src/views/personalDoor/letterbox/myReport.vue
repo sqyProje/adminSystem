@@ -15,7 +15,7 @@
     </div>
     <div class="my-Report">
       <el-table border :row-style="{height:'36px'}" :header-row-style="{height:'36px'}" :cell-style="{padding:'2px',}"
-        :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}" :data="myReport" style="width: 100%">
+        :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}" :data="myReport" style="width: 100%"  height="449">
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="createDate" label="日期"></el-table-column>
         <el-table-column prop="toReportRealName" label="收件人"></el-table-column>
@@ -103,16 +103,9 @@
     margin: 0 auto;
     overflow: hidden;
   }
-
   .sousuo {
     width: 90%;
     margin: 0 auto;
     margin-top: 10px;
-  }
-
-
-
-  el-table {
-    border-radius: 25px;
   }
 </style>

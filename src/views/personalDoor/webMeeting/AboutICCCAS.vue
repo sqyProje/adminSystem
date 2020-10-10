@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="tittle">
-      <b>会议详情</b>
+      <b>会议详情</b>&nbsp;&nbsp;&nbsp;<el-button @click="backtrack" type="warning" plain size="mini">返回</el-button>
     </div>
     <div class="content-box" :model="tableData" ref="tableData">
       <div class="font-color">
@@ -32,7 +32,7 @@
       </div>
       <div class="font-color">会议介绍:</div>
           <div v-html="tableData.content"></div>
-        <el-button @click="backtrack" type="primary" plain>返回</el-button>  
+
     </div>
   </div>
 </template>

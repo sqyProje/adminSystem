@@ -17,6 +17,7 @@
                   <el-tree
                     :data="departData"
                     node-key="uId"
+                    default-expand-all
                     @node-click="departNodeClick"
                     :props="defaultProps">
                   </el-tree>
@@ -34,6 +35,7 @@
                   <el-tree
                     :data="dutyData"
                     node-key="uId"
+                    default-expand-all
                     @node-click="dutyNodeClick"
                     :props="defaultProps">
                   </el-tree>
@@ -71,10 +73,10 @@
           </el-form>
           <div class="grid-content" v-show="tableDataCheckFlag">
             <el-table
+              class="basetreetable"
               :data="tableDataCheck"
               v-loading="listLoadingCheck"
               size  = "small"  max-height="600"
-              border
             >
               <el-table-column label="姓名" prop="realname"></el-table-column>
               <el-table-column label="部门" prop="departName"></el-table-column>
@@ -195,24 +197,26 @@
                 picPath:child.picPath,
                 station:child.station,
                 shortPhone:child.shortPhone,
-                selected:child.selected
+                children:[]
               })
             })
             res.childMenu.forEach((child,two)=>{
               this.tableData[key].children.push({id:this.i++,name:child.name,children:[]})
-              child.employees.forEach((three)=>{
-                this.tableData[key].children[two].children.push({
-                  id:three.uId,
-                  name:three.realname,
-                  email:three.email,
-                  duty:three.duty,
-                  phone:three.phone,
-                  picPath:three.picPath,
-                  station:three.station,
-                  shortPhone:three.shortPhone,
-                  selected:three.selected
+              if(child.employees.length>0){
+                child.employees.forEach((three)=>{
+                  this.tableData[key].children[two].children.push({
+                    id:three.uId,
+                    name:three.realname,
+                    email:three.email,
+                    duty:three.duty,
+                    phone:three.phone,
+                    picPath:three.picPath,
+                    station:three.station,
+                    shortPhone:three.shortPhone,
+                    children:[]
+                  })
                 })
-              })
+              }
             })
           })
         })

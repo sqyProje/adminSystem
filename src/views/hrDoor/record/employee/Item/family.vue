@@ -137,7 +137,7 @@
           sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
           nowaddress:[{required: true, trigger: 'blur', message: '请输入现住址'}],
         },
-        submitFlag :false
+      //  submitFlag :false
       }
     },
     mounted(){
@@ -152,14 +152,14 @@
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
-        this.submitFlag = false
+      //  this.submitFlag = false
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
-        this.submitFlag = false
+       // this.submitFlag = false
         this.dialogTitle = '编辑'
         GetFamily(row.uId).then(response=>{
           this.AddEditInfo = response.datas
@@ -167,16 +167,16 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          if(this.submitFlag){
+          /*if(this.submitFlag){
             return
-          }
-          this.submitFlag = true
+          }*/
+        //  this.submitFlag = true
           if (valid) {
             if (this.dialogTitle === '添加') {
               AddFamily(this.AddEditInfo)
                 .then(response => {
                   this.dialogVisible = false
-                  this.submitFlag = true
+                //  this.submitFlag = true
                   if (response.status === 0) {
                     this.initList(this.$route.query.uId);
                     Message({
@@ -191,7 +191,7 @@
               EditFamily(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
                   this.dialogVisible = false
-                  this.submitFlag = true
+                //  this.submitFlag = true
                   this.initList(this.$route.query.uId);
                   Message({
                     message: response.msg,
@@ -203,7 +203,7 @@
 
             }
           }else{
-            this.submitFlag = false
+           // this.submitFlag = false
             Message({
               message: '参数验证不合法',
               type: 'error',

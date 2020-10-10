@@ -9,7 +9,7 @@ const service = axios.create({
   timeout: 15000, // 请求超时时间
   withCredentials: true
 })
-
+debugger
 service.interceptors.request.use(config => {
   if (store.getters.token) {
     config.headers['Authorization'] = localStorage.getItem('loginToken') // 让每个请求携带自定义token 请根据实际情况自行修改
@@ -40,6 +40,15 @@ service.interceptors.response.use(
     }else if(response.data.type === 'application/vnd.ms-excel'){
       return response
     }else{
+      if(response.config.url.indexOf('/QRCode/handQRCode')>-1){
+        if(res.status !==0){
+           return response.data
+       //   return Promise.reject('error')
+        }else{
+          return response.data
+
+        }
+      }
       if(res.status !==0){
         Message({
           message: res.msg,
@@ -54,7 +63,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-   // console.log(error.response.data.message || error.response.data.msg)// for debug
+    console.log(error.response)// for debug
     if(error.response.data.status === 1005){
       MessageBox.confirm(error.response.data.msg, '确定登出', {
         confirmButtonText: '重新登录',

@@ -19,7 +19,7 @@
         </div>
         <el-form-item>
           <el-button type="success" icon="el-icon-s-promotion" @click="submitForm('ruleForm')">发送</el-button>
-          <el-button @click="resetForm('ruleForm')">关闭</el-button>
+          <el-button @click="resetForm('ruleForm')">返回</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,7 +39,10 @@ export default {
         theme: "",
       },
       token: "",
-      rulesInfo: {theme: [{ required: true,trigger: 'blur',message: '请输入标题'}]}
+      rulesInfo: {
+        theme: [{ required: true,trigger: 'blur',message: '请输入标题'}],
+        substance:[{ required: true,trigger: 'blur',message: '请输入内容'}]
+      }
     };
   },
   methods: {
@@ -88,9 +91,6 @@ export default {
   /* border: 5px solid #f5f5f5; */
   border-radius: 5px 5px 0px 0px;
   margin-top: 10px;
-}
-#height-input {
-  height: 30px;
 }
 </style>
 

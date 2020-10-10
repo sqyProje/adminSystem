@@ -112,6 +112,7 @@
         </el-form-item>
         <el-form-item label ='图集'>
           <multiUploadImg
+            ref="multiImg"
             @imgUrl="picPreview"
             :picArray="picString"
             @delUrl = "delUrlPreview"
@@ -119,9 +120,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button size="small" type="" @click="canleDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
-        </span>
+        <el-button size="small" type="" @click="canleDialog">取 消</el-button>
+        <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -162,7 +163,6 @@
         submitFlag:false,
         startDateLimit: {
           disabledDate: (time) => {
-            console.log(time,this.AddEditInfo.enddate)
             let endTime = this.AddEditInfo.enddate;
             if (endTime) {
               return time.getTime() > new Date(endTime).getTime();
@@ -199,6 +199,7 @@
         this.dialogTitle = '添加'
         this.AddEditInfo.employeeid=this.$route.query.uId
         this.AddEditInfo.state=0
+        this.$refs.multiImg.parentClickClear()
       },
       handleEdit(row) {
         this.dialogVisible = !this.dialogVisible
@@ -213,7 +214,6 @@
             return
           }
           this.picPreviewInfo = response.datas.picPaths+','
-        //  console.log( this.picPreviewInfo)
         })
       },
       UpdateUser(){
@@ -292,6 +292,9 @@
       canleDialog(){
         this.dialogVisible = false
         this.picString = ''
+        this.picString = ''
+        this.picPreviewInfo=''
+        this.$refs.multiImg.parentClickClear()
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },

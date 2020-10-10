@@ -27,7 +27,7 @@
         <el-table-column prop="reportRealName" label="发件人"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button @click="handleClick1(scope.row)" type="text" size="small">详情</el-button>
+            <el-button @click="handleClick1(scope.row)" type="text" size="small">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -122,11 +122,6 @@ export default {
   margin: 0 auto;
   margin-top: 10px;
 }
-
-el-table {
-  border-radius: 25px;
-}
-
 </style>
 
 
