@@ -133,9 +133,6 @@
           this.listLoading = false
           this.tableData = response.datas
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -220,7 +217,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -245,7 +241,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -259,7 +254,6 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       newContent(val){
-        console.log(val)
         this.AddEditInfo.content= val
       }
     }

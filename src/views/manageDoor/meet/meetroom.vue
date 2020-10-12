@@ -251,9 +251,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -341,7 +338,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -357,7 +353,6 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       newContent(val){
-        console.log(val)
         this.AddEditInfo.content= val
       }
     }

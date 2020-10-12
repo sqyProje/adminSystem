@@ -79,7 +79,7 @@
       }
     },
     mounted(){
-      console.log(this.urlSign)
+     // console.log(this.urlSign)
       if(this.value==undefined){
         this.fileList=[]
         this.hideUpload = false
@@ -95,7 +95,7 @@
             url: item
           }
         });
-        console.log( this.value.length > 0 ? true :false)
+       // console.log( this.value.length > 0 ? true :false)
 
         this.hideUpload = true
 
@@ -130,7 +130,6 @@
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，请删除后重新上传`);
       },
       handleUploadSuccess(res, file) {
-        console.log(res)
         this.fileList=[{name: file.name, url: res.datas}];
         this.hideUpload = this.fileList.length >= this.limitCount;
         this.hideUpload = true

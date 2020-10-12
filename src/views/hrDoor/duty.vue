@@ -132,6 +132,7 @@
     <!--组织树-->
    <!-- :show-close="false"-->
     <el-dialog
+      style="overflow: auto"
       title="组织架构树"
       :close-on-click-modal="false"
       :visible.sync="TreeDialogVisible">
@@ -210,9 +211,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);

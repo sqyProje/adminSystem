@@ -17,13 +17,13 @@
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size="small"
-       
+        max-height="600"
         border
       >
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column label="会议标题" prop="title"></el-table-column>
-        <el-table-column label="会议时间" prop="startdate"></el-table-column>
-        <el-table-column prop="meetingroomname" label="会议室"></el-table-column>
+        <el-table-column label="开始时间" prop="startdate"></el-table-column>
+        <el-table-column prop="meetingroomname" label="会议室名称"></el-table-column>
         <el-table-column label="会议状态">
           <template slot-scope="scope">
             <div class="focus-two" v-if="scope.row.meetingState=='2'">进行中</div>
@@ -85,9 +85,6 @@ export default {
           this.tableData = response.datas.list;
           this.total = response.datas.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
 
     handleResetSearch() {

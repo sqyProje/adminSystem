@@ -53,7 +53,6 @@
           if(this.names=="departname"){
             return this.menuInfoArray[0].childMenu=this.toChildTree
           }else if(this.names=='dutyname'){
-            console.log(4)
           }
           //return this.menuInfoArray[0].childMenu=this.toChildTree
         },
@@ -67,7 +66,6 @@
 
         },
         handleNodeClick(val){
-          console.log(val)
           this.mineStatus = val.name
           this.$emit('childFnToParent',{
             ids:val.uId,

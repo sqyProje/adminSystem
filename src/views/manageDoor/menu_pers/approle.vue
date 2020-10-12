@@ -263,9 +263,6 @@
           .then(response => {
             this.roleInfo = response.datas
           })
-          .catch( error => {
-            console.log(error);
-          });
       },
       handleRoleMenu(row){
         this.RoleDialogVisible = true
@@ -279,7 +276,6 @@
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
         let hafCheckedKeys = this.$refs.roleData.getHalfCheckedKeys();
         let perIds= checkedKeys.concat(hafCheckedKeys)
-        console.log(perIds)
         updateAppRole(this.roleId,perIds)
           .then(response=>{
             this.RoleDialogVisible = false

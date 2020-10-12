@@ -88,7 +88,6 @@
           fileList.forEach((value, key) => {
             multiUrl = multiUrl + value.url + ','
           })
-          console.log(file,fileList)
           this.fileList = fileList
 
           this.$message.warning('删除成功');

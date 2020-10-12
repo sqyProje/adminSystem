@@ -42,7 +42,7 @@
         :data="tableData"
         v-loading="listLoading"
         size  = "small"  max-height="600"
-        border
+        class="basetreetable"
       >
         <el-table-column
           type="selection"
@@ -264,9 +264,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);

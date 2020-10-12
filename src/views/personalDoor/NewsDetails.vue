@@ -1,7 +1,6 @@
 <template >
   <div>
-    <el-button style="margin:10px" @click="backtrack" type="primary">返回</el-button>
-
+    <el-button style="margin:10px" @click="backtrack" size='mini' type="primary">返回</el-button>
     <div style="cursor:pointer" class="root-box" >
       <div class="title-style">
         <b>{{neirong.title}}</b>

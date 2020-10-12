@@ -71,8 +71,13 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right"  width="200">
+        <el-table-column label="操作" fixed="right"  width="290">
           <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              v-if="hasPerm('meeting:edit')"
+              @click="handleCheck(scope.row)">查看</el-button>
             <el-button
               size="mini"
               type="success"
@@ -217,7 +222,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
+          <el-button size="small" type="primary" @click="UpdateUser" v-show="checkFlag">确 定</el-button>
         </span>
     </el-dialog>
     <el-dialog
@@ -245,7 +250,7 @@
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
   import {dictionType} from '@/api/basic'
-  import {MeetList,MeetAdd,GetMeet,EditMeet,DeleteMeet,GetMeetDrop,GetRoomDrop} from '@/api/news-metting'
+  import {MeetList,MeetAdd,GetMeet,EditMeet,CheckMeet,DeleteMeet,GetMeetDrop,GetRoomDrop} from '@/api/news-metting'
   import singleUpload from '@/components/Upload/singleImg'
   import Editor from '@/components/Tinymce/Editor'
   const defaultListQuery = {
@@ -318,7 +323,8 @@
               return time.getTime() < new Date(beginTime).getTime();  //开始和结束可以选择同一天  - 8.64e7
             }
           }
-        }
+        },
+        checkFlag:true
       }
 
     } ,
@@ -346,9 +352,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -389,6 +392,13 @@
               duration: 3 * 1000
             })
           }
+        })
+      },
+      handleCheck(row){
+        CheckMeet(row.uId).then(res=>{
+          this.dialogVisible = !this.dialogVisible
+          this.AddEditInfo = res.datas
+          this.checkFlag=false
         })
       },
       UpdateUser(){
@@ -451,7 +461,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -501,7 +510,7 @@
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]
         this.roleData = []
-        console.log(this.userIds)
+      //  console.log(this.userIds)
       },
       RoleCanleDialog(){
         this.RoleDialogVisible = false

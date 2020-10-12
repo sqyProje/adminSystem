@@ -12,7 +12,7 @@
     },
       mounted(){
         this.Urls=this.$route.query.url
-        console.log(decodeURIComponent(this.Urls))
+       // console.log(decodeURIComponent(this.Urls))
       },
     }
 

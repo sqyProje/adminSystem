@@ -410,9 +410,6 @@
                       })
                     }
                   })
-                    .catch(error => {
-                      console.log(error);
-                    });
 
               }else{
                 this.dialogVisible = true
@@ -466,9 +463,6 @@
               })
             }
           })
-            .catch(error => {
-              console.log(error);
-            });
         }else{
           Message({
             message: '请选择审批人',

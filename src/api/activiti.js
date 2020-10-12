@@ -71,7 +71,7 @@ export function DeleteFieldInfo(params) {
 //字段类型
 export function findByParentId() {
   return request({
-    url: '/diction/findByParentId?parentId=0',
+    url: '/diction/findAllByParentId?parentId=0',
     method: 'get'
   })
 }

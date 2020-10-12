@@ -129,9 +129,6 @@
           this.listLoading = false
           this.tableData = response.datas
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
@@ -203,7 +200,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',

@@ -189,9 +189,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -212,7 +209,6 @@
       },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
-          console.log( this.AddEditInfo)
           if (valid) {
             ToApprove(this.AddEditInfo).then(response => {
               if (response.status === 0) {

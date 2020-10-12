@@ -195,9 +195,6 @@
             this.tableData = response.datas.list
             this.total = response.datas.total
           })
-            .catch(error => {
-              console.log(error);
-            });
         },
         handleResetSearch() {
           this.listQuery = Object.assign({}, defaultListQuery);
@@ -247,9 +244,6 @@
                       })
                     }
                   })
-                .catch(error => {
-                    console.log(error);
-                });
               } else {
                 EditDepart(this.AddEditInfo).then(response => {
                   if (response.status === 0) {
@@ -263,9 +257,6 @@
                     })
                   }
                 })
-                  .catch(error => {
-                    console.log(error);
-                  });
               }
 
             }else{
@@ -295,8 +286,8 @@
                 let currentPage = this.listQuery.pageNum > totalPage ? totalPage : this.listQuery.pageNum;
                 this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
                 this.initTable()
+                this.leftTree()
               })
-              .catch(error=>{console.log(error)})
           }).catch(() => {
             Message({
               type: 'info',

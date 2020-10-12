@@ -128,7 +128,6 @@
       enumeration('/approveEnum/getApproveStateEnums').then(response=>{
         this.approveStatusData = response.datas
       })
-      console.log(43)
       this.initTable();
     },
     filters:{
@@ -167,9 +166,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);

@@ -256,9 +256,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -332,8 +329,6 @@
       ExportAll(){
         ExportDatas(this.listQuery).then(res=>{
           importExcel(res)
-        }).catch((error) => {
-          console.log(error)
         })
       },
       childFnInfo(payload){

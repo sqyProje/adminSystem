@@ -26,12 +26,12 @@
           </el-col>
         </el-form>
         <el-table
+          class="basetreetable"
           :data="tableData"
           v-loading="listLoading"
           row-key="uId"
           :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
           size  = "small"  max-height="600"
-          border
         >
           <el-table-column
             type="selection"
@@ -171,9 +171,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -265,7 +262,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
          Message({
             type: 'info',

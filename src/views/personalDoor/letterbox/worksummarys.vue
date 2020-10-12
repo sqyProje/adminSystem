@@ -82,9 +82,6 @@ export default {
           this.myReport = response.datas.list;
           this.total = response.datas.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);

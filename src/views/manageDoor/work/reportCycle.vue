@@ -308,9 +308,7 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
+
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -399,7 +397,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -453,7 +450,7 @@
             this.roleDataTo = response.datas
             this.parseJson(this.roleDataTo)
             this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
-            console.log( this.resourceCheckedKeyTo)
+           // console.log( this.resourceCheckedKeyTo)
             //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
             this.$nextTick(()=>{
               this.$refs.fileTree.setCheckedKeys(this.resourceCheckedKeyTo)
@@ -467,7 +464,7 @@
             this.roleDataTo = response.datas
             this.parseJson(this.roleDataTo)
             this.resourceCheckedKeyTo = this.AddEditInfo.toreportUserIds.split(',')
-            console.log( this.resourceCheckedKeyTo)
+           // console.log( this.resourceCheckedKeyTo)
             //  this.findAllChildren(this.roleDataTo,this.resourceCheckedKeyTo)
             this.$nextTick(()=>{
               this.$refs.roleDataTo.setCheckedKeys(this.resourceCheckedKeyTo)
@@ -552,7 +549,7 @@
       /*单选个人*/
       checkChange(a,b,c) {
         this.leafCheckArr = this.$refs.fileTree.getCheckedKeys()
-        console.log(this.leafCheckArr)
+      //  console.log(this.leafCheckArr)
         let arr = []
         this.leafCheckArr.forEach(item => {
           arr.push(item)
@@ -562,7 +559,7 @@
             return item !== undefined && item !==this.AddEditInfo.toreportUserIds
           })
         }
-        console.log(arr)
+        //console.log(arr)
         if(arr.length>1){
           Message({
             type: 'warning',
@@ -571,7 +568,7 @@
         }
         else {
           this.AddEditInfo.toreportUserIds = arr.join('')
-          console.log(this.AddEditInfo.toreportUserIds)
+         // console.log(this.AddEditInfo.toreportUserIds)
 
           this.$refs.fileTree.setCheckedKeys([]);
           this.$refs.fileTree.setCheckedKeys([this.AddEditInfo.toreportUserIds]);

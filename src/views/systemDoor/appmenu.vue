@@ -33,12 +33,12 @@
       </el-form>
     </div>
     <el-table
+      class="basetreetable"
       :data="tableData"
       v-loading="listLoading"
       row-key="uId"
       :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
       size  = "small"  max-height="600"
-      border
     >
       <el-table-column
         type="selection"
@@ -234,7 +234,6 @@
         this.dialogTitle = '添加子菜单'
         Object.keys(this.FirstMenuInfo).forEach(key => this.FirstMenuInfo[key]= '');
         this.FirstMenuInfo.isdefault = 1
-        console.log(row)
         this.FirstMenuInfo.parentid = row.uId
 
       },
@@ -321,7 +320,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',

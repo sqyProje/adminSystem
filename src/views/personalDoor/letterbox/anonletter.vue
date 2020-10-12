@@ -3,8 +3,8 @@
     <!-- 匿名信 -->
     <div class="sousuo">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="主题名称">
-          <el-input v-model="listQuery.title" placeholder="主题关键字"></el-input>
+        <el-form-item label="标题">
+          <el-input v-model="listQuery.title" placeholder="请输入标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
@@ -96,9 +96,6 @@ export default {
           this.myReport = response.datas.list;
           this.total = response.datas.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);

@@ -244,9 +244,6 @@
                       })
                     }
                   })
-                  .catch(error => {
-                    console.log(error);
-                  });
               } else {
                 EditApprove(this.roleInfo).then(response => {
                   if (response.status === 0) {
@@ -259,9 +256,6 @@
                     })
                   }
                 })
-                  .catch(error => {
-                    console.log(error);
-                  });
               }
             }else{
               Message({
@@ -306,9 +300,6 @@
             .then(response => {
               this.roleInfo = response.datas
             })
-            .catch( error => {
-              console.log(error);
-            });
         },
         //选择用户
         handleRoleMenu(row){
@@ -326,7 +317,7 @@
                   this.roleData[key].children.push({id:departitem.uId,name:departitem.name,children:[]})
                   if(departitem.children.length>0){
                     departitem.children.forEach((thItem)=>{
-                      console.log(this.roleData[key].children[twoId])
+                    //  console.log(this.roleData[key].children[twoId])
                         this.roleData[key].children[twoId].children.push({id:thItem.userId,name:thItem.realName,selected:thItem.selected})
                     })
                   }

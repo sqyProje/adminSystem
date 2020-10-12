@@ -36,7 +36,7 @@ export function DeleteInfo(params) {
 //diction type parentId
 export function dictionType(params) {
   return request({
-    url: '/diction/findByParentId?parentId='+params,
+    url: '/diction/findAllByParentId?parentId='+params,
     method: 'get',
   })
 }

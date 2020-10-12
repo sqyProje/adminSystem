@@ -253,9 +253,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -355,7 +352,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -384,7 +380,6 @@
         }
       },
       approveChange(value){
-        console.log(value)
         if(value===20 ){
           this.userFlag=true
           this.approveFlag=false

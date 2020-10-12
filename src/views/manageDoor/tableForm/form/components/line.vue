@@ -219,9 +219,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -265,7 +262,7 @@
         })
       },
       UpdateUser(){
-        console.log(this.AddEditInfo)
+
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -321,7 +318,6 @@
            })
            this.initTable()
          })
-          .catch(error=>{console.log(error)})
         }).catch(() => {
          Message({
             type: 'info',

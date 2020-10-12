@@ -158,7 +158,6 @@
         }).then(()=> {
           FlowLineAll(qdFlowId).then(res => {
             this.edges = res.datas
-            console.log(this.edges )
 
           }).then(() => {
             var g = new dagreD3.graphlib.Graph().setGraph({});

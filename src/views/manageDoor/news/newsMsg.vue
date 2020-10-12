@@ -42,17 +42,17 @@
           width="55">
         </el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="排序" prop="sort"></el-table-column>
-        <el-table-column label="点赞数" prop="tolike"></el-table-column>
-        <el-table-column label="浏览量" prop="tobrowse"></el-table-column>
-        <el-table-column label="是否置顶">
+        <el-table-column label="排序" prop="sort" width="50"></el-table-column>
+        <el-table-column label="点赞数" prop="tolike"  width="90"></el-table-column>
+        <el-table-column label="浏览量" prop="tobrowse"  width="90"></el-table-column>
+        <el-table-column label="是否置顶"  width="70">
           <template slot-scope="scope">
             <el-button size="mini" round class='label-btn' :type="scope.row.isstick ? 'success' : 'warning'">
               {{scope.row.isstick ? "是" :"否"}}
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="状态"  width="70">
           <template slot-scope="scope">
             <el-button size="mini" round class='label-btn' :type="scope.row.state ? 'success' : 'warning'">
               {{scope.row.state ? "发布" :"下架"}}
@@ -60,9 +60,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="发布时间" prop="publishdate"></el-table-column>
-        <el-table-column label="创建时间" prop="createdate"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate"></el-table-column>
+        <el-table-column label="发布时间" prop="publishdate"  width="150"></el-table-column>
+        <el-table-column label="创建时间" prop="createdate"  width="150"></el-table-column>
+        <el-table-column label="更新时间" prop="updatedate"  width="150"></el-table-column>
         <el-table-column label="操作" fixed="right"  width="260">
           <template slot-scope="scope">
             <el-button
@@ -320,9 +320,6 @@
           this.tableData = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);
@@ -410,7 +407,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -435,7 +431,6 @@
               })
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
@@ -449,7 +444,6 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       newContent(val){
-        console.log(val)
         this.AddEditInfo.content= val
       }
     }

@@ -20,16 +20,17 @@
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size="small"
+        max-height="600"
         border
       >
-        
+
         <el-table-column prop="title" label="会议标题"></el-table-column>
-        <el-table-column prop="publishdate" label="会议时间"></el-table-column>
+        <el-table-column prop="startdate" label="开始时间"></el-table-column>
         <!-- <el-table-column prop="province" label="会议类型">
           <template slot-scope="scope">{{scope.row.meetingState ? "线上会议":"线下会议"}}</template>
         </el-table-column>-->
-        <el-table-column prop="sponsor" label="发起人"></el-table-column>
-        <el-table-column prop="meetingroomname" label="地点"></el-table-column>
+        <el-table-column prop="sponsor" label="主办方"></el-table-column>
+        <el-table-column prop="meetingroomname" label="会议室名称"></el-table-column>
         <el-table-column label="操作" width="260">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="primary" size="mini">查看</el-button>
@@ -82,9 +83,6 @@ export default {
           this.tableData = response.datas.list;
           this.total = response.datas.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleResetSearch() {
       this.listQuery = Object.assign({}, defaultListQuery);

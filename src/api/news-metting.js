@@ -141,6 +141,13 @@ export function GetMeet(params) {
     method: 'get',
   })
 }
+export function CheckMeet(params) {
+  return request({
+    url: '/meeting/check?uId='+params,
+    method: 'get',
+  })
+}
+
 export function EditMeet(params) {
   return request({
     url: '/meeting/edit',

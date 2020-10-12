@@ -114,7 +114,7 @@
         <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
                    type="text"
                    @click = 'passFormFlagFun'
-        >登录</el-button>
+        >登录7</el-button>
       </el-form>
       <!--忘记密码end-->
       <!--注册账号start-->
@@ -162,7 +162,7 @@
         <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
                    type="text"
                    @click = 'registerFormFlagFun'
-        >登录</el-button>
+        >登录6</el-button>
       </el-form>
       <!--注册账号end-->
     </el-card>
@@ -171,7 +171,7 @@
 </template>
 <script>
   import {Message,MessageBox} from 'element-ui'
-  import {isvalidUsername} from '@/utils/validate';
+  import {validmobile} from '@/utils/validate';
   import {setCookie,getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
   import code_bg from '@/assets/images/code.png'
@@ -182,6 +182,13 @@
   export default {
     name: 'login',
     data() {
+      const checkphone = (rule, value, callback) => {
+        if (!validmobile(value)) {
+          callback(new Error('请输入正确的手机号'))
+        } else {
+          callback()
+        }
+      };
       return {
         loginForm: {
           username: '',
@@ -189,19 +196,19 @@
           code:''
         },
         loginRules: {
-          username: [{required: true, trigger: 'blur', message: '请输入用户名'}],
+          username: [{required: true, trigger: 'blur', message: '请输入用户名或者手机号'}],
           password: [{required: true, trigger: 'blur', message: '请输入密码'}],
           code: [{required: true, trigger: 'blur', message: '请输入验证码'}]
         },
         PasswordRules:{
-          phone: [{required: true, trigger: 'blur', message: '请输入手机号'}],
+          phone: [{required: true, trigger: 'blur',validator:checkphone, message: '请输入正确的手机号'}],
           code: [{required: true, trigger: 'blur', message: '请输入验证码'}],
           password: [{required: true, trigger: 'blur', message: '请输入新密码'}]
         },
         registerQueryRules:{
           username: [{required: true, trigger: 'blur', message: '请输入用户名'}],
           password: [{required: true, trigger: 'blur', message: '请输入密码'}],
-          phone: [{required: true, trigger: 'blur', message: '请输入手机号'}],
+          phone: [{required: true, trigger: 'blur',validator:checkphone, message: '请输入正确的手机号'}],
           code: [{required: true, trigger: 'blur', message: '请输入验证码'}]
         },
         loading: false,
@@ -287,12 +294,14 @@
         this.loginFormFlag = !this.loginFormFlag
         this.passFormFlag = !this.passFormFlag
        /* this.CodeFlag=!this.CodeFlag*/
+       this.$refs.ForgetPasswordQuery.resetFields()
         Object.keys(this.ForgetPasswordQuery).forEach(key => this.ForgetPasswordQuery[key]= '');
       },
       registerFormFlagFun(){
         this.loginFormFlag = !this.loginFormFlag
         this.registerFormFlag = !this.registerFormFlag
        /* this.CodeFlag=!this.CodeFlag*/
+        this.$refs.registerQuery.resetFields()
         Object.keys(this.registerQuery).forEach(key => this.registerQuery[key]= '');
       },
       handleLogin() {
@@ -312,16 +321,23 @@
               this.loading = false
             })
           } else {
-            console.log('参数验证不合法！');
             return false
           }
         })
       },
       //忘记密码验证码
       getCode(){
-        getPassCode(this.ForgetPasswordQuery.phone).then(response=>{
-          this.timeOut(response)
-        })
+        if(validmobile(this.ForgetPasswordQuery.phone)){
+          getPassCode(this.ForgetPasswordQuery.phone).then(response=>{
+            this.timeOut(response)
+          })
+        }else{
+          Message({
+            message: '请输入合法手机号',
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
       },
       ForgetPassWord(){
         let ForgetPasswordMd={
@@ -387,7 +403,6 @@
       },
       QRCode(){
         handQRCode(this.uuids).then(res=>{
-          console.log(res)
          if(res.status ===0){
            location.reload()
            localStorage.setItem("loginToken", res.datas)

@@ -5,32 +5,32 @@
     </div>
     <div class="content-box" :model="tableData" ref="tableData">
       <div class="font-color">
-        会议主题:
+        会议标题：
         <span>{{tableData.title}}</span>
       </div>
       <div class="font-color">
-        会议类型:
-        <span>{{tableData.title}}</span>
+        会议室名称：
+        <span>{{tableData.meetingroomname}}</span>
       </div>
       <div class="font-color">
-        开始时间:
+        开始时间：
         <span>{{tableData.startdate}}</span>
       </div>
       <div class="font-color">
-        结束时间:
+        结束时间：
         <span>{{tableData.enddate}}</span>
       </div>
       <div class="font-color">
-        会议地点:
-        <span>{{tableData.meetingroomname}}</span>
+        发布时间：
+        <span>{{tableData.publishdate}}</span>
       </div>
       <div>
-        <div class="font-color">参会人员:</div>
+        <div class="font-color">参会人员：</div>
         <div class="renyuan-yangshi">
           <div class="name-size" v-for="(item,i) in name" :key="i">{{item.userRealName}}</div>
         </div>
       </div>
-      <div class="font-color">会议介绍:</div>
+      <div class="font-color">会议介绍：</div>
           <div v-html="tableData.content"></div>
 
     </div>
@@ -75,8 +75,8 @@ export default {
 }
 .font-color {
   color: #00a0e9;
-  font-size: 16px;
-  margin: 30px 0 0px 0;
+  font-size: 15px;
+  margin: 18px 0 0px 0;
 }
 .renyuan-yangshi {
   display: flex;
@@ -88,7 +88,7 @@ export default {
   background: #4287c7;
   border-radius: 3px;
   padding: 3px;
-  margin: 10px;
+  margin: 10px 5px 0;
 }
 span {
   color: rgba(77, 77, 77, 1);

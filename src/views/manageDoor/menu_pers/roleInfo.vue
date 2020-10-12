@@ -248,9 +248,6 @@
                       })
                     }
                   })
-                  .catch(error => {
-                    console.log(error);
-                  });
               } else {
                 EditRole(this.roleInfo).then(response => {
                   if (response.status === 0) {
@@ -263,9 +260,6 @@
                     })
                   }
                 })
-                  .catch(error => {
-                    console.log(error);
-                  });
               }
             }else{
               Message({
@@ -310,9 +304,6 @@
             .then(response => {
               this.roleInfo = response.datas
             })
-            .catch( error => {
-              console.log(error);
-            });
         },
         handleRoleMenu(row){
           this.RoleDialogVisible = true

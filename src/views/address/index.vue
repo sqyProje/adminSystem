@@ -187,39 +187,37 @@
           this.listLoading = false
           response.datas.forEach((res,key)=>{
             this.tableData.push({id:this.i++,name:res.name,children:[]})
-            res.employees.forEach((child)=>{
-              this.tableData[key].children.push({
-                id:child.uId,
-                name:child.realname,
-                email:child.email,
-                duty:child.duty,
-                phone:child.phone,
-                picPath:child.picPath,
-                station:child.station,
-                shortPhone:child.shortPhone,
-                children:[]
-              })
-            })
-            res.childMenu.forEach((child,two)=>{
-              this.tableData[key].children.push({id:this.i++,name:child.name,children:[]})
-              if(child.employees.length>0){
-                child.employees.forEach((three)=>{
+
+            res.childMenu.forEach((childMenu,two)=>{
+              this.tableData[key].children.push({id:this.i++,name:childMenu.name,children:[]})
+                childMenu.employees.forEach((three)=> {
                   this.tableData[key].children[two].children.push({
-                    id:three.uId,
-                    name:three.realname,
-                    email:three.email,
-                    duty:three.duty,
-                    phone:three.phone,
-                    picPath:three.picPath,
-                    station:three.station,
-                    shortPhone:three.shortPhone,
-                    children:[]
+                    id: three.uId,
+                    name: three.realname,
+                    email: three.email,
+                    duty: three.duty,
+                    phone: three.phone,
+                    picPath: three.picPath,
+                    station: three.station,
+                    shortPhone: three.shortPhone
                   })
                 })
-              }
+            })
+              res.employees.forEach((child)=>{
+                this.tableData[key].children.push({
+                  id:child.uId,
+                  name:child.realname,
+                  email:child.email,
+                  duty:child.duty,
+                  phone:child.phone,
+                  picPath:child.picPath,
+                  station:child.station,
+                  shortPhone:child.shortPhone
+
+                })
+              })
             })
           })
-        })
       },
       initTableCheck() {
         this.listLoadingCheck = true
@@ -228,9 +226,6 @@
           this.tableDataCheck = response.datas.list
           this.total = response.datas.total
         })
-          .catch(error => {
-            console.log(error);
-          });
       },
       handleResetSearch() {
         this.listQuery = Object.assign({}, defaultListQuery);

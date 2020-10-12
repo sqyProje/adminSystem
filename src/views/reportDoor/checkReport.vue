@@ -27,7 +27,6 @@
     created(){
       this.initTable();
       this.userToken=localStorage.getItem('loginToken')
-      console.log(this.userToken)
     },
     methods: {
       initTable() {

@@ -382,9 +382,6 @@
             this.userInfo.departid = response.datas.departId
             this.mineStatus = row.departName
           })
-          .catch( error => {
-          console.log(error);
-        });
 
       },
       userRole(row){
@@ -404,12 +401,12 @@
         this.roleTitle = 'APP角色'
         this.roleDialogVisible = true
         this.updateRoleQuery.userId = row.uId
-        console.log(this.roleList)
+      //  console.log(this.roleList)
         UserAppRoleGet(row.uId).then(response=>{
           this.roleList =response.datas;
-          console.log(this.roleList)
+        //  console.log(this.roleList)
           this.roleList.forEach(selected=>{
-            console.log(selected['selected'])
+          //  console.log(selected['selected'])
             if(selected['selected']){
               this.updateRoleQuery.roleIds.push(selected.uId);
             }
@@ -480,7 +477,6 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',
