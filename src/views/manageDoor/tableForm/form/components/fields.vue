@@ -14,11 +14,11 @@
           返回</el-button>
       </el-col>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         size  = "small"  max-height="600"
-        border
       >
         <el-table-column
           type="selection"

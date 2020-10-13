@@ -39,10 +39,10 @@
         </el-col>
       </el-form>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         size  = "small"  max-height="600"
-        border
       >
         <el-table-column
           type="selection"
@@ -242,7 +242,7 @@
       </el-tree>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="UpdateRoleMenu">确 定</el-button>
+          <el-button size="small" type="primary" @click="UpdateRoleMenu"  v-show="checkFlag">确 定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -490,9 +490,16 @@
         GetMeetDrop(this.AddEditInfo.uId).then(response=>{
           response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})
-            res.children.forEach((child)=>{
-              this.roleData[key].children.push({id:child.userId,name:child.realName,selected:child.selected})
+            res.meeting_depart_userModels.forEach((depart,dkey)=>{
+              this.roleData[key].children.push({id:depart.uId,name:depart.name,children:[]})
+              depart.children.forEach((departuser,three)=>{
+                this.roleData[key].children[dkey].children.push({id:departuser.userId,name:departuser.realName,selected:departuser.selected})
+              })
             })
+            res.children.forEach((child)=>{
+              this.roleData[key].children.push({id:child.userId,name:child.realName,selected:child.selected,children:[]})
+            })
+
           })
           this.findAllChildren(this.roleData,this.resourceCheckedKey)
           this.$nextTick(()=>{

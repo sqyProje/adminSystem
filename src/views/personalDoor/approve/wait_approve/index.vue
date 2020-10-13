@@ -21,10 +21,10 @@
       </el-form-item>
     </el-form>
     <el-table
-        :data="tableData"
-        v-loading="listLoading"
-        size  = "small"  max-height="600"
-        border
+      class="basetreetable"
+      :data="tableData"
+      v-loading="listLoading"
+      size  = "small"  max-height="600"
       >
       <el-table-column type="expand" label="摘要" align="center">
         <template slot-scope="scope">

@@ -64,8 +64,9 @@ service.interceptors.response.use(
   error => {
     console.log(error)// for debug
     if(error.response.data.status === 1005){
-      MessageBox.confirm(error.response.data.msg, '确定登出', {
+      MessageBox.confirm('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
         confirmButtonText: '重新登录',
+        cancelButtonText: false,
         type: 'warning'
       }).then(() => {
         store.dispatch('FedLogOut').then(() => {

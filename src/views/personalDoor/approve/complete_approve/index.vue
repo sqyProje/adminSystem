@@ -15,10 +15,10 @@
       </el-form-item>
     </el-form>
     <el-table
+      class="basetreetable"
       :data="tableData"
       v-loading="listLoading"
       size  = "small"  max-height="600"
-      border
     >
       <el-table-column type="expand" label="摘要" align="center">
         <template slot-scope="scope">

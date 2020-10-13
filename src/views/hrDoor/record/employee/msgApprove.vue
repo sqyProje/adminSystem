@@ -70,12 +70,12 @@
         </el-col>
       </el-form>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"  max-height="600"
-        border
       >
         <el-table-column
           type="selection"

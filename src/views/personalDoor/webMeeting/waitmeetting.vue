@@ -15,13 +15,13 @@
       <!-- 会议信息 -->
 
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size="small"
         max-height="600"
-        border
       >
 
         <el-table-column prop="title" label="会议标题"></el-table-column>
