@@ -158,7 +158,7 @@
         <el-form-item label ='简介'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
-        <el-form-item label ='选择用户' prop="userIds">
+        <el-form-item label ='选择用户' prop="userString">
           <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
         </el-form-item>
         <el-row :gutter="10">
@@ -285,6 +285,7 @@
           type:'',
           rcMettingId:'',
           userIds:[],
+          userString:''//中转
         },
         TypeData:[],
         TypeNameData:[],
@@ -298,7 +299,7 @@
           startdate:[{required: true, trigger: 'blur', message: '请选择开始时间'}],
           enddate:[{required: true, trigger: 'blur', message: '请选择结束时间'}],
           typename:[{required: true, trigger: 'blur', message: '请输入分类名称'}],
-          userIds:[{required: true, trigger: 'blur', message: '请选择用户'}]
+          userString:[{required: true, trigger: 'blur', message: '请选择用户'}]
         },
         RoleDialogVisible:false,
         rcFlag:true,
@@ -373,22 +374,24 @@
         this.rcFlag= true
         this.AddEditInfo.isstick=0
         this.AddEditInfo.state=0
+        this.checkFlag = true
       },
       handleEdit(row) {
         this.dialogTitle = '编辑'
+        this.checkFlag = true
         GetMeet(row.uId).then(response=>{
           if(response.status==0){
             this.dialogVisible = !this.dialogVisible
             this.AddEditInfo = response.datas
              if(this.AddEditInfo.type==1){
                 this.rcFlag=false
-              }else{
+               }else{
                 this.rcFlag = true
               }
           }else{
             Message({
               message: response.msg,
-              type: 'success',
+              type: 'error',
               duration: 3 * 1000
             })
           }
@@ -402,7 +405,9 @@
         })
       },
       UpdateUser(){
+        this.AddEditInfo.userString = this.userIds.toString()
         this.AddEditInfo.userIds = this.userIds
+        console.log(this.AddEditInfo)
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -501,7 +506,7 @@
             })
 
           })
-          this.findAllChildren(this.roleData,this.resourceCheckedKey)
+          this.findAllChildren(this.roleData, this.resourceCheckedKey)
           this.$nextTick(()=>{
             this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
           })
@@ -526,12 +531,27 @@
       },
       //遍历选中子节点
       findAllChildren(data,arr){
+        console.log(data,arr)
+        /*data.forEach((item,index)=>{
+          if(item.children.length!==0){
+            item.children.forEach((child)=>{
+              if(child.selected){
+                arr.push(child.id)
+              }
+            })
+          }
+        })*/
         data.forEach((item,index)=>{
           if(item.children.length!==0){
             item.children.forEach((child)=>{
               if(child.selected){
                 arr.push(child.id)
               }
+              child.children.forEach((thids=>{
+                if(thids.selected) {
+                  arr.push(thids.id)
+                }
+              }))
             })
           }
         })
