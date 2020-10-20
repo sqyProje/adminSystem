@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
         <el-col style="margin-bottom: 10px">
-            <el-button
-              type="success"
-              size="small"
-              @click="handleAdd">
-              添加</el-button>
+          <el-button
+            type="success"
+            size="small"
+            @click="handleAdd">
+            添加</el-button>
         </el-col>
       <el-table
         :data="tableData"
