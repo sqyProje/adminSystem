@@ -33,7 +33,7 @@
           </td>
           <td class="fieldValues">
             <div v-for="(item,key) in fileHref" :key="key" style="height: 26px;line-height: 26px">
-              <a :href="item" >{{item.substring(50,item.length)}}</a><br>
+              <a :href="item" >{{decodeURIComponent(item.substring(50,item.length))}}</a><br>
             </div>
           </td>
         </tr>

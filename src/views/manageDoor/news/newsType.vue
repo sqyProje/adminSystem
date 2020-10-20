@@ -10,10 +10,10 @@
           添加</el-button>
       </el-col>
       <el-table
+        class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
         size  = "small"  max-height="600"
-        border
       >
         <el-table-column
           type="selection"

@@ -1,165 +1,230 @@
 <template>
   <div class="app-container">
-    <el-table
-      :data="tableData"
-      v-loading="listLoading"
-      size  = "small"  max-height="650"
-      border
-    >
-      <el-table-column label="版本类型" prop="apptype" width="150">
-        <template slot-scope="scope">
-          <el-button type="success" v-if="scope.row.apptype==10" size="mini" round class='label-btn'>安卓</el-button>
-          <el-button type="primary" v-else-if="scope.row.apptype==20" size="mini" round class='label-btn'>IOS</el-button>
-          <el-button type="warning" v-else="scope.row.apptype==30" size="mini" round class='label-btn'>其他</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="下载地址" prop="downloadurl"></el-table-column>
-      <el-table-column label="是否强制更新"  width="120">
-        <template slot-scope="scope">
-          <el-button size="mini" round class='label-btn' :type="scope.row.state ? 'success' : 'warning'">
-            {{scope.row.state ? "是" :"否"}}
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="版本号" prop="versionnum" width="80"></el-table-column>
-      <el-table-column label="创建时间" prop="createdate"></el-table-column>
-      <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="success"
-            @click="handleEdit(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog
-      title="编辑"
-      :close-on-click-modal="false"
-      :show-close="false"
-      :visible.sync="dialogVisible"
-      width="33%">
-      <el-form
-        :inline="false"
-        size="mini"
-        ref="AddEditInfo"
-        :model="AddEditInfo"
-        :rules="rulesInfo"
-        label-width="100px"
-      >
-        <el-form-item label='版本类型' prop="apptype">
-          <el-select v-model="AddEditInfo.apptype" placeholder="版本类型" style="width: 100%;">
-            <el-option
-              v-for="item in typeData"
-              :label="item.name"
-              :value="item.id"
-              :key = "item.id"
-            >{{item.name}}</el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label ='下载地址' prop="downloadurl">
-          <el-input v-model="AddEditInfo.downloadurl"></el-input>
-        </el-form-item>
-        <el-form-item label ='版本号' prop="versionnum">
-          <el-input v-model="AddEditInfo.versionnum"></el-input>
-        </el-form-item>
-        <el-form-item label ='更新内容' prop="upcontent">
-          <el-input type="textarea" v-model="AddEditInfo.upcontent"></el-input>
-        </el-form-item>
-        <el-form-item label='是否强制更新' prop="state">
-          <el-select v-model="AddEditInfo.state" placeholder="是否强制更新" style="width: 100%;">
-            <el-option
-              v-for="item in stateData"
-              :label="item.name"
-              :value="item.id"
-              :key = "item.id"
-            >{{item.name}}</el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-          <el-button size="small" type="" @click="canleDialog">关   闭</el-button>
-          <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
-  import {VersionList,GetVersion,EditVersion} from '@/api/basic'
   export default {
     data(){
       return {
-        tableData:[],
-        total: null,
-        listLoading:false,
-        dialogVisible: false,
-        AddEditInfo:{},
-        stateData:[
-          { id: 0, name:'否'},
-          { id: 1, name:'是'}
-        ],
-        typeData:[
-          { id: 10, name:'安卓'},
-          { id: 20, name:'IOS'},
-          { id: 30, name:'其他'},
-        ],
-        rulesInfo: {
-          apptype:[{required: true, trigger: 'blur', message: '请选择版本类型'}],
-          downloadurl: [{ required: true,trigger: 'blur',message: '请输入下载地址'}],
-          upcontent:[{required: true, trigger: 'blur', message: '请输入更新内容'}],
-          versionnum: [{ required: true,trigger: 'blur',message: '请输入版本号'}],
-          state:[{required: true, trigger: 'blur', message: '请选择是否强制更新'}],
-        }
+        config: {
+          size: 24, // 大小, 默认 24, 建议18 - 58
+          url: "//f2e.cn.ronghub.com/sdk/emoji-48.png", // Emoji 背景图片
+          lang: "zh", // Emoji 对应名称语言, 默认 zh
+          // 扩展表情
+          extension: {
+            dataSource: {
+              u1F914: {
+                en: "thinking face", // 英文名称
+                zh: "思考", // 中文名称
+                tag: "🤔", // 原生 Emoji
+                position: "0 0" // 所在背景图位置坐标
+              }
+            },
+            // 新增 Emoji 背景图 url
+            url: "//cdn.ronghub.com/thinking-face.png"
+          }
+        },
+        imEmojiList:'',
+        imTOkenCount:0,
+        conversationList:[],
+        appkey : 'kj7swf8oknb42',
+        loaded: false,
       }
     },
     created(){
-      this.initTable()
+      this.imClientInit(this.appkey);
     },
     methods:{
-      onSearchList() {
-        this.initTable()
+      imClientInit: function(appkey) {
+        // 初始化im
+        RongIMLib.RongIMClient.init(appkey);
+        this.imEmojiInit(this.config);
+        this.setConnectionStatusLis(); // 必须设置监听器后，再连接融云服务器，
+        this.setOnReceiveMessageLis();
+        this.getToken();
       },
-      initTable() {
-        this.listLoading = true
-        VersionList().then(response => {
-          this.listLoading = false
-          this.tableData = response.datas
-        })
+      imEmojiInit: function(config) {
+        // 初始化表情
+        RongIMLib.RongIMEmoji.init(config);
+        this.imEmojiList = RongIMLib.RongIMEmoji.list;
       },
-      handleEdit(row) {
-        this.dialogVisible = true
-        this.dialogTitle = '编辑'
-        GetVersion(row.uId).then(response => {
-            this.AddEditInfo = response.datas
-          })
+      setConnectionStatusLis: function() {
+        // 设置监听器
+        let that = this;
+        RongIMClient.setConnectionStatusListener({
+          onChanged: function(status) {
+            switch (status) {
+              case RongIMLib.ConnectionStatus.CONNECTED:
+                console.log("链接成功");
+                break;
+              case RongIMLib.ConnectionStatus.CONNECTING:
+                console.log("正在链接");
+                break;
+              case RongIMLib.ConnectionStatus.DISCONNECTED:
+                console.log("断开连接");
+                that.alertMsgShow = true;
+                that.alertMsg = "当前消息回话已断开。";
+                break;
+              case RongIMLib.ConnectionStatus
+                .KICKED_OFFLINE_BY_OTHER_CLIENT:
+                that.alertMsgShow = true;
+                that.alertMsg = "其他页面登录，当前消息回话已断开。";
+                break;
+              case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+                console.log("域名不正确");
+                break;
+              case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+                console.log("网络不可用");
+                break;
+            }
+          }
+        });
       },
-      UpdateUser(){
-        this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-            EditVersion(this.AddEditInfo).then(response => {
-              if (response.status === 0) {
-                this.dialogVisible = false
-                this.initTable();
-                Message({
-                  message: response.msg,
-                  type: 'success',
-                  duration: 3 * 1000
-                })
-              }
-            })
-          }else{
-            Message({
-              message: '参数验证不合法',
-              type: 'error',
-              duration: 3 * 1000
-            })
+      setOnReceiveMessageLis: function() {
+        // 消息监听器
+        let that = this;
+        RongIMClient.setOnReceiveMessageListener({
+          // 接收到的消息
+          onReceived: function (message) {
+            console.log(message)
+            var messageContent = message.content;
+            // 判断消息类型
+            switch(message.messageType) {
+              case RongIMClient.MessageType.TextMessage: // 文字消息
+                console.log('文字内容', messageContent.content);
+                break;
+              case RongIMClient.MessageType.ImageMessage: // 图片消息
+                console.log('图片缩略图 base64', messageContent.content);
+                console.log('原图 url', messageContent.imageUri);
+                break;
+              case RongIMClient.MessageType.HQVoiceMessage: // 音频消息
+                console.log('音频 type ', messageContent.type); // 编解码类型，默认为 aac 音频
+                console.log('音频 url', messageContent.remoteUrl); // 播放：<audio src={remoteUrl} />
+                console.log('音频 时长', messageContent.duration);
+                break;
+              case RongIMClient.MessageType.RichContentMessage: // 富文本(图文)消息
+                console.log('文本内容', messageContent.content);
+                console.log('图片 base64', messageContent.imageUri);
+                console.log('原图 url', messageContent.url);
+                break;
+              case RongIMClient.MessageType.UnknownMessage: // 未知消息
+                console.log('未知消息, 请检查消息自定义格式是否正确', message);
+                break;
+              default:
+                console.log('收到消息', message);
+                break;
+            }
           }
         })
       },
-      canleDialog(){
-        this.dialogVisible = false
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+      getToken: function() {
+        // 获取token
+        let that = this;
+        // 获取token值成功后进行connect连接
+        /*if (that.$store.state.user.isLogin) {
+          // 用户登录成功后采取获取token
+          if (that.$store.state.user.user.imToken) {*/
+            //先从store找imtoken
+            that.toConnect('Xkcb2nIpylL7C8aGI80eUCRR4JPw5XxSxA1rDRnd8rahz2l3P1nmfcNVAgNi5CMPFUV4CmES3CE=@fdt1.cn.rongnav.com;fdt1.cn.rongcfg.com');
+          /*} else {
+            that.userApi.getImToken({}, function(res) {
+              that.toConnect(res.imToken);
+            });
+          }
+        }*/
+      },
+      toConnect: function(token) {
+        let that = this;
+        RongIMClient.connect(
+          token,
+          {
+            onSuccess: function(userId) {
+              that.senderId = userId;
+              that.getTotalUnreadNum();
+              that.getConversationList()
+            },
+            onTokenIncorrect: function() {
+              console.log("token无效");
+              that.imTOkenCount++;
+              if(that.imTOkenCount<2){
+                that.getToken();
+              }
+            },
+            onError: function(errorCode) {
+              let that = this;
+              var info = "";
+              switch (errorCode) {
+                case RongIMLib.ErrorCode.TIMEOUT:
+                  that.alertMsgShow = true;
+                  that.alertMsg = "服务器连接超时";
+                  break;
+                case RongIMLib.ConnectionState
+                  .UNACCEPTABLE_PAROTOCOL_VERSION:
+                  info = "不可接受的协议版本";
+                  break;
+                case RongIMLib.ConnectionState.IDENTIFIER_REJECTED:
+                  info = "appkey不正确";
+                  break;
+                case RongIMLib.ConnectionState.SERVER_UNAVAILABLE:
+                  that.alertMsgShow = true;
+                  that.alertMsg = "消息服务暂时不可用";
+                  break;
+              }
+            }
+          }
+        );
+      },
+      getTotalUnreadNum: function() {
+        let that = this;
+        RongIMClient.getInstance().getTotalUnreadCount({
+          onSuccess: function(count) {
+            // count => 所有会话总未读数。
+            console.log('所有会话总未读数'+count);
+            that.totalUnreadNum = count;
+          },
+          onError: function(error) {
+            // error => 获取总未读数错误码。
+          }
+        });
+      },
+      getConversationList: function(callback) {
+        // 获取会话列表
+        let that = this;
+        RongIMClient.getInstance().getConversationList(
+          {
+            onSuccess: function(list) {
+              // list => 会话列表集合。
+              console.log(list);
+              if (list.length > 0) {
+            //    console.log(list[0].targetId);
+                /*let newList = [];
+                list.forEach(function(item, key) {
+                  newList.push({
+                    targetId: item.targetId,
+                    targetName:
+                      item.latestMessage.messageDirection == 1
+                        ? item.latestMessage.content.extra.split(
+                        ",|"
+                        )[1]
+                        : item.latestMessage.content.extra.split(
+                        ",|"
+                        )[0]
+                  });
+                });
+                that.conversationList = newList;*/
+              }
+              if(callback){
+                callback();
+              }
+            },
+            onError: function(error) {
+              console.log(error)
+              // do something...
+            }
+          },
+          null
+        );
       },
     }
   }

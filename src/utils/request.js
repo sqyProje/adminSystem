@@ -64,7 +64,7 @@ service.interceptors.response.use(
   error => {
     console.log(error)// for debug
     if(error.response.data.status === 1005){
-      MessageBox.confirm('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
+      /*MessageBox.confirm('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
         confirmButtonText: '重新登录',
         cancelButtonText: false,
         type: 'warning'
@@ -72,6 +72,15 @@ service.interceptors.response.use(
         store.dispatch('FedLogOut').then(() => {
           location.reload()// 为了重新实例化vue-router对象 避免bug
         })
+      })*/
+      MessageBox.alert('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
+        confirmButtonText: '重新登录',
+        type: 'warning',
+        callback:action=>{
+          store.dispatch('FedLogOut').then(() => {
+            location.reload()// 为了重新实例化vue-router对象 避免bug
+          })
+        }
       })
     }
 

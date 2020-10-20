@@ -62,7 +62,7 @@
           <el-input v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='背景色'  prop="colour">
-          <el-input v-model="AddEditInfo.colour"></el-input>
+          <el-input v-model="AddEditInfo.colour" placeholder="请输入背景颜色（例如：#ff0000）"></el-input>
         </el-form-item>
         <el-form-item label ='App报表路径'  prop="reqUrl">
           <el-input v-model="AddEditInfo.reqUrl"></el-input>
@@ -73,7 +73,6 @@
         <el-form-item label ='排序'  prop="sort">
           <el-input v-model="AddEditInfo.sort"></el-input>
         </el-form-item>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">取 消</el-button>

@@ -2,13 +2,7 @@
   <div>
     <el-card class="login-form-layout">
       <div v-show="loginFormFlag">
-        <div class="refresh" @click="refreshCode" v-show="refreshFlag">
-          <div class="color-text">
-            <img :src="refresh_bg" alt="">
-            <div>请点击刷新二维码</div>
-          </div>
 
-        </div>
         <img :src="loginFormFlag&&CodeFlag==true ? code_bg : codephone" class="code" @click="handleCode">
         <div style="text-align: center">
           <svg t="1585901382243" class="icon" icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -53,24 +47,34 @@
               登录
             </el-button>
           </el-form-item>
-          <el-button style="float: left; margin-bottom: 10px;color: #9fa2a8"
-                     type="text"
-                     @click = 'registerFormFlagFun'
-          >注册账号</el-button>
-          <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
-                     type="text"
-                     @click = 'passFormFlagFun'
-          >忘记密码</el-button>
+
         </el-form>
+        <!--二维码登录-->
+        <div  class="codeinfo" v-show="!CodeFlag" style="text-align: center">
+          <div style="padding:20px;box-shadow: 0px 0px 20px 2px #ccc;display: inline-block">
+            <img :src="loginCode" alt="">
+            <div style="font-size:14px">请使用最新版手机端OA扫码</div>
+          </div>
+          <div class="refresh" @click="refreshCode" v-show="refreshFlag">
+            <div class="color-text">
+              <img :src="refresh_bg" alt="">
+              <div>请点击刷新二维码</div>
+            </div>
+          </div>
+        </div>
+        <!--二维码登录结束-->
         <!--登录结束-->
+        <el-button style="float: left; margin-bottom: 10px;color: #9fa2a8"
+                   type="text"
+                   @click = 'registerFormFlagFun'
+        >注册账号</el-button>
+        <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
+                   type="text"
+                   @click = 'passFormFlagFun'
+        >忘记密码</el-button>
       </div>
 
-       <!--二维码登录-->
-      <div  v-show="!CodeFlag" style="text-align: center">
-        <img :src="loginCode" alt="">
-        <div>请使用最新版手机端OA扫码</div>
-      </div>
-      <!--二维码登录结束-->
+
 
 
       <!--忘记密码start-->
@@ -114,7 +118,7 @@
         <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
                    type="text"
                    @click = 'passFormFlagFun'
-        >登录7</el-button>
+        >登录</el-button>
       </el-form>
       <!--忘记密码end-->
       <!--注册账号start-->
@@ -162,7 +166,7 @@
         <el-button style="float: right; margin-bottom: 10px;color: #9fa2a8"
                    type="text"
                    @click = 'registerFormFlagFun'
-        >登录6</el-button>
+        >登录</el-button>
       </el-form>
       <!--注册账号end-->
     </el-card>
@@ -477,18 +481,24 @@
     max-height: 100%;
     margin-top: 200px;
   }
+  .codeinfo{
+    position: relative;
+    width: 215px;
+    height: 230px;
+    margin:0 auto 56px;
+  }
   .refresh{
     position: absolute;
     top: 0;
     right: 0;
     background: rgba(255, 255, 255, 0.9);
     text-align: center;
-    width: 360px;
-    height: 483px;
+    width: 215px;
+    height: 230px;
     z-index: 35;
   }
   .color-text{
-    margin-top:215px;
+    margin-top:90px;
   }
   .refresh img{
     width:30px;

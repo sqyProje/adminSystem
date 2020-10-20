@@ -60,7 +60,7 @@
       </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="继续签时间" prop="continuedate">
+      <el-form-item label="续签时间" prop="continuedate">
         <el-date-picker type="date" v-model="AddEditInfo.continuedate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>

@@ -101,7 +101,7 @@
           layout="total, sizes,prev, pager, next,jumper"
           :current-page.sync="listQuery.pageNum"
           :page-size="listQuery.pageSize"
-          :page-sizes="[100,200,300]"
+          :page-sizes="[50,100,150]"
           :total="total">
         </el-pagination>
       </div>
@@ -158,7 +158,7 @@
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
         <el-form-item label ='工资表' prop="file">
-          <input type="file"  @change="handleChange($event)" />
+          <input type="file" ref="fileurl"  @change="handleChange($event)" />
           <el-input type="hidden" v-model="AddEditInfo.file"></el-input>
         </el-form-item>
       </el-form>
@@ -181,7 +181,7 @@
     realName:'',
     departName:'',
     pageNum:1,
-    pageSize:100
+    pageSize:50
   }
 
   export default {
@@ -204,7 +204,7 @@
           file:''
         },
         rulesInfo: {
-          name: [{ required: true,trigger: 'blur',message: '请选择表单名称'}],
+          name: [{ required: true,trigger: 'blur',message: '请输入表单名称'}],
           payDate:[{required: true, trigger: 'blur', message: '请选择工资年月'}],
           payStartDate:[{required: true, trigger: 'blur', message: '请选择开始核算时间'}],
           payEndDate:[{required: true, trigger: 'blur', message: '请选择结束核算时间'}],
@@ -315,11 +315,9 @@
       },
       canleDialog(){
         this.dialogVisible = false
-        this.picArray='',
-        this.fileIdsArray=[],
-        this.filePreviewInfo='',
-        this.fileString=''
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+        this.$refs.fileurl.value=''
+        this.$refs.AddEditInfo.resetFields()
       },
       ExportFun(){
         ExportModel().then(res=>{

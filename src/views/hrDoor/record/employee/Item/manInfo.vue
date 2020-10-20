@@ -40,19 +40,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="政治面貌" prop="politics">
-            <el-select
-              v-model="AddEditInfo.politics"
-              placeholder="状态"
-              @change="politicsChange"
-              style="width: 100%;">
-              <el-option
-                v-for="item in politicsData"
-                :label="item.enumValue"
-                :value="item.enumKey"
-                :key = "item.enumKey"
-              >{{item.enumValue}}</el-option>
-            </el-select>
+          <el-form-item label="短号">
+            <el-input v-model="AddEditInfo.shortPhone"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -68,7 +57,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="电子邮箱" prop="email">
@@ -83,12 +71,12 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="离职/退休/停止时间">
             <el-date-picker type="date" v-model="AddEditInfo.dimissiondate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="婚姻状况">
             <el-select
               v-model="AddEditInfo.marriage"
@@ -100,6 +88,22 @@
                 :value="item.uId"
                 :key = "item.uId"
               >{{item.name}}</el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="政治面貌" prop="politics">
+            <el-select
+              v-model="AddEditInfo.politics"
+              placeholder="状态"
+              @change="politicsChange"
+              style="width: 100%;">
+              <el-option
+                v-for="item in politicsData"
+                :label="item.enumValue"
+                :value="item.enumKey"
+                :key = "item.enumKey"
+              >{{item.enumValue}}</el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -276,6 +280,7 @@
           jobuniversity: "",
           number: "",
           phone: "",
+          shortPhone:'',
           marriage:'',
           politics: "",
           partyDate:"",
