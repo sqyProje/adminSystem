@@ -6,7 +6,7 @@
       size  = "small"  max-height="600"
       border
     >
-      <el-table-column type="expand" label="摘要" align="center">
+      <el-table-column type="expand" label="拖欠人员" align="center" width="80">
         <template slot-scope="scope">
           <div
             v-for="(item,index) in scope.row.defaultReportUserModels"
@@ -15,7 +15,7 @@
               <el-link :underline="false">拖欠人：</el-link>
               <el-link type="info" :underline="false">{{item.realName}}</el-link>&nbsp;&nbsp;&nbsp;&nbsp;
               <el-link :underline="false">拖欠天数：</el-link>
-              <el-link type="info" :underline="false">{{item.days}}</el-link>
+              <el-link type="info" :underline="false">{{item.days}}天</el-link>
             </div>
           </div>
         </template>

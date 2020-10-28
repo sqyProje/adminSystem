@@ -344,7 +344,7 @@
         this.$refs.AddEditInfo.validate(valid => {
           this.AddEditInfo.employeeId=this.$route.query.uId
           if (valid) {
-            console.log(this.AddEditInfo)
+            //console.log(this.AddEditInfo)
             EditEmployeeInfo(this.AddEditInfo).then(response=>{
               if (response.status === 0) {
                 this.submitFlag = true

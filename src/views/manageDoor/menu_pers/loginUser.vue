@@ -183,7 +183,8 @@
         rulesPhone:{
           phoneno:[{ required: true,trigger: 'blur',validator: checkphone}],
           code:[{ required: true,trigger: 'blur',message: '验证码不能为空'}]
-        }
+        },
+        auth_timetimer:''
 
       }
     },
@@ -207,6 +208,9 @@
       },
 
       canleDialog() {
+        clearInterval(this.auth_timetimer);
+        this.auth_time = 0
+        this.sendAuthCode = true
         this.dialogVisible = false
         this.PhoneDialogVisible = false
         this.passwordDialogVisible=false
@@ -231,30 +235,39 @@
       },
       getCode(){
         this.oldphoneno = this.loginUserInfo.phoneno
-        getPhoneCode(this.oldphoneno).then(response=>{
-          if(response.status === 0){
-            Message({
-              message: response.msg,
-              type: 'success',
-              duration: 3 * 1000
-            })
-            this.sendAuthCode = false;
-            this.auth_time = 180;
-            var auth_timetimer =  setInterval(()=>{
-            this.auth_time--;
-            if(this.auth_time<=0){
-              this.sendAuthCode = true;
-              clearInterval(auth_timetimer);
+        if(validmobile(this.editPhoneQuery.phoneno)){
+          getPhoneCode(this.oldphoneno).then(response=>{
+            if(response.status === 0){
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+              this.sendAuthCode = false;
+              this.auth_time = 180;
+               this.auth_timetimer =  setInterval(()=>{
+                this.auth_time--;
+                if(this.auth_time<=0){
+                  this.sendAuthCode = true;
+                  clearInterval(this.auth_timetimer);
                 }
-            }, 1000);
-          }else{
-            Message({
-              message: response.msg,
-              type: 'success',
-              duration: 3 * 1000
-            })
-          }
-        })
+              }, 1000);
+            }else{
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }
+          })
+        }else{
+          Message({
+            message: '请输入新手机号',
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
+
       },
       editPhoneFunc(){
         this.$refs.rulesPhone.validate(valid=>{

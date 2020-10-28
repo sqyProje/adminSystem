@@ -81,7 +81,12 @@
               @click="HandleWorkFlow(scope.row)">审批过程</el-button>
             <el-button
               size="mini"
-              type="error"
+              type="info"
+              v-if="scope.row.approvestatus == 60"
+              @click="HandleSubmitRepeat(scope.row)">重新提交</el-button>
+            <el-button
+              size="mini"
+              type="danger"
               v-if="scope.row.approvestatus !=10 && scope.row.approvestatus !=60 && scope.row.approvestatus !=90"
               @click="HandleRepeal(scope.row)">撤销</el-button>
           </template>
@@ -195,6 +200,9 @@
             duration: 3 * 1000
           })
         })
+      },
+      HandleSubmitRepeat(row){
+        this.$router.push({name:'sub_approve_fields',query: {u_id: row.uId,form_id: row.tableFromId,form_name:row.name}})
       }
     }
   }

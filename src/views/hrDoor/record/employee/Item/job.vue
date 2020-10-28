@@ -252,7 +252,7 @@
               })
               this.initList(this.$route.query.uId);
             })
-            .catch(error=>{console.log(error)})
+           // .catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',

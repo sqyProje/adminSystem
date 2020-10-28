@@ -71,7 +71,7 @@ export default {
   border-bottom: 1px solid #cccccc;
 }
 .content-box {
-  margin: 30px 0 0 100px;
+  margin: 30px 0 100px 100px;
 }
 .font-color {
   color: #00a0e9;

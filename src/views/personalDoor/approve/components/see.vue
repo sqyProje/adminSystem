@@ -17,12 +17,12 @@
           <td class="fieldName">
             {{imgTitle}}
           </td>
-          <td  class="fieldValues"><el-image
+          <td  class="fieldValues">
+            <el-image
             v-for="item in imgArray"
             :key="item"
             style="width: 100px; height: 100px;margin-top: 10px;"
             :src="item"
-            fit="cover"
             :preview-src-list="imgArray"
           ></el-image>
           </td>

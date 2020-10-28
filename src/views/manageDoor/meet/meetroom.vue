@@ -267,12 +267,13 @@
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+        this.$refs.AddEditInfo.clearValidate()
         this.dialogTitle = '添加'
         this.AddEditInfo.isstick=0
         this.AddEditInfo.state=0
       },
       handleEdit(row) {
+        this.$refs.AddEditInfo.clearValidate()
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '编辑'
         GetRoom(row.uId).then(response=>{
@@ -288,6 +289,7 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
+                    this.$refs.AddEditInfo.resetFields()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -301,6 +303,7 @@
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
+                  this.$refs.AddEditInfo.resetFields()
                   Message({
                     message: response.msg,
                     type: 'success',

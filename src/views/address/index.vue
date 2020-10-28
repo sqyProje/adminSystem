@@ -164,7 +164,9 @@
     } ,
     created(){
       GetDutyInfoArray().then(response=>{
-        this.dutyData.push(response.datas[0])
+        response.datas.forEach(item=>{
+          this.dutyData.push(item)
+        })
       })
       GetDepartInfoArray().then(response=>{
         response.datas.forEach(item=>{

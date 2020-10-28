@@ -179,7 +179,7 @@
       },
       UpdateUser() {
         this.AddEditInfo.filepath =  this.filePreviewInfo.substring(0, this.filePreviewInfo.length-1)
-        console.log(this.AddEditInfo.filepath)
+        //console.log(this.AddEditInfo.filepath)
         this.$refs.AddEditInfo.validate(valid => {
           this.AddEditInfo.employeeid=this.$route.query.uId
             if (valid) {

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container" shadow="never">
+    <h3 class="demo-dynamic" style="text-align: center">{{FormName}}</h3>
     <el-form
       v-if="dynamicValidateForm.domains.length>0"
       :model="dynamicValidateForm"
@@ -200,7 +201,7 @@
             @imgUrl="picPreview"
             @delUrl = "delUrlPreview"
             ref="multiImg"
-            :picArray="''"
+            :picArray="domain.fieldValue"
           ></multiUploadImg>
         <!--  <el-input v-model="domain.fieldValue" :placeholder="domain.valimessage"></el-input>-->
         </el-form-item>
@@ -217,7 +218,7 @@
             ref="fileFile"
             @file-url="FilePreview"
             @delFile = 'delFilePreview'
-            :picArray="[]">
+            :fileArray="domain.fieldValue">
           </multiUploadFile>
         </el-form-item>
       </div>
@@ -266,12 +267,13 @@
   import { Message, MessageBox } from 'element-ui'
   import multiUploadImg from '@/components/Upload/multiUploadImg'
   import multiUploadFile from '@/components/Upload/multiUploadFile'
-  import {dictionType} from '@/api/basic'
-  import {GetSubInfo,AddFormInfo,GetApproveUser} from '@/api/approve'
+  import {dictionTypePer} from '@/api/basic'
+  import {GetSubInfo,AddFormInfo,GetApproveUser,GetMyInfo} from '@/api/approve'
 
   export default {
     data(){
       return {
+        FormName:'',
         FileArray:[],
         picPreviewInfo:'',
         picIdsArray:[],
@@ -291,23 +293,25 @@
         rulesInfo: {
           UserId: [{required: true, trigger: 'blur', message: '请选择用户'}],
         },
-        submitFlag:false
+        submitFlag:false,
+        ProcessData:[]
       }
     },
     components:{
       multiUploadImg,multiUploadFile
     },
     created(){
+      this.FormName=this.$route.query.form_name
       GetSubInfo(this.$route.query.form_id)
         .then(response=>{
           response.datas.forEach((item,index)=> {
             if(item.isdrop===1){//单选
-              dictionType(item.listId).then(res=>{
+              dictionTypePer(item.listId).then(res=>{
                 this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
               })
             }
             if(item.isdrop===2){//多选
-              dictionType(item.listId).then(res=>{
+              dictionTypePer(item.listId).then(res=>{
                 this.ManyData.push({ItemData:res.datas,dId:item.listId})
               })
             }
@@ -322,13 +326,38 @@
             })
             //性别
             if(item.fieldtype===140){
-              dictionType('a09ec95d95484cd5902c5b608c51d310').then(res=>{
+              dictionTypePer('a09ec95d95484cd5902c5b608c51d310').then(res=>{
                 this.SexData=res.datas
               })
             }
           })
 
         })
+      if(this.$route.query.form_id && this.$route.query.u_id){
+        GetMyInfo(this.$route.query.u_id)
+          .then(response=>{
+            response.datas.tableFieldValueModels.forEach((item,index)=>{
+              this.ProcessData.push(item)
+
+              if(item.fieldType ===150){
+                this.picIdsArray= item.fieldValues.split(',')
+              }else if(item.fieldType === 160){
+                let Href  = decodeURIComponent(item.fieldValues)
+                this.fileIdsArray=Href.split(',')
+              }
+            })
+          }).then(()=>{
+          //console.log(this.fileIdsArray)
+          this.dynamicValidateForm.domains.filter(item=>{
+            this.ProcessData.forEach(Pinfo=>{
+              if(item.fieldname==Pinfo.fieldName){
+                item.fieldValue = Pinfo.fieldValues
+              }
+            })
+          })
+        })
+      }
+
     },
     methods:{
       FilePreview(value){ //文件
@@ -343,18 +372,19 @@
         this.fileIdsArray= this.fileIdsArray.filter((x)=>{
           return x !==value
         })
+        //console.log(this.fileIdsArray)
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 160){
             item.fieldValue = this.fileIdsArray.toString()
           }
         })
       },
-
       picPreview(value){ //图片
         this.picIdsArray.push(value)
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 150){
             item.fieldValue = this.picIdsArray.toString()
+          //  console.log(item.fieldValue)
           }
         })
       },
@@ -393,7 +423,7 @@
             tableFieldValue:item.fieldValue.toString()
           })
         })
-      //  console.log(data)
+        //console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
             GetApproveUser(data).then(response=>{

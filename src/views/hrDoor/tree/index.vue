@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <div class="container">
+    <div class="container" style="overflow: auto">
       <div class="text-center">
         <vue2-org-tree
           name="test"
@@ -123,7 +123,7 @@
     },
 
     created(){
-      console.log(this.toChildTree)
+      //console.log(this.toChildTree)
     },
     methods: {
       renderContent(h, data) {

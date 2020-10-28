@@ -235,7 +235,7 @@
         this.getDays()
       },
       selectMonth(value){
-        console.log(value)
+        //console.log(value)
         this.month = value.toString().padStart(2, '0')
         this.today = 1
         this.getDays()

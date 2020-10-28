@@ -14,7 +14,7 @@
               <div slot="content">
                {{itemChild.name}}
               </div>
-              <div class="icon-item" @click="handleViewOrder(itemChild.uId)">
+              <div class="icon-item" @click="handleViewOrder(itemChild.uId,itemChild.name)">
                 <img :src="itemChild.picpath  ? itemChild.picpath : logo"/>
                 <span>{{itemChild.name}} </span>
               </div>
@@ -43,8 +43,8 @@
           this.ListQuerys = response.datas
         })
       },
-      handleViewOrder(itemUId){
-        this.$router.push({name:'sub_approve_fields',query: {form_id: itemUId}})
+      handleViewOrder(itemUId,itemName){
+        this.$router.push({name:'sub_approve_fields',query: {form_id: itemUId,form_name:itemName}})
       },
     }
   }

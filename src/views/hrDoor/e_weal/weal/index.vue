@@ -364,7 +364,7 @@
               this.listQuery.pageNum = this.listQuery.pageNum < 1 ? 1 : currentPage;
               this.initTable()
             })
-            .catch(error=>{console.log(error)})
+            //.catch(error=>{console.log(error)})
         }).catch(() => {
           Message({
             type: 'info',

@@ -369,7 +369,7 @@
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+        this.$refs.AddEditInfo.clearValidate()
         this.dialogTitle = '添加'
         this.rcFlag= true
         this.AddEditInfo.isstick=0
@@ -379,15 +379,16 @@
       handleEdit(row) {
         this.dialogTitle = '编辑'
         this.checkFlag = true
+        this.$refs.AddEditInfo.clearValidate()
         GetMeet(row.uId).then(response=>{
           if(response.status==0){
             this.dialogVisible = !this.dialogVisible
             this.AddEditInfo = response.datas
              if(this.AddEditInfo.type==1){
-                this.rcFlag=false
+               this.rcFlag=false
                }else{
-                this.rcFlag = true
-              }
+               this.rcFlag = true
+             }
           }else{
             Message({
               message: response.msg,
@@ -416,6 +417,7 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
+                    this.$refs.AddEditInfo.resetFields()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -429,6 +431,7 @@
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
+                  this.$refs.AddEditInfo.resetFields()
                   Message({
                     message: response.msg,
                     type: 'success',
