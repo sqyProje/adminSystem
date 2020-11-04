@@ -48,7 +48,7 @@
                         fit="cover"></el-image>
             </div>
             <div v-if="item.fieldType==160">
-              <el-link :underline="false">{{item.fieldName}}：</el-link>
+              <el-link :underline="false">{{item.fieldName}} ：</el-link>
               <el-link type="info" :underline="false" v-for="(filetext,keys) in item.fieldValues.split(',')" :key="keys">
                 {{filetext.substring(50,filetext.length)}}<span v-if="keys!= item.fieldValues.split(',').length-1">，</span></el-link>
             </div>
