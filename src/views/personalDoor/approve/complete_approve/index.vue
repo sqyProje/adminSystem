@@ -2,7 +2,13 @@
   <div class="app-container">
     <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
       <el-form-item>
+        <el-input v-model="listQuery.startName" placeholder="发起人"></el-input>
+      </el-form-item>
+      <el-form-item>
         <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="listQuery.contentKey" placeholder="审批关键字"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
@@ -45,6 +51,8 @@
           </div>
         </template>
       </el-table-column>
+
+      <el-table-column label="发起人" prop="startUserName" align="center"></el-table-column>
       <el-table-column label="表单名称" prop="approveName" align="center"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">

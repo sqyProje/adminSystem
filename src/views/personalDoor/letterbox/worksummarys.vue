@@ -14,12 +14,11 @@
     </div>
     <div class="my-Report">
       <el-table
-      border
-        :row-style="{height:'36px'}"
-        :header-row-style="{height:'36px'}"
-        :cell-style="{padding:'2px',}"
+        class="basetreetable"
         :header-cell-style="{ background: '#3C82FE',color:'#FFFFFF',}"
         :data="myReport"
+        size="small"
+        max-height="600"
         style="width: 100%"
       >
         <el-table-column prop="title" label="标题"></el-table-column>

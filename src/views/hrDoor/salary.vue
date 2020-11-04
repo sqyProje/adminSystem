@@ -67,29 +67,25 @@
         <el-table-column label="编号" prop="number"></el-table-column>
         <el-table-column label="部门" prop="departname"></el-table-column>
         <el-table-column label="姓名" prop="realname"></el-table-column>
-        <el-table-column label="岗位工资" prop="stationPay"></el-table-column>
-        <el-table-column label="薪级工资" prop="gradePay"></el-table-column>
-        <el-table-column label="护士津贴" prop="nurseSubsidy"></el-table-column>
-        <el-table-column label="津贴" prop="subsidy"></el-table-column>
-        <el-table-column label="职务" width="88" prop="dutySubsidy"></el-table-column>
-        <el-table-column label="独生" width="55" prop="aloneSubsidy"></el-table-column>
-        <el-table-column label="医疗和卫生" width="88" prop="healthSubsidy"></el-table-column>
-        <el-table-column label="其他" prop="otherSubsidy"></el-table-column>
-        <el-table-column label="养老保险" prop="oldInsurance"></el-table-column>
-        <el-table-column label="医疗保险" prop="medicalInsurance"></el-table-column>
-        <el-table-column label="失业保险" prop="workInsurance"></el-table-column>
-        <el-table-column label="公积金" prop="saveFunds"></el-table-column>
-        <el-table-column label="大病救助" prop="bigIllHelp"></el-table-column>
-        <el-table-column label="其他扣除" prop="otherDeduct"></el-table-column>
+        <el-table-column label="薪资月份" prop="salarydate"></el-table-column>
+        <el-table-column label="创建时间" prop="createdate"></el-table-column>
         <el-table-column label="扣款合计" prop="deductTotal"></el-table-column>
-        <el-table-column label="应发合计" fixed="right" >
+        <el-table-column label="应发合计"  >
           <template slot-scope="scope">
             {{scope.row.salaryTotal}}
           </template>
         </el-table-column>
-        <el-table-column label="实发合计"   fixed="right">
+        <el-table-column label="实发合计" >
           <template slot-scope="scope">
             {{scope.row.salaryPay}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleEdit(scope.row)">薪资清单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -107,6 +103,38 @@
       </div>
     </div>
     </el-col>
+    <el-dialog
+      title='薪资清单'
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="detailsVisible"
+      width="23%">
+      <div>
+        <div>
+          <h4>扣除款项明细：</h4>
+          <p>大病救助：{{DeatailSalary.bigIllHelp}}</p>
+          <p>医疗保险：{{DeatailSalary.medicalInsurance}}</p>
+          <p>养老保险：{{DeatailSalary.oldInsurance}}</p>
+          <p>其他扣除：{{DeatailSalary.otherDeduct}}</p>
+          <p>公积金：{{DeatailSalary.saveFunds}}</p>
+          <p>失业保险：{{DeatailSalary.workInsurance}}</p>
+        </div>
+        <div>
+          <h4>应发工资明细：</h4>
+          <p>独生：{{DeatailSalary.aloneSubsidy}}</p>
+          <p>职务：{{DeatailSalary.dutySubsidy}}</p>
+          <p>薪级工资：{{DeatailSalary.gradePay}}</p>
+          <p>医疗和卫生：{{DeatailSalary.healthSubsidy}}</p>
+          <p>护士津贴：{{DeatailSalary.nurseSubsidy}}</p>
+          <p>其他：{{DeatailSalary.otherSubsidy}}</p>
+          <p>岗位工资：{{DeatailSalary.stationPay}}</p>
+          <p>津贴：{{DeatailSalary.subsidy}}</p>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary"  @click="detailsVisible=!detailsVisible">关闭</el-button>
+      </span>
+    </el-dialog>
     <el-dialog
       title="导入工资表"
       :close-on-click-modal="false"      :show-close="false"
@@ -195,6 +223,8 @@
         payData:[],
         departData:[],
         dialogVisible: false,
+        detailsVisible:false,
+        DeatailSalary:{},
         AddEditInfo:{
           payDate:'',
           payStartDate:'',
@@ -336,6 +366,10 @@
           this.listQuery.departName = payload.Name
         }
         this.initTable(this.listQuery);
+      },
+      handleEdit(row){
+        this.DeatailSalary=row
+        this.detailsVisible = !this.detailsVisible
       }
 
     }

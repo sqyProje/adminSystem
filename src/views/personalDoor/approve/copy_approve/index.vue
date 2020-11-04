@@ -5,6 +5,12 @@
         <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
       </el-form-item>
       <el-form-item>
+        <el-input v-model="listQuery.startName" placeholder="发起人姓名"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="listQuery.contentKey" placeholder="审批关键字"></el-input>
+      </el-form-item>
+      <el-form-item>
         <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
         <el-button
           type="warning"
@@ -45,6 +51,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="发起人" prop="startUserName" align="center"></el-table-column>
       <el-table-column label="表单名称" prop="approveName" align="center"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
@@ -53,7 +60,6 @@
       </el-table-column>
       <el-table-column label="审批创建时间" prop="approveCreateDate" align="center"></el-table-column>
       <el-table-column label="审批结束时间" prop="approveEndDate" align="center"></el-table-column>
-      <el-table-column label="发起用户名" prop="startUserName" align="center"></el-table-column>
       <el-table-column label="审批人" prop="approveUserName" align="center"></el-table-column>
       <el-table-column label="操作" fixed="right"  width="400" align="center">
         <template slot-scope="scope">
@@ -92,6 +98,8 @@
   import {InitCopyList} from '@/api/approve'
   const defaultListQuery = {
     name:'',
+    startName:'',
+    contentKey:'',
     pageNum:1,
     pageSize:10
   }

@@ -160,6 +160,7 @@
         </el-form-item>
         <el-form-item label ='选择用户' prop="userString">
           <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
+          <el-input type="hidden" v-model="AddEditInfo.userString"></el-input>
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="8">
@@ -369,7 +370,7 @@
       },
       handleAdd(row){
         this.dialogVisible = !this.dialogVisible
-        this.$refs.AddEditInfo.clearValidate()
+        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
         this.rcFlag= true
         this.AddEditInfo.isstick=0
@@ -379,7 +380,6 @@
       handleEdit(row) {
         this.dialogTitle = '编辑'
         this.checkFlag = true
-        this.$refs.AddEditInfo.clearValidate()
         GetMeet(row.uId).then(response=>{
           if(response.status==0){
             this.dialogVisible = !this.dialogVisible
@@ -408,7 +408,7 @@
       UpdateUser(){
         this.AddEditInfo.userString = this.userIds.toString()
         this.AddEditInfo.userIds = this.userIds
-        console.log(this.AddEditInfo)
+      //  console.log(this.$refs.AddEditInfo.validate())
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -417,7 +417,6 @@
                   this.dialogVisible = false
                   if (response.status === 0) {
                     this.initTable();
-                    this.$refs.AddEditInfo.resetFields()
                     Message({
                       message: response.msg,
                       type: 'success',
@@ -431,7 +430,6 @@
                 if (response.status === 0) {
                   this.dialogVisible = false
                   this.initTable();
-                  this.$refs.AddEditInfo.resetFields()
                   Message({
                     message: response.msg,
                     type: 'success',

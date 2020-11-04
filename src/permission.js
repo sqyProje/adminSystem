@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
           //  next({path:fromPath})
           })
           store.dispatch('GetLoginUserInfo').then(res => {
-            console.log(4)
+          //  console.log(4)
           })
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {

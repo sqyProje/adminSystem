@@ -5,7 +5,7 @@
         <div slot="header" class="clearfix">
           <span>{{item.name}}</span>
         </div>
-        <div style="margin-bottom:50px;"  class="clearfix">
+        <div class="clearfix">
           <el-col
             :span="2" class="text-center"
             v-for = 'itemChild in item.tableFormSubModels'

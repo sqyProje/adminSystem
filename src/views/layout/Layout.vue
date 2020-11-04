@@ -1,5 +1,5 @@
 <template>
-  <div  :class="classObj" class="app-wrapper">
+  <div  class="app-wrapper"><!-- :class="classObj"-->
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container"></sidebar>
     <div :class="{hasTagsView:needTagsView}"  class="main-container">
@@ -22,7 +22,7 @@
 <script>
 import RightPanel from '@/components/RightPanel'
 import { Navbar, Sidebar, AppMain, TagsView, Settings} from './components'
-import ResizeMixin from './mixin/ResizeHandler'
+//import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'layout',
@@ -34,7 +34,7 @@ export default {
     RightPanel,
     Settings
   },
-  mixins: [ResizeMixin],
+ // mixins: [ResizeMixin],
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
@@ -51,13 +51,13 @@ export default {
     showSettings() {
       return this.$store.state.settings.showSettings
     },
-    classObj() {
+    /*classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
-    }
+    }*/
   }
 }
 </script>

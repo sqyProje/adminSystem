@@ -128,3 +128,12 @@ export function InitCopyList(params) {
     params: params
   })
 }
+
+//抄送我的
+export function InitRelevanceList(params) {
+  return request({
+    url: '/relevance_approve/list',
+    method: 'get',
+    params: params
+  })
+}

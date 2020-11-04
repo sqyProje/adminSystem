@@ -205,7 +205,6 @@
                     })
                   }
                 })
-
             } else {
               EditAppRole(this.roleInfo).then(response => {
                 if (response.status === 0) {

@@ -6,6 +6,9 @@
           <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
         </el-form-item>
         <el-form-item>
+          <el-input v-model="listQuery.contentKey" placeholder="审批关键字"></el-input>
+        </el-form-item>
+        <el-form-item>
           <el-select v-model="listQuery.approveStatus" placeholder="审批状态">
             <el-option value="" label="全部">全部</el-option>
             <el-option
@@ -59,8 +62,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="表单名称" prop="name" align="center"></el-table-column>
         <el-table-column label="发起人" prop="startUserName" align="center"></el-table-column>
+        <el-table-column label="表单名称" prop="name" align="center"></el-table-column>
         <el-table-column label="状态" prop="approvestatus" align="center">
           <template slot-scope="scope">
 
@@ -113,6 +116,7 @@
   import {InitMyList,repeal} from '@/api/approve'
   const defaultListQuery = {
     name: '',
+    contentKey:'',
     approveStatus:'',
     pageNum:1,
     pageSize:10

@@ -40,6 +40,13 @@ export function dictionType(params) {
     method: 'get',
   })
 }
+//门户字典
+export function dictionTypePer(params) {
+  return request({
+    url: '/diction/findByParentId?parentId='+params,
+    method: 'get',
+  })
+}
 //枚举方法
 export function enumeration(urlInfo) {
   return request({

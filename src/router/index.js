@@ -162,6 +162,13 @@ export const asyncRouterMap = [
             name:'copy_approve',
             component:()=>import('@/views/personalDoor/approve/copy_approve'),
             meta:{title:'抄送我的',noCache: true}
+          },
+
+          {
+            path:'relevance_approve',
+            name:'relevance_approve',
+            component:()=>import('@/views/personalDoor/approve/relevance_approve'),
+            meta:{title:'抄送我的',noCache: true}
           }
         ]
       },

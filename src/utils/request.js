@@ -16,7 +16,7 @@ service.interceptors.request.use(config => {
   return config
 }, error => {
   // Do something with request error
-  console.log(error) // for debug
+  //console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -62,7 +62,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error)// for debug
+   // console.log(error)// for debug
     if(error.response.data.status === 1005){
       /*MessageBox.confirm('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
         confirmButtonText: '重新登录',
