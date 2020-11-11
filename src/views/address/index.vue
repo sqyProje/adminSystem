@@ -5,7 +5,7 @@
         <el-col :span="24">
           <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
             <el-form-item>
-              <el-input v-model="listQuery.realName" placeholder="姓名"></el-input>
+              <el-input v-model="listQuery.realName" placeholder="姓名2"></el-input>
             </el-form-item>
             <el-form-item>
               <el-select
