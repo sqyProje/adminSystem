@@ -16,7 +16,7 @@
     <el-input v-model="AddEditInfo.company"></el-input>
   </el-form-item>
   <el-row :gutter="20">
-    <el-col :span="8">
+    <el-col :span="9">
       <el-form-item label="合同类型" prop="type">
         <el-select v-model="AddEditInfo.type" placeholder="合同类型" style="width: 100%;">
           <el-option
@@ -40,9 +40,9 @@
         </el-select>
       </el-form-item>
     </el-col>
-    <el-col :span="8">
+    <el-col :span="7">
       <el-form-item label="是否续签" prop="isContinue">
-        <el-select v-model="AddEditInfo.isContinue" placeholder="合同状态" style="width: 100%;">
+        <el-select v-model="AddEditInfo.isContinue" placeholder="合同状态" style="width: 100%;" @change="ContinueChange">
           <el-option
             v-for="item in stateData"
             :label="item.Continuename"
@@ -59,21 +59,9 @@
         <el-date-picker type="date" v-model="AddEditInfo.enddate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
       </el-form-item>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="12" v-if="ContinueFlag">
       <el-form-item label="续签时间" prop="continuedate">
         <el-date-picker type="date" v-model="AddEditInfo.continuedate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
-      </el-form-item>
-    </el-col>
-  </el-row>
-  <el-row :gutter="20">
-    <el-col :span="12">
-      <el-form-item label="创建时间">
-        <el-input v-model="AddEditInfo.createdate" :disabled="true"></el-input>
-      </el-form-item>
-    </el-col>
-    <el-col :span="12">
-      <el-form-item label="更新时间" >
-        <el-input v-model="AddEditInfo.updatedate" :disabled="true"></el-input>
       </el-form-item>
     </el-col>
   </el-row>
@@ -132,19 +120,21 @@
           state	:[{ required: true,trigger: 'blur',message: '请输入合同状态'}]
         },
         typeData:[
-          { id: 0, name: '劳务合同'},
-          { id: 1, name: '劳务派遣合同'},
+          { id: 0, name: '聘用合同'},
+          { id: 1, name: '退休人员返聘协议'},
+          { id: 2, name: '外聘专家聘用协议'}
         ],
         stateData:[
-          { id: 0, name: '有效',Continuename:'是'},
-          { id: 1, name: '解除',Continuename:'否'},
+          { id: 0, name: '解除',Continuename:'否'},
+          { id: 1, name: '有效',Continuename:'是'},
         ],
         submitFlag:false,
         picArray:'',
         fileFlag:false,
         fileIdsArray:[],
         filePreviewInfo:'',
-        fileString:''
+        fileString:'',
+        ContinueFlag:false
       };
     },
     components:{
@@ -175,6 +165,7 @@
           this.picArray = response.datas.filepath;
           this.filePreviewInfo = response.datas.filepath+','
           this.fileIdsArray = response.datas.filepath.split(',')
+          this.ContinueFlag = this.AddEditInfo.isContinue ? true:false
         })
       },
       UpdateUser() {
@@ -206,7 +197,13 @@
             }
         })
       },
-
+      ContinueChange(value){
+        if(value){
+          this.ContinueFlag=true
+        }else{
+          this.ContinueFlag=false
+        }
+      }
     }
   };
 </script>

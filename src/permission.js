@@ -24,8 +24,12 @@ router.beforeEach((to, from, next) => {
           //  next({path:fromPath})
           })
           store.dispatch('GetLoginUserInfo').then(res => {
-          //  console.log(4)
+            //  console.log(4)
           })
+          store.dispatch('taskAlertInfo').then(res => {
+            //  console.log(4)
+          })
+
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')

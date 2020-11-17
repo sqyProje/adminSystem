@@ -148,4 +148,10 @@ export function handQRCode(params){
     type:'get',
   })
 }
-
+//人事信息过期
+export function taskAlert() {
+  return request({
+    url:'/taskAlert/counts',
+    type:'get'
+  })
+}

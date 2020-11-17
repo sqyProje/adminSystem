@@ -1,5 +1,6 @@
 <template>
-<el-form ref="AddEditInfo" :model="AddEditInfo" :rules="rulesInfo" label-width="150px" size="mini">
+  <div>
+    <el-form ref="AddEditInfo" :model="AddEditInfo" :rules="rulesInfo" label-width="150px" size="mini">
   <div class="box-card">
     <div class="header">
       <span>基本信息</span>
@@ -129,6 +130,52 @@
       <el-form-item label="特长">
         <el-input type="textarea" v-model="AddEditInfo.evaluate"></el-input>
       </el-form-item>
+      <el-row :gutter="20" v-if="!TryFlag">
+        <el-col :span="12">
+          <el-form-item label="是否试用期满时间">
+            <el-select
+              v-model="AddEditInfo.tryTimeState"
+              placeholder="是否试用期满时间"
+              @change="tryState"
+              style="width: 100%;">
+              <el-option
+                v-for="item in TryData"
+                :label="item.name"
+                :value="item.id"
+                :key = "item.id"
+              >{{item.name}}</el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="试用期满时间">
+            <el-date-picker type="date" v-model="AddEditInfo.tryTime" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" v-if="TryFlag">
+        <el-col :span="12">
+          <el-form-item label="是否需转正定级">
+            <el-select
+              v-model="AddEditInfo.toOfficialTimeState"
+              placeholder="是否需转正定级"
+              @change="toState"
+              style="width: 100%;">
+              <el-option
+                v-for="item in TryData"
+                :label="item.name"
+                :value="item.id"
+                :key = "item.id"
+              >{{item.name}}</el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12"><!---->
+          <el-form-item label="转正定级时间"  :disabled="TryFlag && ToTimeFlag ? disabled :false">
+            <el-date-picker type="date" v-model="AddEditInfo.toOfficialTime"  value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </div>
     <div class="header">
       <span>职称/执业</span>
@@ -206,7 +253,7 @@
       </el-row>
     </div>
     <div class="header">
-      <span>在职教育信息</span>
+      <span>在职教育信息</span><el-link type="primary" @click="moreJob">更多</el-link>
     </div>
     <div>
       <el-row :gutter="20">
@@ -237,12 +284,25 @@
     <el-button type="primary" @click="UpdateUser" :disabled="submitFlag">提交</el-button>
   </el-form-item>
 </el-form>
+    <el-dialog
+      title="添加在职教育信息"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="moreFlag"
+      width="31%">
+      <more-job :moreJobData="moreJobData"  @updateInfo="updateInfo"></more-job>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" type="" @click="moreFlag=false">关闭</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script>
   import {Message,MessageBox} from 'element-ui'
   import {validmobile,validEmail} from '@/utils/validate'
   import {enumeration,dictionType} from '@/api/basic'
   import {GetEmployeeInfo,EditEmployeeInfo} from '@/api/personnel'
+  import moreJob from './morejob'
   export default {
     data() {
       const checkphone = (rule, value, callback) => {
@@ -295,7 +355,11 @@
           operationType:"",
           operationState:"",
           operationProfession:"",
-          operationDate:""
+          operationDate:"",
+          toOfficialTime: '',
+          toOfficialTimeState: '',
+          tryTime: '',
+          tryTimeState: ''
         },
         rulesInfo: {
           number: [{ required: true,trigger: 'blur',message: '请输入编号'}],
@@ -315,7 +379,13 @@
         politicsData:[],
         propertyData:[],
         marriageData:[],
-        submitFlag:false
+        submitFlag:false,
+        TryData:[{id:0,name:'否'}, {id:1,name:'是'}],
+        TryFlag:false,
+        ToTimeFlag:true,
+        moreFlag:false,
+        moreJobData:[],
+        oneJobData:{}
       };
     },
     mounted(){
@@ -331,13 +401,31 @@
       this.getInfo(this.$route.query.uId)
 
     },
+    components:{moreJob},
     methods: {
       getInfo(uId){
         GetEmployeeInfo(uId).then(response=>{
-          this.AddEditInfo = response.datas==null ? this.AddEditInfo={} :  response.datas
-          if(this.AddEditInfo.property==10){
-            this.propertyFlag=true
+          this.moreJobData = response.datas.e_jobEducations
+          if(response.datas.employeeInfo==null){
+            this.AddEditInfo={}
+          }else{
+            this.AddEditInfo = response.datas.employeeInfo
+            ///试用期未满
+            if(this.AddEditInfo.tryTimeState){
+              this.TryFlag = true
+            }else{
+              this.TryFlag = false
+            }
+            if (this.AddEditInfo.toOfficialTimeState) {
+              this.ToTimeFlag = true
+            } else {
+              this.ToTimeFlag = false
+            }
+            if(this.AddEditInfo.property==10){
+              this.propertyFlag=true
+            }
           }
+
         })
       },
       UpdateUser() {
@@ -379,14 +467,32 @@
           this.AddEditInfo.partyDuty = ''
         }
       },
-
+      tryState(value) {
+        if (value) {
+          this.TryFlag = true
+        } else {
+          this.TryFlag = false
+        }
+      },
+      toState(value){
+        if (value) {
+          this.ToTimeFlag = true
+        } else {
+          this.ToTimeFlag = false
+        }
+      },
+      moreJob(){
+        this.moreFlag=true
+      },
+      updateInfo(){
+        this.getInfo(this.$route.query.uId)
+      }
     }
   };
 </script>
 <style>
   .header{
     padding-bottom: 10px;
-
     margin-bottom: 10px;
     border-bottom: 1px solid #eeeeee;
   }

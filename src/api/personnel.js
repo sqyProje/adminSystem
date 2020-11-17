@@ -557,3 +557,26 @@ export function yearCheckExport() {
   })
 }
 
+//更多在职教育信息
+export function addEJob(params) {
+  return request({
+    url: '/employeeInfo/addEJob',
+    method: 'post',
+    data: params
+  })
+}
+export function editEJob(params) {
+  return request({
+    url: '/employeeInfo/editEJob',
+    method: 'post',
+    data: params
+  })
+}
+//editEJob
+//删除
+export function deleteJob(params) {
+  return request({
+    url: '/employeeInfo/deleteJob?uId='+params,
+    method: 'post',
+  })
+}

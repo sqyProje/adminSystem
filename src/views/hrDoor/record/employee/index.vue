@@ -8,10 +8,10 @@
     <el-col :xs="16" :sm="18" :md="21">
       <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item>
+        <el-form-item v-if="!dateInfo">
           <el-input v-model="listQuery.realName" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="!dateInfo">
           <el-select
             v-model="listQuery.stationId"
             placeholder="岗位名称"
@@ -25,7 +25,7 @@
             >{{item.name}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="!dateInfo">
           <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
           <el-button
             type="warning"
@@ -33,6 +33,22 @@
             size="small">
             重置
           </el-button>
+        </el-form-item>
+        <el-form-item v-if="dateInfo">
+          <el-select
+            v-model="listQuery.type"
+            placeholder="有责日期状态"
+            style="width: 100%;">
+            <el-option
+              v-for="item in typeData"
+              :label="item.display_name"
+              :value="item.id"
+              :key = "item.id"
+            >{{item.display_name}}</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="dateInfo">
+          <el-button type="primary" @click="onSearchListDate"  size="small">有责日期查询</el-button>
         </el-form-item>
         <el-col>
           <el-form-item>
@@ -54,8 +70,6 @@
         class="basetreetable"
         :data="tableData"
         v-loading="listLoading"
-        row-key="uId"
-        :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"
         max-height="600"
       >
@@ -261,6 +275,7 @@
     realName: '',
     departId:'',
     stationId:'',
+    type:'',
     pageNum:1,
     pageSize:10
   }
@@ -296,6 +311,12 @@
           { id: 1, display_name: '离职'},
           { id: 2, display_name: '退休'}
         ],
+        typeData:[
+          { id: '1', display_name: '试用期'},
+          { id: '2', display_name: '转正'},
+          { id: '3', display_name: '身份证'},
+          { id: '4', display_name: '合同'}
+        ],
         departData:[],
         dutyData:[],
         stationData:[],
@@ -312,14 +333,19 @@
           officedate:[{ required: true,trigger: 'blur',message: '请选择任职时间'}],
           jobstate:[{required: true, trigger: 'blur', message: '请选择在职状态'}],
         },
-        wealName:'',
+        wealName:''
       }
     } ,
     components:{
       singleUpload,SearchTree,stationmove
     },
+    computed:{
+      dateInfo(){
+       return this.$route.query.bool
+     },
+    },
     created(){
-      this.initTable();
+      //console.log(1)
       this.departFu()
       this.dutyFu()
       GetStationDrop().then(response=>{
@@ -328,6 +354,26 @@
       userDrop().then(response=>{
         this.userIdData = response.datas
       })
+    },
+    watch:{
+      $route: {
+        handler() {
+          if(this.$route.query.keyvalue) {
+            //console.log(typeof(this.$route.query.keyvalue) )
+            const queryvalue=this.$route.query.keyvalue
+           this.listQuery.type = queryvalue
+            this.initTable();
+            //深度监听，同时也可监听到param参数变化
+          }else{
+//            console.log(2)
+            this.listQuery.type = ''
+            this.initTable();
+          }
+        },
+        deep: true,
+        immediate:true
+      }
+
     },
     methods: {
       picFun(data){
@@ -353,6 +399,9 @@
 
       },
       onSearchList() {
+        this.initTable()
+      },
+      onSearchListDate(){
         this.initTable()
       },
       initTable() {
@@ -466,7 +515,7 @@
         this.stationFlag = false
       },
       handleViewOrder(row){
-        this.$router.push({name:'detail',query: {uId: row.uId}})
+        this.$router.push({name:'detail',query: {uId: row.uId,bool:this.$route.query.bool,keyvalue:this.$route.query.keyvalue}})
       },
       stationTrigger(val){
         this.AddEditInfo.stationname = val ? this.stationData.find(ele => ele.uId === val).name : ''

@@ -11,6 +11,7 @@
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
+      <person-date v-if="dateInfo"></person-date>
       <div class="footer">
          河南健康奇点网络科技有限公司 | 地址：河南省郑州市郑东新区木华广场3号楼A座601室 | 电话：0371-88917172 | 豫ICP备19022191号-1
         &copy;   2020<a href="http://hnjkqd.com/" target="_blank" style="color: #00a0e9">hnjkqd.com</a>版权所有
@@ -21,7 +22,7 @@
 
 <script>
 import RightPanel from '@/components/RightPanel'
-import { Navbar, Sidebar, AppMain, TagsView, Settings} from './components'
+import { Navbar, Sidebar, AppMain, TagsView, Settings, PersonDate} from './components'
 //import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -32,7 +33,8 @@ export default {
     AppMain,
     TagsView,
     RightPanel,
-    Settings
+    Settings,
+    PersonDate
   },
  // mixins: [ResizeMixin],
   computed: {
@@ -50,6 +52,9 @@ export default {
     },
     showSettings() {
       return this.$store.state.settings.showSettings
+    },
+    dateInfo(){
+      return this.$store.state.user.dateInfo.bool
     },
     /*classObj() {
       return {

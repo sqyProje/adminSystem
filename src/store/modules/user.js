@@ -1,4 +1,4 @@
-import { login, logout, getLeftMenuInfo, getLoginUserInfo, shiftToken } from '@/api/login'
+import { login, logout, getLeftMenuInfo, getLoginUserInfo, shiftToken,taskAlert } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
 
@@ -11,7 +11,8 @@ const user = {
     avatar: '',
     roles: [],
     loginUserInfo: {},
-    btnPermission: []
+    btnPermission: [],
+    dateInfo:{}
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -31,6 +32,9 @@ const user = {
     },
     SET_BUTTON: (state, btnPermission) => {
       state.btnPermission = btnPermission
+    },
+    SET_DATEINFO:(state,DateInfo)=>{
+      state.dateInfo = DateInfo
     }
   },
   actions: {
@@ -82,7 +86,17 @@ const user = {
         })
       })
     },
-
+    //获取人事信息过期数据
+    taskAlertInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        taskAlert().then(response => {
+          const data = response.datas
+          commit('SET_DATEINFO', data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
