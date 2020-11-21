@@ -8,9 +8,9 @@ import {getCookie} from '@/utils/support';
 const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
-
   if (localStorage.getItem('loginToken')) {
     if (to.path === '/login') {
+     // next()
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
@@ -19,16 +19,13 @@ router.beforeEach((to, from, next) => {
         store.dispatch('GetLeftMenuInfo').then(res => { // 拉取左侧菜单信息*/
           let menus=res.datas.menuModels;
           store.dispatch('GenerateRoutes', { menus }).then(() => { // 生成可访问的路由表
+            store.dispatch('GetLoginUserInfo')
+            store.dispatch('taskAlertInfo')
             router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表
             next({ ...to, replace: true })
-          //  next({path:fromPath})
+          //  next({path:from})
           })
-          store.dispatch('GetLoginUserInfo').then(res => {
-            //  console.log(4)
-          })
-          store.dispatch('taskAlertInfo').then(res => {
-            //  console.log(4)
-          })
+
 
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {

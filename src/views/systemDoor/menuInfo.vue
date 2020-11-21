@@ -112,7 +112,7 @@
           size="mini"
           :model="FirstMenuInfo"
           label-width="100px"
-          ref="menuInfo"
+          ref="FirstMenuInfo"
           :rules ="rulesInfo"
         >
           <el-form-item label ='名称'  prop="name">

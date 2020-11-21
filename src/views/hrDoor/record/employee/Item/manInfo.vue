@@ -66,7 +66,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="参加工作时间" prop="jobdate">
-            <el-date-picker type="date" v-model="AddEditInfo.jobdate" value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.jobdate" value-format="yyyy-MM-dd" placeholder="格式：yyyy-MM-dd" style="width: 100%;"></el-date-picker>
           </el-form-item>
 
         </el-col>
@@ -132,10 +132,10 @@
       </el-form-item>
       <el-row :gutter="20" v-if="!TryFlag">
         <el-col :span="12">
-          <el-form-item label="是否试用期满时间">
+          <el-form-item label="是否试用期满">
             <el-select
               v-model="AddEditInfo.tryTimeState"
-              placeholder="是否试用期满时间"
+              placeholder="是否试用期满"
               @change="tryState"
               style="width: 100%;">
               <el-option
@@ -172,7 +172,7 @@
         </el-col>
         <el-col :span="12"><!---->
           <el-form-item label="转正定级时间"  :disabled="TryFlag && ToTimeFlag ? disabled :false">
-            <el-date-picker type="date" v-model="AddEditInfo.toOfficialTime"  value-format="yyyy-MM-dd"  :editable="false" style="width: 100%;"></el-date-picker>
+            <el-date-picker type="date" v-model="AddEditInfo.toOfficialTime"  value-format="yyyy-MM-dd" placeholder="格式：yyyy-MM-dd"  style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -367,7 +367,7 @@
           familyaddress:[{ required: true,trigger: 'blur',message: '请输入家庭住址'}],
           phone:[{ required: true,trigger: 'blur', validator: checkphone,message: '请输入联系电话'}],
           politics:[{ required: true,trigger: 'blur',message: '请输入政治面貌'}],
-          jobdate:[{ required: true,trigger: 'blur',message: '请输入参加工作时间'}],
+          jobdate:[{ required: true,trigger: 'blur',message: '请输入参加工作时间 格式：yyyy-MM-dd'}],
           alleducation:[{ required: true,trigger: 'blur',message: '请输入全日制学历'}],
           allfinishdate:[{ required: true,trigger: 'blur',message: '请输入全日制毕业时间'}],
           alluniversity:[{ required: true,trigger: 'blur',message: '请输入全日制毕业院校'}],

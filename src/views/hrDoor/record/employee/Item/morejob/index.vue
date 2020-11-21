@@ -97,8 +97,6 @@
     },
     watch:{
       'moreJobData'(){
-        console.log('++++++')
-        console.log(this.moreJobData)
         this.form.dynamicItem=this.moreJobData
       }
     },
@@ -106,7 +104,7 @@
       addItem () {
         if(this.form.dynamicItem.length>=5){
           Message({
-            message: '在职教育信息暂时为三条',
+            message: '在职教育信息暂时为五条',
             type: 'danger',
             duration: 3 * 1000
           })

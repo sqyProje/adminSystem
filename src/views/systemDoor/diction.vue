@@ -138,6 +138,7 @@
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
+        listLoading:false,
         dialogTitle:'',
         dialogVisible: false,
         AddEditInfo:{

@@ -308,8 +308,10 @@
         },
         stateData:[
           { id: 0, display_name: '在职'},
-          { id: 1, display_name: '离职'},
-          { id: 2, display_name: '退休'}
+          { id: 1, display_name: '辞职'},
+          { id: 2, display_name: '退休'},
+          { id: 3, display_name: '停薪留职'},
+          { id: 4, display_name: '死亡'}
         ],
         typeData:[
           { id: '1', display_name: '试用期'},
@@ -358,14 +360,16 @@
     watch:{
       $route: {
         handler() {
+
           if(this.$route.query.keyvalue) {
-            //console.log(typeof(this.$route.query.keyvalue) )
+          //  console.log(typeof(this.$route.query.keyvalue) )
             const queryvalue=this.$route.query.keyvalue
-           this.listQuery.type = queryvalue
+            this.listQuery.type = queryvalue
             this.initTable();
             //深度监听，同时也可监听到param参数变化
           }else{
-//            console.log(2)
+          //  console.log(2)
+          //  this.listQuery.pageNum = this.$route.query.pageNum
             this.listQuery.type = ''
             this.initTable();
           }
@@ -425,7 +429,7 @@
         this.listQuery.pageNum = val;
         this.initTable();
       },
-      handleAdd(row){
+      handleAdd(){
         this.dialogVisible = !this.dialogVisible
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.dialogTitle = '添加'
@@ -516,6 +520,7 @@
       },
       handleViewOrder(row){
         this.$router.push({name:'detail',query: {uId: row.uId,bool:this.$route.query.bool,keyvalue:this.$route.query.keyvalue}})
+        //,pageNum:this.listQuery.pageNum
       },
       stationTrigger(val){
         this.AddEditInfo.stationname = val ? this.stationData.find(ele => ele.uId === val).name : ''

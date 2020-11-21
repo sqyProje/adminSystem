@@ -43,10 +43,7 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.code).then(response => {
-
-
           localStorage.setItem("loginToken", response.datas)
-
           resolve()
         }).catch(error => {
           reject(error)

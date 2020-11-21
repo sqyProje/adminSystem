@@ -137,6 +137,17 @@
         }
       }
     }
+    .fixed-header{
+      position: fixed;
+      top:0;
+      right:0;
+      z-index:9;
+      width: calc(100% - 54px);
+      transition: width 0.28s
+    }
+    .footer{
+      width: calc(100% - 54px);
+    }
   }
 
   .el-menu--collapse .el-menu .el-submenu {

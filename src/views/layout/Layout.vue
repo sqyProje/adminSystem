@@ -1,5 +1,5 @@
 <template>
-  <div  class="app-wrapper"><!-- :class="classObj"-->
+  <div  class="app-wrapper" :class="classObj"><!-- -->
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container"></sidebar>
     <div :class="{hasTagsView:needTagsView}"  class="main-container">
@@ -14,7 +14,7 @@
       <person-date v-if="dateInfo"></person-date>
       <div class="footer">
          河南健康奇点网络科技有限公司 | 地址：河南省郑州市郑东新区木华广场3号楼A座601室 | 电话：0371-88917172 | 豫ICP备19022191号-1
-        &copy;   2020<a href="http://hnjkqd.com/" target="_blank" style="color: #00a0e9">hnjkqd.com</a>版权所有
+        &copy;   {{getFullYear}}<a href="http://hnjkqd.com/" target="_blank" style="color: #00a0e9">hnjkqd.com</a>版权所有
       </div>
     </div>
   </div>
@@ -56,13 +56,17 @@ export default {
     dateInfo(){
       return this.$store.state.user.dateInfo.bool
     },
-    /*classObj() {
+    classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
-    }*/
+    },
+    getFullYear(){
+      let myDate= new Date()
+      return myDate.getFullYear()
+    }
   }
 }
 </script>

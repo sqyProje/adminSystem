@@ -28,6 +28,7 @@
     methods:{
       prev(){
         this.$router.push({name:'employee',query:{uId: this.$route.query.uId,bool:this.$route.query.bool,keyvalue:this.$route.query.keyvalue}})
+        //,pageNum:this.$route.query.pageNum
       }
   }
   }
