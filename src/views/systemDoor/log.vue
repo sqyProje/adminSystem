@@ -1,24 +1,22 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-        <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="操作的用户名"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="listQuery.postKey" placeholder="提交的数据"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
-          <el-button
-            type="warning"
-            @click="handleResetSearch()"
-            size="small">
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+  <div class="app-container filter-container">
+    <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+      <el-form-item>
+        <el-input v-model="listQuery.name" placeholder="操作的用户名"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="listQuery.postKey" placeholder="提交的数据"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
+        <el-button
+          type="warning"
+          @click="handleResetSearch()"
+          size="small">
+          重置
+        </el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       class="basetreetable"
       :data="tableData"

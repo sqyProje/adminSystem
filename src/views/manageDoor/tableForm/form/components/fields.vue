@@ -88,7 +88,7 @@
           <el-input v-model="AddEditInfo.fieldname"></el-input>
         </el-form-item>
         <el-form-item label='字段类型' prop="fieldtype">
-          <el-select v-model="AddEditInfo.fieldtype" placeholder="字段类型" style="width: 100%;">
+          <el-select v-model="AddEditInfo.fieldtype" filterable placeholder="字段类型" style="width: 100%;">
             <el-option
               v-for="item in dictionTypeData"
               :label="item.enumValue"

@@ -141,12 +141,14 @@
         .avatar-wrapper {
           margin-top: 5px;
           position: relative;
-
+          display: flex;
+          align-items: center;
           .user-avatar {
             cursor: pointer;
             width: 40px;
             height: 40px;
             border-radius: 10px;
+            margin-right: 10px;
           }
 
           .el-icon-caret-bottom {

@@ -6,7 +6,7 @@
           <el-input v-model="listQuery.name" placeholder="姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.stationType" placeholder="人员岗位分类" style="width: 100%;">
+          <el-select v-model="listQuery.stationType" placeholder="人员岗位分类" filterable style="width: 100%;">
             <el-option
               v-for="item in TypeData"
               :label="item.name"
@@ -16,7 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.getStation" placeholder="聘用岗位" style="width: 100%;">
+          <el-select v-model="listQuery.getStation" placeholder="聘用岗位" filterable style="width: 100%;">
             <el-option
               v-for="item in GetData"
               :label="item.name"
@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.getStationLevel" placeholder="聘用岗位等级" style="width: 100%;">
+          <el-select v-model="listQuery.getStationLevel" placeholder="聘用岗位等级" filterable style="width: 100%;">
             <el-option
               v-for="item in LevelData"
               :label="item.name"
@@ -36,7 +36,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="listQuery.checkYearResult" placeholder="考核结果" style="width: 100%;">
+          <el-select v-model="listQuery.checkYearResult" placeholder="考核结果" filterable style="width: 100%;">
             <el-option
               v-for="item in ResultData"
               :label="item.name"
@@ -154,7 +154,7 @@
         <el-row>
           <el-col :span=12>
             <el-form-item label='人员岗位分类'>
-              <el-select v-model="AddEditInfo.stationType" placeholder="人员岗位分类" style="width: 100%;">
+              <el-select v-model="AddEditInfo.stationType" filterable placeholder="人员岗位分类" style="width: 100%;">
                 <el-option
                   v-for="item in TypeData"
                   :label="item.name"
@@ -166,7 +166,7 @@
           </el-col>
           <el-col :span=12>
             <el-form-item label='聘用岗位'>
-              <el-select v-model="AddEditInfo.getStation" placeholder="聘用岗位" style="width: 100%;">
+              <el-select v-model="AddEditInfo.getStation" filterable placeholder="聘用岗位" style="width: 100%;">
                 <el-option
                   v-for="item in GetData"
                   :label="item.name"
@@ -180,7 +180,7 @@
         <el-row>
           <el-col :span=12>
             <el-form-item label='聘用岗位等级'>
-              <el-select v-model="AddEditInfo.getStationLevel" placeholder="聘用岗位等级" style="width: 100%;">
+              <el-select v-model="AddEditInfo.getStationLevel"filterable placeholder="聘用岗位等级" style="width: 100%;">
                 <el-option
                   v-for="item in LevelData"
                   :label="item.name"
@@ -192,7 +192,7 @@
           </el-col>
           <el-col :span=12>
             <el-form-item label='上报类别'>
-              <el-select v-model="AddEditInfo.upType" placeholder="上报类别" style="width: 100%;">
+              <el-select v-model="AddEditInfo.upType" filterable placeholder="上报类别" style="width: 100%;">
                 <el-option
                   v-for="item in upTypeData"
                   :label="item.name"

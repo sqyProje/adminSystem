@@ -29,6 +29,14 @@ export function GetApproveUser(params) {
     data: params
   })
 }
+//拒绝之后重复提交接口
+export function subReloadApprove(params) {
+  return request({
+    url: '/sub_approve/rePostForm',
+    method: 'post',
+    data: params
+  })
+}
 //我的审批
 export function InitMyList(params) {
   return request({

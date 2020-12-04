@@ -7,7 +7,8 @@
         </div>
         <div class="clearfix">
           <el-col
-            :span="2" class="text-center"
+            :xs="8" :sm="6" :md="4" :lg="3" :xl="2"
+            class="text-center"
             v-for = 'itemChild in item.tableFormSubModels'
             :key="itemChild.uId">
             <el-tooltip placement="top">

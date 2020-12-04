@@ -42,6 +42,19 @@
         <span class="left">查看人：{{otherInfo.checkRealName}}</span>
         <span class="right">查看日期：{{otherInfo.checkDate}}</span>
       </div>
+      <h3 v-show="reasonInfo.length>0"> 拒绝原因</h3>
+      <table class="progress-table" cellspacing="0" cellpadding="0" v-show="reasonInfo.length>0">
+        <tr>
+          <td class="fieldName">拒绝原因</td>
+          <td class="fieldValues">拒绝人</td>
+        </tr>
+        <tr v-for="item in reasonInfo">
+          <td class="fieldName">
+            {{item.approveSketch}}
+          </td>
+          <td  class="fieldValues">{{item.approveUser}}</td>
+        </tr>
+      </table>
       <h3> 审批流程</h3>
       <table class='progress-table' cellspacing="0" cellpadding="0" >
         <tr v-for="item in workData">
@@ -55,7 +68,6 @@
                   <span><el-image
                     style="
                       width: 30px; height: 30px;
-                      background-color:#e1e1e1;
                       vertical-align: middle;
                       text-align:center;margin-right: 10px;  "
                     :src=itemchild.courseUserPic
@@ -73,7 +85,6 @@
                       v-if="itemchild.picsignatureUrl.length != 0"
                       style="
                         width: 100px; height: 30px;
-                        background-color:#e1e1e1;
                         vertical-align: middle;
                         text-align:center;margin-right: 10px;  "
                       :src=itemchild.picsignatureUrl
@@ -111,6 +122,7 @@
         fileTitle:'',
         fileHref:'',
         otherInfo:{},
+        reasonInfo:[]
       }
     },
     filters:{
@@ -148,6 +160,7 @@
       })
       GetMyInfo(this.$route.query.u_id)
       .then(response=>{
+        this.reasonInfo=response.datas.approveHistorysModels
         this.otherInfo={
           name:response.datas.name,
           approveId:response.datas.approveId,

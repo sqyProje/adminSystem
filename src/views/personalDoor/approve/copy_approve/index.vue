@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container filter-container">
     <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
       <el-form-item>
         <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>

@@ -156,7 +156,13 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
-      <!---->
+      <el-input
+        size="mini"
+        style="width: 260px;"
+        placeholder="输入关键字进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleData"
         show-checkbox
@@ -164,6 +170,7 @@
         ref="roleData"
         :default-expanded-keys="resourceCheckedKey"
         :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -217,7 +224,8 @@
         defaultProps: {
           children: 'children',
           label: 'name',
-        }
+        },
+        filterText:''
       }
     } ,
     created(){
@@ -230,7 +238,16 @@
     components:{
       singleUpload,
     },
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       picFun(data){
         this.AddEditInfo.picpath = data
       },
@@ -349,6 +366,7 @@
       //选择用户
       userRole(){
         this.RoleDialogVisible = true
+        this.filterText = ''
         GetFlowUserDrop().then(response=>{
           /*response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})

@@ -64,7 +64,12 @@ a:hover {
 }
 //搜索栏样式
 .filter-container {
-
+margin-bottom: 100px;
+}
+.filter-container:after{
+  content: "";
+  clear: both;
+  display: block;
 }
 
 //操作栏样式
@@ -172,4 +177,7 @@ a:hover {
 .basetreetable .el-table__body .el-table__row td:last-child,.basetreetable .has-gutter th:last-child{
   //border-right:none;
 }
-
+/*去除upload组件过渡效果*/
+.el-upload-list__item {
+  transition: none !important;
+}

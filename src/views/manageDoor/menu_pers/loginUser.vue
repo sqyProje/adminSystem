@@ -219,14 +219,14 @@
 
       },
       editInfoFunc() {
-        if(!validcard(this.editInfoQuery.idcard)) {
+        /*if(!validcard(this.editInfoQuery.idcard)) {
           this.$message.warning('请输入正确的身份证号')
           return
         }
         if(!validEmail(this.editInfoQuery.email)) {
           this.$message.warning('请输入正确的邮箱号')
           return
-        }
+        }*/
         editInfo(this.editInfoQuery).then(response => {
           this.dialogVisible = false;
           this.getLoginInfo()

@@ -1,43 +1,41 @@
 <template>
-    <div class="app-container">
-      <div class="filter-container">
-        <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+    <div class="app-container filter-container">
+      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+        <el-form-item>
+          <el-input v-model="listQuery.name" placeholder="菜单名称"></el-input>
+        </el-form-item>
+        <el-form-item >
+          <el-select v-model="listQuery.type" placeholder="菜单类型">
+            <el-option label="菜单" :value="0">菜单</el-option>
+            <el-option label="按钮" :value="1">按钮</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item >
+          <el-select v-model="listQuery.state" placeholder="状态">
+            <el-option label="启用" :value="0">启用</el-option>
+            <el-option label="禁用" :value="1">禁用</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
+          <el-button
+            type="warning"
+            @click="handleResetSearch()"
+            size="small">
+            重置
+          </el-button>
+        </el-form-item>
+        <el-col>
           <el-form-item>
-            <el-input v-model="listQuery.name" placeholder="菜单名称"></el-input>
-          </el-form-item>
-          <el-form-item >
-            <el-select v-model="listQuery.type" placeholder="菜单类型">
-              <el-option label="菜单" :value="0">菜单</el-option>
-              <el-option label="按钮" :value="1">按钮</el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item >
-            <el-select v-model="listQuery.state" placeholder="状态">
-              <el-option label="启用" :value="0">启用</el-option>
-              <el-option label="禁用" :value="1">禁用</el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
             <el-button
-              type="warning"
-              @click="handleResetSearch()"
-              size="small">
-              重置
-            </el-button>
+              type="success"
+              size="small"
+              v-if="hasPerm('menu:add')"
+              @click="addUserDialog">
+              添加</el-button>
           </el-form-item>
-          <el-col>
-            <el-form-item>
-              <el-button
-                type="success"
-                size="small"
-                v-if="hasPerm('menu:add')"
-                @click="addUserDialog">
-                添加</el-button>
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </div>
+        </el-col>
+      </el-form>
       <el-table
         class="basetreetable"
         :data="tableData"

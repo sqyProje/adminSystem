@@ -1,7 +1,6 @@
 <template>
-  <div class="app-container">
+  <div class="app-container filter-container">
     <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
-
       <el-form-item>
         <el-input v-model="listQuery.startName" placeholder="发起人"></el-input>
       </el-form-item>
@@ -212,7 +211,7 @@
         this.AddEditInfo.approveStepId = row.approveStepId
       },
       handleEdit(row) {
-        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId,approveStepId:row.approveStepId}})
+        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId,approveStepId:row.approveStepId,isPicture:row.isPicture}})
       },
       handleSeek(row){
         this.$router.push({name:'see',query: {u_id: row.approveId}})

@@ -17,6 +17,7 @@
             <el-select
               v-model="AddEditInfo.property"
               placeholder="人员性质"
+              filterable
               @change="propertyChange"
               style="width: 100%;">
               <el-option

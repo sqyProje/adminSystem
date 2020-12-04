@@ -4,7 +4,7 @@
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
           <el-form-item label =''>
-            <el-select v-model="listQuery.wealNameId" placeholder="表单名称">
+            <el-select v-model="listQuery.wealNameId" filterable placeholder="表单名称">
               <el-option
                 v-for="item in wealNameData"
                 :key="item.uId"
@@ -140,6 +140,13 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
+      <el-input
+        size="mini"
+        style="width: 260px;"
+        placeholder="输入员工姓名进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleData"
         show-checkbox
@@ -147,6 +154,7 @@
         ref="roleData"
         :default-expanded-keys="resourceCheckedKey"
         :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -223,7 +231,8 @@
           children: 'children',
           label: 'name',
         },
-        editEmployeed:true
+        editEmployeed:true,
+        filterText:''
       }
     } ,
     created(){
@@ -231,6 +240,11 @@
       wealName().then(res=>{
         this.wealNameData = res.datas
       })
+    },
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
     },
     filters:{
       formatStatus(value){
@@ -254,6 +268,10 @@
       }
     },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTable()
       },

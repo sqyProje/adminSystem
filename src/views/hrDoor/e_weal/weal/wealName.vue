@@ -96,7 +96,7 @@
           <el-input type="textarea" v-model="AddEditInfo.name"></el-input>
         </el-form-item>
         <el-form-item label ='导出样式'  prop="wealtype">
-          <el-select v-model="AddEditInfo.wealtype" placeholder="导出样式" style="width:100%">
+          <el-select v-model="AddEditInfo.wealtype" filterable placeholder="导出样式" style="width:100%">
             <el-option
               v-for="item in wealData"
               :key="item.enumKey"

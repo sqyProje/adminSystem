@@ -128,13 +128,23 @@
             </el-select>
           </el-form-item>
           <el-form-item label='审批人'  prop="userid" v-show="userFlag">
-            <el-select v-model="AddEditInfo.userid" placeholder="审批人" style="width: 100%;">
+            <el-select v-model="AddEditInfo.userid" filterable placeholder="审批人" style="width: 100%;">
               <el-option
                 v-for="item in userDropData"
                 :label="item.realname"
                 :value="item.uId"
                 :key="item.uId">
                 {{item.realname}}</el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label='是否图片'>
+            <el-select v-model="AddEditInfo.isPicture" style="width: 100%;">
+              <el-option
+                v-for="item in stateData"
+                :label="item.use_name"
+                :value="item.id"
+                :key = "item.id"
+              >{{item.use_name}}</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label ='排序' prop="sort">
@@ -189,14 +199,15 @@
           sketch:'',
           qdflowid:'',
           approveroleid:'',
+          isPicture:'',
           sort:'',
           userid:'',
           approvenodetype:'',
           state:'',
         },
         stateData:[
-          { id:0 , display_name: '禁用'},
-          { id:1, display_name: '启用'}
+          { id:0 , display_name: '禁用',use_name:'否'},
+          { id:1, display_name: '启用',use_name:'是'}
         ],
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],

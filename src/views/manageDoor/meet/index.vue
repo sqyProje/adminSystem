@@ -129,6 +129,7 @@
             v-model="AddEditInfo.meetingroomname"
             placeholder="会议室名称"
             @change="roomChange"
+            filterable
             style="width: 100%;">
               <el-tooltip placement="top"  v-for="item in TypeData"  :key = "item.uId">
                 <div slot="content">容纳人数：{{item.maxpeople}}<br/>类型：{{item.type==1 ?'线下':'线上'}}</div>
@@ -165,7 +166,7 @@
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label='会议分类' prop="typename">
-              <el-select v-model="AddEditInfo.typename" placeholder="会议分类" style="width: 100%;">
+              <el-select v-model="AddEditInfo.typename" filterable placeholder="会议分类" style="width: 100%;">
                 <el-option
                   v-for="item in TypeNameData"
                   :label="item.name"
@@ -231,7 +232,13 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
-      <!---->
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入关键字进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleData"
         show-checkbox
@@ -239,6 +246,7 @@
         ref="roleData"
         :default-expanded-keys="resourceCheckedKey"
         :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -326,7 +334,8 @@
             }
           }
         },
-        checkFlag:true
+        checkFlag:true,
+        filterText:''
       }
 
     } ,
@@ -343,7 +352,16 @@
       })
 
     },
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTable()
       },
@@ -493,6 +511,7 @@
       //选择用户
       userRole(){
         this.RoleDialogVisible = true
+        this.filterText=''
         GetMeetDrop(this.AddEditInfo.uId).then(response=>{
           response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})
@@ -532,7 +551,7 @@
       },
       //遍历选中子节点
       findAllChildren(data,arr){
-        console.log(data,arr)
+      //  console.log(data,arr)
         /*data.forEach((item,index)=>{
           if(item.children.length!==0){
             item.children.forEach((child)=>{

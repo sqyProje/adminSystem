@@ -5,15 +5,14 @@
       <el-step :title="item.courseName"  v-for="(item,index) in workData" :key="index">
         <template slot="description" >
           <div class="step-row" v-for="child in item.approveStepCourseModels">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content"
-                  ><!-- v-if=" child.courseStatus !=80 && child.courseStatus != 85 "-->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="processing_content">
+              <!-- v-if=" child.courseStatus !=80 && child.courseStatus != 85 "-->
               <tr>
                 <td style="color:#333">
                   <div class="processing_content_detail" :class="{'lastDetail':index==lastDetail}">
                     <div><el-image
                       style="
                       width: 30px; height: 30px;
-                      background-color:#e1e1e1;
                       vertical-align: middle;
                       text-align:center;margin-right: 10px;"
                       :src=child.courseUserPic
@@ -27,11 +26,26 @@
                       <span v-else-if="child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span>
                       <!--<span v-if="child.courseStatus == ''"></span>
                       <span v-else-if="child.courseStatus!=0">({{child.courseStatus | formatState}})</span>-->
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <span v-show="child.approveDate">审批时间：{{child.approveDate}}</span>
                     </div>
                     <div v-if="!item.bool && child.courseSketch.length >0" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
+                    <div class="demo-image__error" v-if="child.picPaths.length>0">图片：
+                      <el-image
+                        style="width: 100px; height: 100px;vertical-align: middle"
+                        v-for="(items,keys) in child.picPaths"
+                        :key="keys"
+                        :src=items
+                        fit="fill"
+                        :preview-src-list="child.picPaths">
+                        <div slot="error" class="image-slot"  style="width: 100px; height: 100px;line-height: 100px;text-align: center">
+                          暂无图片信息
+                        </div>
+                      </el-image>
+                    </div>
                     <div class="demo-image__error" v-if="!item.bool && child.picsignatureUrl.length>0">签名：
                       <el-image
-                        style="width: 100px; height: 36px;background-color:#e1e1e1;vertical-align: middle"
+                        style="width: 100px; height: 36px;vertical-align: middle"
                         :src=child.picsignatureUrl
                         fit="fill">
                         <div slot="error" class="image-slot"  style="width: 100px; height: 36px;line-height: 36px;text-align: center">

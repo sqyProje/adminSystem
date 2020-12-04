@@ -123,7 +123,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label='关键字' prop="keyword">
-              <el-select v-model="AddEditInfo.keyword" placeholder="关键字" style="width: 100%;">
+              <el-select v-model="AddEditInfo.keyword" filterable placeholder="关键字" style="width: 100%;">
                 <el-option
                   v-for="item in KeyData"
                   :label="item.name"
@@ -135,7 +135,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label='新闻类型' prop="type">
-              <el-select v-model="AddEditInfo.type" placeholder="状态" style="width: 100%;">
+              <el-select v-model="AddEditInfo.type" filterable placeholder="状态" style="width: 100%;">
                 <el-option
                   v-for="item in TypeData"
                   :label="item.name"

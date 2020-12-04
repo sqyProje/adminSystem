@@ -160,6 +160,13 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入人员姓名进行过滤"
+        v-model="reportText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleData"
         show-checkbox
@@ -167,6 +174,7 @@
         ref="roleData"
         :default-expanded-keys="resourceCheckedKey"
         :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -181,6 +189,13 @@
       :visible.sync="RoleDialogVisibleTo"
       width="33%">
       <!--:check-strictly="true" 父子是否关联-->
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入人员姓名进行过滤"
+        v-model="filterToText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleDataTo"
         show-checkbox
@@ -188,9 +203,9 @@
         ref="roleDataTo"
         :default-expanded-keys="resourceCheckedKeyTo"
         :default-checked-keys="resourceCheckedKeyTo"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
-
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialogTo">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenuTo">确 定</el-button>
@@ -203,6 +218,13 @@
       :visible.sync="radioFlag"
       width="33%">
       <!--:check-strictly="true" 父子是否关联-->
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入人员姓名进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
       <el-tree
         ref="fileTree"
         :data="roleDataTo"
@@ -211,6 +233,7 @@
         :default-expanded-keys="resourceCheckedKeyTo"
         :default-checked-keys="resourceCheckedKeyTo"
         @check-change="checkChange"
+        :filter-node-method="filterNode"
         :props="defaultProps"
          node-key="id">
       </el-tree>
@@ -291,13 +314,31 @@
         fileTree: [],
         leafCheckArr: [],
         oldCheckKey: '',
+        reportText:'',
+        filterText:'',
+        filterToText:''
       }
 
     } ,
     created(){
       this.initTable();
     },
+    watch: {
+      reportText(val){
+        this.$refs.roleData.filter(val)
+      },
+      filterText(val) {
+        this.$refs.fileTree.filter(val);
+      },
+      filterToText(val) {
+        this.$refs.roleDataTo.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTable()
       },
@@ -413,6 +454,7 @@
       //选择汇报人员
       userRole(){
         this.RoleDialogVisible = true
+        this.reportText = ''
         GetReportUser(this.AddEditInfo.uId).then(response=>{
           this.roleData = response.datas
           this.parseJson(this.roleData)
@@ -446,6 +488,7 @@
         if(this.AddEditInfo.toreporttype===10){ //单选
           this.radioFlag=true
           this.RoleDialogVisibleTo=false
+          this.filterText = ''
           GetToReportUser(this.AddEditInfo.uId).then(response=>{
             this.roleDataTo = response.datas
             this.parseJson(this.roleDataTo)
@@ -460,6 +503,7 @@
         }else if(this.AddEditInfo.toreporttype===20){ //多选
           this.radioFlag=false
           this.RoleDialogVisibleTo=true
+          this.filterToText = ''
           GetToReportUser(this.AddEditInfo.uId).then(response=>{
             this.roleDataTo = response.datas
             this.parseJson(this.roleDataTo)

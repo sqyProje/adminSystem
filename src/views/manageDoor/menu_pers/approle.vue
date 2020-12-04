@@ -1,31 +1,29 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+  <div class="app-container filter-container">
+    <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+      <el-form-item>
+        <el-input v-model="listQuery.name" placeholder="名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
+        <el-button
+          type="warning"
+          @click="handleResetSearch()"
+          size="small">
+          重置
+        </el-button>
+      </el-form-item>
+      <el-col>
         <el-form-item>
-          <el-input v-model="listQuery.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSearchList"  size="small">查询</el-button>
           <el-button
-            type="warning"
-            @click="handleResetSearch()"
-            size="small">
-            重置
-          </el-button>
+            type="success"
+            size="small"
+            v-if="hasPerm('user:add')"
+            @click="addUserDialog">
+            添加</el-button>
         </el-form-item>
-        <el-col>
-          <el-form-item>
-            <el-button
-              type="success"
-              size="small"
-              v-if="hasPerm('user:add')"
-              @click="addUserDialog">
-              添加</el-button>
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </div>
+      </el-col>
+    </el-form>
     <el-table
       :data="tableData"
       v-loading="listLoading"
@@ -103,7 +101,13 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
-      <!---->
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入关键字进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
       <el-tree
         :data="roleData"
         show-checkbox
@@ -111,6 +115,7 @@
         ref="roleData"
         :default-expanded-keys="resourceCheckedKey"
         :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
         :props="defaultProps">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -152,13 +157,23 @@
         defaultProps: {
           children: 'childMenu',
           label: 'name'
-        }
+        },
+        filterText:''
       }
     } ,
     created(){
       this.initTable()
     },
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTable()
       },
@@ -265,6 +280,7 @@
       },
       handleRoleMenu(row){
         this.RoleDialogVisible = true
+        this.filterText = ''
         this.roleId = row.uId
         AppRole(row.uId).then(response=>{
           this.roleData = response.datas;

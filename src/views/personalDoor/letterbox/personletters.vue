@@ -1,5 +1,5 @@
 <template>
-  <div  class="app-container">
+  <div  class="app-container filter-container">
     <!-- 匿名信 -->
     <div class="sousuo">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
@@ -103,7 +103,6 @@ export default {
 <style scoped>
 .my-Report {
   width: 90%;
-  height: 760px;
   border-radius: 10px 10px 0 0;
   margin: 0 auto;
   overflow: hidden;

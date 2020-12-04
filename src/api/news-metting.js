@@ -79,6 +79,12 @@ export function StateNotice(params) {
     method: 'post'
   })
 }
+export function GetNoticeUser(params) {
+  return request({
+    url: '/notice/usersByDepartSelected?uId='+params,
+    method: 'get',
+  })
+}
 /*会议室管理*/
 export function RoomList(params) {
   return request({

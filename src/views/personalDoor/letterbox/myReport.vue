@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="filter-container">
     <div class="sousuo">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item label="信件名称">
@@ -98,7 +98,6 @@
 <style scoped>
   .my-Report {
     width: 90%;
-    height: 760px;
     border-radius: 10px 10px 0 0;
     margin: 0 auto;
     overflow: hidden;

@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 /*字典管理*/
 export function InitList(params) {
   return request({
@@ -41,10 +42,19 @@ export function dictionType(params) {
   })
 }
 //门户字典
-export function dictionTypePer(params) {
+export function dictionTypePer(parentId,name,pageNum,pageSize) {
   return request({
-    url: '/diction/findByParentId?parentId='+params,
+    url: '/diction/findByParentId?parentId='+parentId+'&name='+name+'&pageNum='+pageNum+'&pageSize='+pageSize,
     method: 'get',
+    /*headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    params:qs.stringify({
+      parentId,
+      name,
+      pageNum,
+      pageSize
+    })*/
   })
 }
 //枚举方法

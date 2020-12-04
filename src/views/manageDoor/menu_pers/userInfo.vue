@@ -120,24 +120,29 @@
           <el-form-item label ='真实姓名' prop="realname">
             <el-input v-model="userInfo.realname"></el-input>
           </el-form-item>
-          <el-form-item label ='身份证号'  prop="idcard">
+          <el-form-item label ='身份证号'><!--prop="idcard"-->
             <el-input v-model="userInfo.idcard"></el-input>
           </el-form-item>
           <el-form-item label ='手机号' prop="phoneno">
             <el-input v-model="userInfo.phoneno"></el-input>
           </el-form-item>
-          <el-form-item label ='邮箱' prop="email">
+          <el-form-item label ='邮箱' ><!--prop="email"-->
             <el-input v-model="userInfo.email"></el-input>
           </el-form-item>
-          <el-form-item label ='部门' prop="departid">
+          <el-form-item label ='部门'><!-- prop="departid"-->
             <el-select v-model="mineStatus" ref="departid" placeholder="请选择" style="width: 178px;">
+              <el-input
+                placeholder="输入关键字进行过滤"
+                v-model="filterText"
+                clearable>
+              </el-input>
               <el-option :value="mineStatusValue" style="height: auto;padding:0">
                 <el-tree
                   :data="menuInfoArray"
                   node-key="uId"
                   ref="roleData"
-                  default-expand-all
                   @node-click="handleNodeClick"
+                  :filter-node-method="filterNode"
                   :props="defaultProps">
                 </el-tree>
               </el-option>
@@ -265,10 +270,10 @@
         deleteListArray:[],
         rulesInfo: {
           realname: [{ required: true,trigger: 'blur',message: '请输入真实姓名'}],
-          idcard:[{required: true, trigger: 'blur', validator:checkcard,message: '请输入正确的身份证号'}],
+          //idcard:[{required: true, trigger: 'blur', validator:checkcard,message: '请输入正确的身份证号'}],
           phoneno:[{required:true,trigger:'blur',validator:checkphone, message: '请输入正确的联系方式'}],
-          departid: [{ required: true,trigger: 'change',message: '请选择部门'}],
-          email:[{ required: true,trigger: 'blur',validator:checkemail,}]
+          //departid: [{ required: true,trigger: 'change',message: '请选择部门'}],
+        //  email:[{ required: true,trigger: 'blur',validator:checkemail,}]
         },
         filterText:'',
         mineStatus:'',
@@ -282,7 +287,7 @@
           children: 'childMenu',
           label: 'name'
         },
-        stateFlag:false
+        stateFlag:false,
       }
     },
     components:{
@@ -297,8 +302,16 @@
         })
       })
     },
-
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTable()
       },

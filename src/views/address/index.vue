@@ -13,12 +13,18 @@
                 placeholder="请选择部门"
                 ref="departName"
                 style="width: 100%">
+                <el-input
+                  placeholder="输入关键字进行过滤"
+                  v-model="filterDepart"
+                  clearable>
+                </el-input>
                 <el-option :value="listQuery.departName" style="height: auto;padding:0">
                   <el-tree
                     :data="departData"
                     node-key="uId"
-                    default-expand-all
+                    ref="roleDepart"
                     @node-click="departNodeClick"
+                    :filter-node-method="filterNode"
                     :props="defaultProps">
                   </el-tree>
                 </el-option>
@@ -31,12 +37,18 @@
                 ref="dutyName"
                 style="width: 100%"
               >
+                <el-input
+                  placeholder="输入关键字进行过滤"
+                  v-model="filterDuty"
+                  clearable>
+                </el-input>
                 <el-option :value="listQuery.dutyName" style="height: auto;padding:0">
                   <el-tree
                     :data="dutyData"
                     node-key="uId"
-                    default-expand-all
+                    ref="roleDuty"
                     @node-click="dutyNodeClick"
+                    :filter-node-method="filterNode"
                     :props="defaultProps">
                   </el-tree>
                 </el-option>
@@ -46,7 +58,9 @@
               <el-select
                 v-model="listQuery.stationId"
                 placeholder="请选择岗位名称"
-                style="width: 100%;">
+                style="width: 100%;"
+                filterable
+              >
                 <el-option
                   v-for="item in stationData"
                   :label="item.name"
@@ -160,6 +174,8 @@
           children: 'childMenu',
           label: 'name'
         },
+        filterDepart:'',
+        filterDuty:''
       }
     } ,
     created(){
@@ -178,7 +194,19 @@
       })
       this.initTable()
     },
+    watch: {
+      filterDepart(val) {
+        this.$refs.roleDepart.filter(val);
+      },
+      filterDuty(val) {
+        this.$refs.roleDuty.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       onSearchList() {
         this.initTableCheck()
         this.tableDataCheckFlag = true
@@ -247,13 +275,14 @@
         this.listQuery.departId = val.uId
         this.listQuery.departName = val.name
         this.$refs.departName.blur();
+        this.filterDepart = ''
       },
       dutyNodeClick(val){
         this.listQuery.dutyId = val.uId
         this.listQuery.dutyName = val.name
         this.$refs.dutyName.blur();
+        this.filterDuty = ''
       },
-
     }
   }
 

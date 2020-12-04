@@ -9,7 +9,7 @@
       <div class="filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="listQuery.payNameId" placeholder="工资表单">
+          <el-select v-model="listQuery.payNameId" filterable placeholder="工资表单">
             <el-option
               v-for="item in payData"
               :key="item.uId"

@@ -1,6 +1,5 @@
 <template>
-  <div class="app-container">
-    <el-form class="filter-container">
+  <div class="app-container filter-container">
       <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
         <el-form-item>
           <el-input v-model="listQuery.name" placeholder="表单名称"></el-input>
@@ -30,7 +29,6 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </el-form>
       <el-table
         class="basetreetable"
         :data="tableData"

@@ -15,6 +15,7 @@
           <el-select
             v-model="listQuery.stationId"
             placeholder="岗位名称"
+            filterable
             @change="stationTrigger"
             style="width: 100%;">
             <el-option
@@ -146,11 +147,18 @@
             style="width: 100%"
             ref="departname"
           >
+            <el-input
+              placeholder="输入关键字进行过滤"
+              v-model="filterDepart"
+              clearable>
+            </el-input>
             <el-option :value="AddEditInfo.departname" style="height: auto;padding:0">
               <el-tree
                 :data="departData"
                 node-key="uId"
                 @node-click="departNodeClick"
+                ref="DepartTree"
+                :filter-node-method="filterNode"
                 :props="defaultProps">
               </el-tree>
             </el-option>
@@ -163,11 +171,18 @@
             style="width: 100%;padding: 0;"
             ref="dutyname"
           >
+            <el-input
+              placeholder="输入关键字进行过滤"
+              v-model="filterDuty"
+              clearable>
+            </el-input>
             <el-option :value="AddEditInfo.dutyname" style="height: auto;padding:0">
               <el-tree
                 :data="dutyData"
                 node-key="uId"
+                ref="DutyTree"
                 @node-click="dutyNodeClick"
+                :filter-node-method="filterNode"
                 :props="defaultProps">
               </el-tree>
             </el-option>
@@ -176,6 +191,7 @@
         <el-form-item label ="岗位名称"  prop="stationname">
           <el-select
             v-model="AddEditInfo.stationname"
+            filterable
             placeholder="岗位名称"
             @change="stationTrigger"
             style="width: 100%;">
@@ -205,7 +221,7 @@
         <el-form-item label ='调动原因' v-show="sketchFlag">
           <el-input v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
-        <el-form-item label ='任职时间'  prop="officedate">
+        <el-form-item label ='任职时间'>
           <el-date-picker
             style="width: 100%;"
             v-model="AddEditInfo.officedate"
@@ -329,13 +345,14 @@
         },
         rulesInfo: {
           realname: [{ required: true,trigger: 'blur',message: '请输入姓名'}],
-          departname:[{ required: true,trigger: 'blur',message: '请选择部门'}],
-          dutyname:[{ required: true,trigger: 'blur',message: '请选择职务名称'}],
+          departname:[{ required: true,trigger:['blur','change'],message: '请选择部门'}],
+          dutyname:[{ required: true,trigger: ['blur','change'],message: '请选择职务名称'}],
           stationname	:[{ required: true,trigger: 'blur',message: '请选择岗位名称'}],
-          officedate:[{ required: true,trigger: 'blur',message: '请选择任职时间'}],
           jobstate:[{required: true, trigger: 'blur', message: '请选择在职状态'}],
         },
-        wealName:''
+        wealName:'',
+        filterDepart:'',
+        filterDuty:''
       }
     } ,
     components:{
@@ -376,10 +393,19 @@
         },
         deep: true,
         immediate:true
+      },
+      filterDepart(val) {
+        this.$refs.DepartTree.filter(val);
+      },
+      filterDuty(val) {
+        this.$refs.DutyTree.filter(val);
       }
-
     },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       picFun(data){
         this.AddEditInfo.picpath = data
       },
@@ -536,11 +562,13 @@
         this.AddEditInfo.departid = val.uId
         this.AddEditInfo.departname = val.name
         this.$refs.departname.blur();
+        this.filterDepart=''
       },
       dutyNodeClick(val){
         this.AddEditInfo.dutyid = val.uId
         this.AddEditInfo.dutyname = val.name
         this.$refs.dutyname.blur();
+        this.filterDuty=''
       },
       childFnInfo(payload){
         this.listQuery.departId = payload.uId

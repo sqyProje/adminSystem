@@ -99,23 +99,40 @@
           </el-switch>
         </el-form-item>
         <!--单选框-->
+        <!--          v-for="(firstItem,firstIndex) in OnlyDataMany"
+                  :key="firstIndex"
+
+        && domain.listId===firstItem.dId
+-->
         <el-form-item
           v-for="(firstItem,firstIndex) in OnlyDataMany"
           :key="firstIndex"
-          v-if="domain.fieldtype===90 && domain.listId===firstItem.dId"
+          v-if="domain.fieldtype===90 && domain.listId===firstItem.dId "
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?{
             required: true, message: domain.fieldname+'必填项', trigger: 'blur'
           }:[]"
         >
-          <el-select v-model="domain.fieldValue"  :placeholder="domain.valimessage" style="width: 100%" >
+          <el-select
+            v-model="domain.fieldValue"
+            filterable
+            :placeholder="domain.valimessage"
+            @focus="onlyFocus(firstItem.dId,firstItem.isdrop)"
+            style="width: 100%"
+            popper-class="selectJob"
+            :filter-method="dataFilter"
+          ><!-- v-el-select-loadmore="loadmore"-->
             <el-option
-              v-for="item in firstItem.ItemData"
+              v-for="item in selectOne"
               :key="item.name"
               :label="item.name"
               :value="item.name">
             </el-option>
+            <div style="text-align: center">
+              <span class="text" @click.stop="prevePage">上一页</span>
+              <span class="text" @click.stop="nextPage" v-show="formData.pageNum !== pageCount">下一页</span>
+            </div>
           </el-select>
         </el-form-item>
         <!--多选-->
@@ -129,13 +146,26 @@
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
         >
-          <el-select v-model="domain.fieldValue" multiple  :placeholder="domain.valimessage" style="width: 100%" >
+          <el-select
+            v-model="domain.fieldValue"
+            multiple
+            filterable
+            :placeholder="domain.valimessage"
+            @focus="onlyFocus(ManyItem.dId,ManyItem.isdrop)"
+            style="width: 100%"
+            popper-class="selectJob"
+            :filter-method="dataFilter"
+          >
             <el-option
-              v-for="item in ManyItem.ItemData"
+              v-for="item in selectMany"
               :key="item.name"
               :label="item.name"
               :value="item.name">
             </el-option>
+            <div style="text-align: center">
+              <span class="text" @click.stop="prevePage">上一页</span>
+              <span class="text" @click.stop="nextPage" v-show="formData.pageNum !== pageCount">下一页</span>
+            </div>
           </el-select>
         </el-form-item>
         <!--身份证-->
@@ -246,7 +276,7 @@
         :rules ="rulesInfo"
       >
         <el-form-item label='选择用户'>
-          <el-select v-model="AddEditInfo.UserId" style="width: 100%;">
+          <el-select v-model="AddEditInfo.UserId" filterable style="width: 100%;">
             <el-option
               v-for="item in ApproveUserData"
               :label="item.realname"
@@ -268,7 +298,7 @@
   import multiUploadImg from '@/components/Upload/multiUploadImg'
   import multiUploadFile from '@/components/Upload/multiUploadFile'
   import {dictionTypePer} from '@/api/basic'
-  import {GetSubInfo,AddFormInfo,GetApproveUser,GetMyInfo} from '@/api/approve'
+  import {GetSubInfo,AddFormInfo,GetApproveUser,GetMyInfo,subReloadApprove} from '@/api/approve'
 
   export default {
     data(){
@@ -282,7 +312,7 @@
         dynamicValidateForm: {
           domains: [],
         },
-        OnlyDataMany:[],
+        OnlyDataMany:[],//当前页数数据
         ManyData:[],
         SexData:[],
         dialogVisible: false,
@@ -294,11 +324,44 @@
           UserId: [{required: true, trigger: 'blur', message: '请选择用户'}],
         },
         submitFlag:false,
-        ProcessData:[]
+        ProcessData:[],
+        approveId:'',//重复提交时用到
+        formData: {   //下拉参数
+          parentId:'',
+          name:'',
+          pageNum: 1,// 当前页数
+          pageSize: 20
+        },
+        isdrop:'',
+        total: null, // 获取总数据量
+        pageCount: null, // 获取总页数
+        selectOne:[],
+        selectMany:[]
       }
     },
     components:{
       multiUploadImg,multiUploadFile
+    },
+    directives: {
+      'el-select-loadmore': {
+        bind(el, binding) {
+          // 获取element-ui定义好的scroll盒子
+          const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap');
+          SELECTWRAP_DOM.addEventListener('scroll', function () {
+            /**
+             * scrollHeight 获取元素内容高度(只读)
+             * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
+             * clientHeight 读取元素的可见高度(只读)
+             * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+             * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+             */
+            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight;
+            if (condition) {
+              binding.value();
+            }
+          });
+        }
+      }
     },
     created(){
       this.FormName=this.$route.query.form_name
@@ -306,13 +369,15 @@
         .then(response=>{
           response.datas.forEach((item,index)=> {
             if(item.isdrop===1){//单选
-              dictionTypePer(item.listId).then(res=>{
-                this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId})
+              dictionTypePer(item.listId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+                this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId,isdrop:item.isdrop})
+
               })
             }
             if(item.isdrop===2){//多选
-              dictionTypePer(item.listId).then(res=>{
-                this.ManyData.push({ItemData:res.datas,dId:item.listId})
+              dictionTypePer(item.listId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+                this.ManyData.push({ItemData:res.datas,dId:item.listId,isdrop:item.isdrop})
+
               })
             }
             this.dynamicValidateForm.domains.push({
@@ -322,7 +387,8 @@
               valimessage: item.valimessage,
               ismust:item.ismust,
               listId:item.listId,
-              fieldValue:''
+              fieldValue:'',
+              isdrop:item.isdrop
             })
             //性别
             if(item.fieldtype===140){
@@ -336,9 +402,9 @@
       if(this.$route.query.form_id && this.$route.query.u_id){
         GetMyInfo(this.$route.query.u_id)
           .then(response=>{
+            this.approveId = response.datas.approveId
             response.datas.tableFieldValueModels.forEach((item,index)=>{
               this.ProcessData.push(item)
-
               if(item.fieldType ===150){
                 this.picIdsArray= item.fieldValues.split(',')
               }else if(item.fieldType === 160){
@@ -414,6 +480,7 @@
         }
         this.submitFlag=true
         const data={
+          approveId:this.approveId,
           tableFormId:this.$route.query.form_id,
           tableFieldSubModels:[]
         }
@@ -429,6 +496,19 @@
             GetApproveUser(data).then(response=>{
               if(response.datas===null){
                 this.dialogVisible = false
+                if(this.$route.query.u_id){
+                  subReloadApprove(data).then(res => {
+                    if (res.status === 0) {
+                      this.dialogVisible = false
+                      this.$router.push({name:'sub_approve'})
+                      Message({
+                        message: res.msg,
+                        type: 'success',
+                        duration: 3 * 1000
+                      })
+                    }
+                  })
+                }else{
                   AddFormInfo(data).then(res => {
                     if (res.status === 0) {
                       this.dialogVisible = false
@@ -440,6 +520,8 @@
                       })
                     }
                   })
+                }
+
 
               }else{
                 this.dialogVisible = true
@@ -471,6 +553,7 @@
       },
       UpdateUser(){
         const data={
+          approveId:this.approveId,
           tableFormId:this.$route.query.form_id,
           approveUserId:this.AddEditInfo.UserId,
           tableFieldSubModels:[]
@@ -482,17 +565,31 @@
           })
         })
         if(this.AddEditInfo.UserId.length>0){
-          AddFormInfo(data).then(res => {
-            if (res.status === 0) {
-              this.dialogVisible = false
-              this.$router.push({name:'sub_approve'})
-              Message({
-                message: res.msg,
-                type: 'success',
-                duration: 3 * 1000
-              })
-            }
-          })
+          if(this.$route.query.u_id){
+            subReloadApprove(data).then(res => {
+              if (res.status === 0) {
+                this.dialogVisible = false
+                this.$router.push({name: 'sub_approve'})
+                Message({
+                  message: res.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+              }
+            })
+          }else {
+            AddFormInfo(data).then(res => {
+              if (res.status === 0) {
+                this.dialogVisible = false
+                this.$router.push({name: 'sub_approve'})
+                Message({
+                  message: res.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+              }
+            })
+          }
         }else{
           Message({
             message: '请选择审批人',
@@ -506,8 +603,77 @@
         this.submitFlag=false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+      },
+      onlyFocus(value,isdrop){
+        this.formData.name = ''
+        this.formData.parentId=value
+        this.isdrop= isdrop
+        this.total=null
+        this.pageCount= null
+        this.formData.pageNum=1
+        if(this.isdrop===1){//单选
+          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+            this.selectOne=res.datas.list
+            this.total= (res.datas.list && res.datas.total)
+            this.pageCount = Math.ceil(this.total / 20)
+          })
+        }
+        if(this.isdrop===2){
+          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+            this.selectMany=res.datas.list
+            this.total= (res.datas.list && res.datas.total)
+            this.pageCount = Math.ceil(this.total / 20)
+          })
+        }
 
       },
+      prevePage(){
+        -- this.formData.pageNum;
+        if( this.formData.pageNum< 1){
+          this.formData.pageNum = 1
+        }
+        if(this.isdrop===1){//单选
+          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+            this.selectOne=res.datas.list
+          })
+        }
+        if(this.isdrop===2){
+          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+            this.selectMany=res.datas.list
+          })
+        }
+      },
+      nextPage(){
+        if(this.formData.pageNum < this.pageCount){
+          ++ this.formData.pageNum
+          if(this.isdrop===1){//单选
+            dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+              this.selectOne=res.datas.list
+            })
+          }
+          if(this.isdrop===2){
+            dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+              this.selectMany=res.datas.list
+            })
+          }
+        }
+      },
+      //自定义搜索
+      dataFilter(value){
+        this.formData.pageNum=1
+        this.formData.pageSize=20
+        this.formData.name = value
+        if(this.isdrop===1) {//单选
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectOne = res.datas.list
+          })
+        }
+        if(this.isdrop===2){
+          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
+            this.selectMany=res.datas.list
+          })
+        }
+      }
     }
   }
 
@@ -518,4 +684,18 @@
     width:800px;
     margin: 20px auto;
   }
+  .selectJob .span{
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .selectJob .text{
+    padding-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color :cornflowerblue;
+  }
+
 </style>

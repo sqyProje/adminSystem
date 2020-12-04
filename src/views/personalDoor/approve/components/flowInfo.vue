@@ -53,7 +53,6 @@
                   <span><el-image
                     style="
                       width: 30px; height: 30px;
-                      background-color:#e1e1e1;
                       vertical-align: middle;
                       text-align:center;margin-right: 10px;  "
                     :src=itemchild.courseUserPic
@@ -71,7 +70,6 @@
                       v-if="itemchild.picsignatureUrl.length != 0"
                       style="
                         width: 100px; height: 30px;
-                        background-color:#e1e1e1;
                         vertical-align: middle;
                         text-align:center;margin-right: 10px;  "
                       :src=itemchild.picsignatureUrl
@@ -93,12 +91,12 @@
           :inline="false"
           size="mini"
           :model="AddEditInfo"
-          label-width="50px"
+          label-width="80px"
           ref="AddEditInfo"
           :rules ="rulesInfo"
         >
           <el-form-item label='用户' v-show="UserFlag">
-            <el-select v-model="AddEditInfo.approveUserId"style="width: 100%;">
+            <el-select v-model="AddEditInfo.approveUserId" filterable style="width: 100%;">
               <el-option
                 v-for="item in ApproveUserData"
                 :label="item.realname"
@@ -121,6 +119,14 @@
           <el-form-item label='批注'>
             <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
           </el-form-item>
+          <el-form-item label='选择图片' v-show="this.$route.query.isPicture==1">
+            <multiUploadImg
+              ref="multiImg"
+              @imgUrl="picPreview"
+              @delUrl = "delUrlPreview"
+              :picArray="picString"
+            ></multiUploadImg>
+          </el-form-item>
           <el-form-item>
             <el-button size="small" type="primary" @click="UpdateUser">审  批</el-button>
           </el-form-item>
@@ -135,6 +141,7 @@
 <script type="text/ecmascript-6">
   import { Message, MessageBox } from 'element-ui'
   import logo from '@/assets/images/logo.png'
+  import multiUploadImg from '@/components/Upload/multiUploadImg'
   import {GetMyInfo,WorkFlow,ToApprove,GetProcessUser} from '@/api/approve'
 
   export default {
@@ -158,13 +165,18 @@
           approveStepId:'',
           approveUserId:'',
           approveStatus:'',
-          sketch:''
+          sketch:'',
+          pictures:''
         },
         rulesInfo: {
           approveStatus: [{required: true, trigger: 'blur', message: '请选择审批'}]
-        }
+        },
+        picString:"",
+        picIdsArray:[],
+        picPreviewInfo:'',
       }
     },
+    components:{multiUploadImg},
     filters:{
       formatState(value){
         if(value===10){
@@ -230,11 +242,23 @@
       })
     },
     methods:{
+      picPreview(value){
+        this.picPreviewInfo += value+','
+        this.picIdsArray.push(value)
+      },
+      delUrlPreview(value){
+        this.picIdsArray= this.picIdsArray.filter((x)=>{
+          return x !==value
+        })
+        this.picString = this.picIdsArray.toString()
+        this.picPreviewInfo = this.picIdsArray.toString()+','
+      },
       prev(){
         this.$router.push({name:'wait_approve'})
       },
       UpdateUser(){
-      if(this.ApproveUserData.length > 0){
+        this.AddEditInfo.pictures =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
+        if(this.ApproveUserData.length > 0){
         if(this.AddEditInfo.approveUserId<=0){
           Message({
             message: '请选择用户',
@@ -286,9 +310,9 @@
           }
         })
       }
-  },
-    }
+    },
   }
+}
 
 </script>
 

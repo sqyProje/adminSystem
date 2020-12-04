@@ -136,7 +136,10 @@
         <el-form-item label ='轮播内容'>
           <el-input type="textarea" v-model="AddEditInfo.carouselcontent"></el-input>
         </el-form-item>
-
+        <el-form-item label ='选择用户' prop="users">
+          <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
+          <el-input type="hidden" v-model="AddEditInfo.users" style="height: 0;"></el-input>
+        </el-form-item>
         <el-row :gutter="10">
           <el-col :span="8">
             <el-form-item label ='轮播时间'>
@@ -194,13 +197,39 @@
           <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
         </span>
     </el-dialog>
-
+    <el-dialog
+      title="选择用户"
+      :close-on-click-modal="false"      :show-close="false"
+      :visible.sync="RoleDialogVisible"
+      width="33%">
+      <el-input
+        size="mini"
+        style="width: 260px"
+        placeholder="输入关键字进行过滤"
+        v-model="filterText"
+        clearable>
+      </el-input>
+      <el-tree
+        :data="roleData"
+        show-checkbox
+        node-key="id"
+        ref="roleData"
+        :default-expanded-keys="resourceCheckedKey"
+        :default-checked-keys="resourceCheckedKey"
+        :filter-node-method="filterNode"
+        :props="defaultProps">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+          <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
+          <el-button size="small" type="primary" @click="UpdateRoleMenu">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
   import {dictionType} from '@/api/basic'
-  import {NoticeList,NoticeAdd,GetNotice,EditNotice,DeleteNotice,StateNotice} from '@/api/news-metting'
+  import {NoticeList,NoticeAdd,GetNotice,EditNotice,DeleteNotice,StateNotice,GetNoticeUser} from '@/api/news-metting'
   import singleUpload from '@/components/Upload/singleImg'
   import Editor from '@/components/Tinymce/Editor'
   const defaultListQuery = {
@@ -228,6 +257,7 @@
           sort:'',
           carouselcontent:'',
           state:'',
+          users:''
         },
         TypeData:[],
         KeyData:[],
@@ -245,7 +275,17 @@
           sort:[{required: true, trigger: 'blur', message: '排序应为数字'}],
           enddate:[{required: true, trigger: 'blur', message: '请选择轮播结束时间'}],
           state:[{required: true, trigger: ['blur','change'], message: '请选择状态'}],
-        }
+          users:[{required: true, trigger: 'blur', message: '请选择用户'}]
+        },
+        userIds:'',
+        filterText:'',
+        RoleDialogVisible:false,
+        roleData:[],
+        resourceCheckedKey:[],
+        defaultProps: {
+          children: 'children',
+          label: 'name',
+        },
       }
     } ,
     components:{
@@ -259,6 +299,11 @@
       dictionType('fe9171b86c104125a12024c419f75ccd').then(response=>{
         this.KeyData = response.datas
       })
+    },
+    watch: {
+      filterText(val) {
+        this.$refs.roleData.filter(val);
+      }
     },
     methods: {
       picFun(data){
@@ -303,6 +348,7 @@
         })
       },
       UpdateUser(){
+        this.AddEditInfo.users = this.userIds
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -331,7 +377,6 @@
                   })
                 }
               })
-
             }
           }else{
             Message({
@@ -399,7 +444,79 @@
       },
       newContent(val){
         this.AddEditInfo.content= val
-      }
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      //选择用户
+      userRole(){
+        this.RoleDialogVisible = true
+        this.filterText=''
+        GetNoticeUser(this.AddEditInfo.uId).then(response=>{
+          response.datas.forEach((res,key)=>{
+            this.roleData.push({id:key,name:res.departName,children:[]})
+            res.userDropModels.forEach((depart,dkey)=>{
+              this.roleData[key].children.push({id:depart.uId,name:depart.realname,selected:depart.selected})
+              /*depart.children.forEach((departuser,three)=>{
+                this.roleData[key].children[dkey].children.push({id:departuser.uId,name:departuser.realname,selected:departuser.selected})
+              })*/
+            })
+           /* res.children.forEach((child)=>{
+              this.roleData[key].children.push({id:child.userId,name:child.realName,selected:child.selected,children:[]})
+            })*/
+
+          })
+          this.findAllChildren(this.roleData, this.resourceCheckedKey)
+          this.$nextTick(()=>{
+            this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
+          })
+
+        })
+      },
+      UpdateRoleMenu(){
+        let checkedKeys = this.$refs.roleData.getCheckedKeys();
+        checkedKeys =  checkedKeys.filter((value)=>{
+          return value.length >= 3
+        })
+        this.userIds = checkedKeys.toString()
+        this.RoleDialogVisible = false
+        this.resourceCheckedKey=[]
+        this.roleData = []
+          console.log(this.userIds)
+      },
+      RoleCanleDialog(){
+        this.RoleDialogVisible = false
+        this.resourceCheckedKey=[]
+        this.roleData = []
+      },
+      //遍历选中子节点
+      findAllChildren(data,arr){
+        //  console.log(data,arr)
+        /*data.forEach((item,index)=>{
+          if(item.children.length!==0){
+            item.children.forEach((child)=>{
+              if(child.selected){
+                arr.push(child.id)
+              }
+            })
+          }
+        })*/
+        data.forEach((item,index)=>{
+          if(item.children.length!==0){
+            item.children.forEach((child)=>{
+              if(child.selected){
+                arr.push(child.id)
+              }
+             /* child.children.forEach((thids=>{
+                if(thids.selected) {
+                  arr.push(thids.id)
+                }
+              }))*/
+            })
+          }
+        })
+      },
     }
   }
 
