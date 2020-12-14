@@ -54,10 +54,10 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column label="简介" prop="sketch"></el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate"></el-table-column>
-        <el-table-column label="操作" fixed="right" width="400px">
+        <el-table-column label="操作" fixed="right" width="460px">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -78,6 +78,10 @@
               type="danger"
               v-if="hasPerm('form:deletes')"
               @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="info"
+              @click="handleCopy(scope.row)">复制</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -129,7 +133,7 @@
         </el-form-item>
         <el-form-item label ='用户树' prop="usersView">
           <el-input type='hidden' v-model="AddEditInfo.usersView" style="width: 0;height: 0;"></el-input>
-          <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
+          <el-button size="small" v-on:click.native="userRole('')" type="primary">选择用户</el-button>
         </el-form-item>
         <el-form-item label ='排序'>
           <el-input v-model="AddEditInfo.sort" type="number" min="0" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
@@ -156,6 +160,21 @@
       :close-on-click-modal="false"      :show-close="false"
       :visible.sync="RoleDialogVisible"
       width="33%">
+      <el-form :inline="true" size="mini" :model="listQuery" class="demo-form-inline">
+        <el-form-item>
+          <el-select v-model="DutyNameText" multiple placeholder="职务名称" clearable style="width: 100%;">
+            <el-option
+              v-for="item in DutyName"
+              :label="item.name"
+              :value="item.name"
+              :key="item.uId">
+              {{item.name}}</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearchDuty()"  size="small">查询</el-button>
+        </el-form-item>
+      </el-form>
       <el-input
         size="mini"
         style="width: 260px;"
@@ -163,16 +182,30 @@
         v-model="filterText"
         clearable>
       </el-input>
-      <el-tree
-        :data="roleData"
-        show-checkbox
-        node-key="id"
-        ref="roleData"
-        :default-expanded-keys="resourceCheckedKey"
-        :default-checked-keys="resourceCheckedKey"
-        :filter-node-method="filterNode"
-        :props="defaultProps">
-      </el-tree>
+      <el-row :gutter = '10'>
+        <el-col :span="14">
+          <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <!--  @check='checks'-->
+          <el-tree
+            :data="roleData"
+            show-checkbox
+            node-key="uId"
+            ref="roleData"
+            :check-on-click-node = true
+            @check-change = "checkChange"
+            :default-expanded-keys="resourceCheckedKey"
+            :default-checked-keys="resourceCheckedKey"
+            :filter-node-method="filterNode"
+            :props="defaultProps">
+          </el-tree>
+        </el-col>
+        <!--<el-col :span="10">
+          <ul>
+            <li v-for="(item,index) in checkArray" :key="index">{{item.name}}</li>
+          </ul>
+        </el-col>-->
+      </el-row>
+
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenu">确 定</el-button>
@@ -184,7 +217,7 @@
   import { Message, MessageBox } from 'element-ui'
   import {dictionType} from '@/api/basic'
   import singleUpload from '@/components/Upload/singleImg'
-  import {InitList,AddInfo,GetInfo,EditInfo,DeleteInfo,GetFlowUserDrop} from '@/api/tableForm'
+  import {InitList,AddInfo,GetInfo,EditInfo,DeleteInfo,GetFlowUserDrop,dutyFind,copyTableField} from '@/api/tableForm'
   const defaultListQuery = {
     name: '',
     approveType:'',
@@ -225,7 +258,11 @@
           children: 'children',
           label: 'name',
         },
-        filterText:''
+        filterText:'',
+        DutyName:[],
+        DutyNameText:'',
+        checkAll:false,
+        checkArray:[]
       }
     } ,
     created(){
@@ -234,6 +271,10 @@
         .then(res=>{
           this.dictionTypeData = res.datas
         })
+      dutyFind().then(res=>{
+        this.DutyName = res.datas
+      //  console.log(this.DutyName)
+      })
     },
     components:{
       singleUpload,
@@ -247,6 +288,20 @@
       filterNode(value, data) {
         if (!value) return true;
         return data.name.indexOf(value) !== -1;
+      },
+      handleCopy(row){
+        copyTableField(row.uId)
+          .then(response => {
+            this.dialogVisible = false
+            if (response.status === 0) {
+              this.initTable();
+              Message({
+                message: response.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }
+          })
       },
       picFun(data){
         this.AddEditInfo.picpath = data
@@ -279,12 +334,16 @@
         this.AddEditInfo.picUrl= v
       },
       handleAdd(row){
+        this.DutyNameText = ''
+        this.checkAll = false
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '添加'
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.AddEditInfo.state = 0
       },
       handleEdit(row) {
+        this.DutyNameText = ''
+        this.checkAll = false
         this.dialogVisible = !this.dialogVisible
         this.dialogTitle = '编辑'
         GetInfo(row.uId).then(response=>{
@@ -363,11 +422,71 @@
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
+      onSearchDuty(){
+        this.userRole(this.DutyNameText)
+      },
+      handleCheckAllChange(){
+        if (this.checkAll) {
+          this.$refs.roleData.setCheckedNodes(this.roleData);
+          let userArray = [];
+          this.$refs.roleData.getCheckedNodes().forEach((item) => {
+            if(item.selected  === undefined){
+              return
+            }else{
+              userArray.push(item.uId)
+              this.AddEditInfo.usersView = userArray.toString()
+              //12.04
+              /*if(!this.checkArray[item]){
+                this.checkArray.push(item)
+                this.AddEditInfo.usersView = this.checkArray.toString()
+              }*/
+
+              //12.04
+            }
+          });
+        } else {
+          this.$refs.roleData.setCheckedKeys([]);
+          this.checkArray=[]
+          this.AddEditInfo.usersView = ''
+        }
+      },
+      //12.04
+      checks(data,checkNode){
+        checkNode.checkedNodes.forEach((item)=>{
+          if(item.selected  === undefined){
+            return
+          }else{
+            //this.array_diff(this.checkArray,checkNode.checkedNodes)
+            this.checkArray.push(item)
+            this.AddEditInfo.usersView = this.checkArray.toString()
+          }
+        })
+      },
+      checkChange(a,b,c){
+        console.log(a,b,c)
+      },
+      array_diff(a, b) {
+        for (var i = 0; i < b.length; i++) {
+          for (var j = 0; j < a.length; j++) {
+            if (a[j].uId == b[i].uId) {
+              a.splice(j, 1);
+              j = j - 1;
+            }
+          }
+        }
+        return a;
+      },
       //选择用户
-      userRole(){
+      userRole(DutyNameText){
         this.RoleDialogVisible = true
         this.filterText = ''
-        GetFlowUserDrop().then(response=>{
+        this.resourceCheckedKey = []
+        this.checkAll = false
+        if( DutyNameText === ''){
+          this.DutyNameText = ''
+        }
+        DutyNameText = DutyNameText.toString()
+        GetFlowUserDrop(DutyNameText).then(response=>{
           /*response.datas.forEach((res,key)=>{
             this.roleData.push({id:key,name:res.name,children:[]})
             res.user.forEach((child)=>{
@@ -388,13 +507,21 @@
           this.$nextTick(()=>{
             this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
           })
+
         })
       },
       UpdateRoleMenu(){
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
-        /*checkedKeys =  checkedKeys.filter((value)=>{
-          return value.length >= 3
-        })*/
+        let select_box = [];
+        this.$refs.roleData.getCheckedNodes().forEach((item) => {
+          if(item.selected  === undefined){
+            return
+          }else{
+            select_box.push(item.uId);
+          }
+        });
+        checkedKeys = select_box;
+        console.log(checkedKeys)
         this.AddEditInfo.usersView = checkedKeys.toString()
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]
@@ -411,7 +538,7 @@
           if(item.children.length!==0){
             item.children.forEach((child)=>{
               if(child.selected){
-                arr.push(child.id)
+                arr.push(child.uId)
               }
             })
           }
@@ -438,7 +565,7 @@
             }
             if (item.user && Array.isArray(item.user)) {
               item.user.forEach(function (child) {
-                item[key] .push( {id:child.uId,name:child.realname,selected:child.selected,})
+                item[key].push( {uId:child.uId,name:child.realname,selected:child.selected,})
                 toParse(item[key])
               })
             }
