@@ -368,7 +368,7 @@
         }
       },
       prev(){
-        this.$router.push({name:'form'})
+        this.$router.push({name:'form',query:{pageNum:this.$route.query.pageNum}})
       }
     }
   }

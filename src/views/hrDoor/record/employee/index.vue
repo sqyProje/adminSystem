@@ -364,7 +364,6 @@
      },
     },
     created(){
-      //console.log(1)
       this.departFu()
       this.dutyFu()
       GetStationDrop().then(response=>{
@@ -377,7 +376,6 @@
     watch:{
       $route: {
         handler() {
-
           if(this.$route.query.keyvalue) {
           //  console.log(typeof(this.$route.query.keyvalue) )
             const queryvalue=this.$route.query.keyvalue
@@ -386,7 +384,9 @@
             //深度监听，同时也可监听到param参数变化
           }else{
           //  console.log(2)
-          //  this.listQuery.pageNum = this.$route.query.pageNum
+            if(this.$route.query.pageNum){
+              this.listQuery.pageNum = this.$route.query.pageNum
+            }
             this.listQuery.type = ''
             this.initTable();
           }
@@ -545,7 +545,14 @@
         this.stationFlag = false
       },
       handleViewOrder(row){
-        this.$router.push({name:'detail',query: {uId: row.uId,bool:this.$route.query.bool,keyvalue:this.$route.query.keyvalue}})
+        this.$router.push({name:'detail',
+          query: {
+            uId: row.uId,
+            bool:this.$route.query.bool,
+            keyvalue:this.$route.query.keyvalue,
+            pageNum:this.listQuery.pageNum
+          }
+        })
         //,pageNum:this.listQuery.pageNum
       },
       stationTrigger(val){

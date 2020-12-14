@@ -106,7 +106,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label='审批' prop="approveStatus">
-            <el-select v-model="AddEditInfo.approveStatus" placeholder="审批" style="width: 100%;">
+            <el-select v-model="AddEditInfo.approveStatus" placeholder="审批" style="width: 100%;" @change="approveChange">
               <el-option
                 v-for="(item,index) in stateData"
                 :style="index == 0 ? 'color:#ff0000' : 'color:#00ff00' "
@@ -254,29 +254,29 @@
         this.picPreviewInfo = this.picIdsArray.toString()+','
       },
       prev(){
-        this.$router.push({name:'wait_approve'})
+        this.$router.push({name:'wait_approve',
+          query:{
+          pageNum:this.$route.query.pageNum
+          }
+        })
+      },
+      approveChange(value){
+        this.AddEditInfo.approveStatus = value
       },
       UpdateUser(){
         this.AddEditInfo.pictures =  this.picPreviewInfo.substring(0, this.picPreviewInfo.length-1)
-        if(this.ApproveUserData.length > 0){
-        if(this.AddEditInfo.approveUserId<=0){
-          Message({
-            message: '请选择用户',
-            type: 'error',
-            duration: 3 * 1000
-          })
-        }else{
+        //60拒绝不选人
+        if(this.AddEditInfo.approveStatus === 60){
           this.$refs.AddEditInfo.validate(valid => {
             if (valid) {
-              this.$router.push({name:'wait_approve'})
               ToApprove(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
-                  this.$router.push({name:'wait_approve'})
                   Message({
                     message: response.msg,
                     type: 'success',
                     duration: 3 * 1000
                   })
+                  this.$router.push({name:'wait_approve'})
                 }
               })
             }else{
@@ -287,29 +287,60 @@
               })
             }
           })
+          return
         }
-      }else{
-        this.$refs.AddEditInfo.validate(valid => {
-          if (valid) {
-          ToApprove(this.AddEditInfo).then(response => {
-            if (response.status === 0) {
-              Message({
-                message: response.msg,
-                type: 'success',
-                duration: 3 * 1000
-              })
-              this.$router.push({name:'wait_approve'})
-            }
-          })
-          }else{
+        if(this.ApproveUserData.length > 0){
+          if(this.AddEditInfo.approveUserId<=0){
             Message({
-              message: '参数验证不合法',
+              message: '请选择用户',
               type: 'error',
               duration: 3 * 1000
             })
+          }else{
+            this.$refs.AddEditInfo.validate(valid => {
+              if (valid) {
+                this.$router.push({name:'wait_approve'})
+                ToApprove(this.AddEditInfo).then(response => {
+                  if (response.status === 0) {
+                    this.$router.push({name:'wait_approve'})
+                    Message({
+                      message: response.msg,
+                      type: 'success',
+                      duration: 3 * 1000
+                    })
+                  }
+                })
+              }else{
+                Message({
+                  message: '参数验证不合法',
+                  type: 'error',
+                  duration: 3 * 1000
+                })
+              }
+            })
           }
-        })
-      }
+        }else{
+          this.$refs.AddEditInfo.validate(valid => {
+            if (valid) {
+            ToApprove(this.AddEditInfo).then(response => {
+              if (response.status === 0) {
+                Message({
+                  message: response.msg,
+                  type: 'success',
+                  duration: 3 * 1000
+                })
+                this.$router.push({name:'wait_approve'})
+              }
+            })
+            }else{
+              Message({
+                message: '参数验证不合法',
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
+          })
+        }
     },
   }
 }

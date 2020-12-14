@@ -115,6 +115,9 @@
       }
     },
     created(){
+      if(this.$route.query.pageNum){
+        this.listQuery.pageNum = this.$route.query.pageNum
+      }
       this.initTable();
     },
     filters:{
@@ -168,13 +171,13 @@
         this.initTable();
       },
       handleSeek(row) {
-        this.$router.push({name:'see',query: {u_id: row.approveId}})
+        this.$router.push({name:'see',query: {u_id: row.approveId,formName:'copy_approve',pageNun:this.listQuery.pageNum}})
       },
       HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.approveId}})
+        this.$router.push({name:'workflow',query: {u_id: row.approveId,formName:'copy_approve',pageNun:this.listQuery.pageNum}})
       },
       HandlePrint(row){
-        this.$router.push({name:'print',query: {u_id: row.approveId}})
+        this.$router.push({name:'print',query: {u_id: row.approveId,formName:'copy_approve',pageNun:this.listQuery.pageNum}})
       }
     }
   }

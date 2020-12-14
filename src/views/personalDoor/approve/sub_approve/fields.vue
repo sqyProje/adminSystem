@@ -275,7 +275,7 @@
         ref="AddEditInfo"
         :rules ="rulesInfo"
       >
-        <el-form-item label='选择用户'>
+        <el-form-item label='审批人'>
           <el-select v-model="AddEditInfo.UserId" filterable style="width: 100%;">
             <el-option
               v-for="item in ApproveUserData"
@@ -561,7 +561,7 @@
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           data.tableFieldSubModels.push({
             tableFieldId:item.uId,
-            tableFieldValue:item.fieldValue
+            tableFieldValue:item.fieldValue.toString()
           })
         })
         if(this.AddEditInfo.UserId.length>0){

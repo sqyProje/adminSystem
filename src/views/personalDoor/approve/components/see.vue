@@ -184,7 +184,9 @@
     },
     methods:{
       prev(){
-        this.$router.go(-1)
+      //  this.$router.go(-1)
+        const names=this.$route.query.formName
+        this.$router.push({name:names,query: {pageNum:this.$route.query.pageNum}})
       }
     }
   }

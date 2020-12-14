@@ -135,6 +135,9 @@
       enumeration('/approveEnum/getApproveStateEnums').then(response=>{
         this.approveStatusData = response.datas
       })
+      if(this.$route.query.pageNum){
+        this.listQuery.pageNum = this.$route.query.pageNum
+      }
       this.initTable();
     },
     filters:{
@@ -188,10 +191,10 @@
         this.initTable();
       },
       handleSeek(row) {
-        this.$router.push({name:'see',query: {u_id: row.uId}})
+        this.$router.push({name:'see',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
       },
       HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.uId}})
+        this.$router.push({name:'workflow',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
       },
       HandleRepeal(row){
         repeal(row.uId).then(res=>{

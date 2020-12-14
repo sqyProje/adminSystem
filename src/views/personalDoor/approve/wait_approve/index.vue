@@ -152,6 +152,9 @@
       }
     },
     created(){
+      if(this.$route.query.pageNum){
+        this.listQuery.pageNum =  this.$route.query.pageNum
+      }
       this.initTable();
     },
     filters:{
@@ -211,14 +214,21 @@
         this.AddEditInfo.approveStepId = row.approveStepId
       },
       handleEdit(row) {
-        this.$router.push({name:'my_approve_fields',query: {u_id: row.approveId,approveStepId:row.approveStepId,isPicture:row.isPicture}})
+        this.$router.push({name:'my_approve_fields',
+          query: {
+          u_id: row.approveId,
+          approveStepId:row.approveStepId,
+          isPicture:row.isPicture,
+          pageNum:this.listQuery.pageNum,
+          formName:'wait_approve',
+        }
+        })
       },
       handleSeek(row){
-        this.$router.push({name:'see',query: {u_id: row.approveId}})
-
+        this.$router.push({name:'see',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'wait_approve'}})
       },
       HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.approveId}})
+        this.$router.push({name:'workflow',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'wait_approve'}})
       },
       handlerFun(row){
         if(row.approveStepStatus ===40){

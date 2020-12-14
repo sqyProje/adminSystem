@@ -159,6 +159,9 @@
       }
     },
     created(){
+      if(this.$route.query.pageNum){
+        this.listQuery.pageNum = this.$route.query.pageNum
+      }
       this.initTable();
     },
     filters:{
@@ -244,10 +247,10 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
       },
       handleSeek(row) {
-        this.$router.push({name:'see',query: {u_id: row.approveId}})
+        this.$router.push({name:'see',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'complete_approve'}})
       },
       HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.approveId}})
+        this.$router.push({name:'workflow',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'complete_approve'}})
       },
       handlerFun(row){
         if(row.approveStatus ===20){
@@ -261,7 +264,7 @@
         }
       },
       HandlePrint(row){
-        this.$router.push({name:'print',query: {u_id: row.approveId}})
+        this.$router.push({name:'print',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'complete_approve'}})
       }
     }
   }

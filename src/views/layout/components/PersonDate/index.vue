@@ -6,7 +6,7 @@
         <div class="close" type="text" @click="close()"><img src="@/assets/images/close.png" alt=""></div>
       </div>
       <ul class="ul-content">
-        <li v-for="(item, index) in dateInfo.pushMsgModels" :key="index+item.counts">
+        <li v-for="(item, index) in dateInfo.pushMsgModels" :key="index">
           <router-link :to="{path:'/hrDoor/record/employee',query:{bool:1,keyvalue:index+1}}">
            {{index+1}}. {{item.typeName}}
             <el-link v-if="index==0" type="primary" class="counts">{{item.counts}}</el-link>

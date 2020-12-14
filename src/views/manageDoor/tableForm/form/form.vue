@@ -185,14 +185,16 @@
       <el-row :gutter = '10'>
         <el-col :span="14">
           <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-          <!--  @check='checks'-->
+          <!--
+          :check-on-click-node = true
+            @check='checks'
+            @check-change="handleCheckChange"
+          -->
           <el-tree
             :data="roleData"
             show-checkbox
             node-key="uId"
             ref="roleData"
-            :check-on-click-node = true
-            @check-change = "checkChange"
             :default-expanded-keys="resourceCheckedKey"
             :default-checked-keys="resourceCheckedKey"
             :filter-node-method="filterNode"
@@ -201,7 +203,7 @@
         </el-col>
         <!--<el-col :span="10">
           <ul>
-            <li v-for="(item,index) in checkArray" :key="index">{{item.name}}</li>
+            <li v-for="(item,index) in checkArray" :key="index">{{item}}</li>
           </ul>
         </el-col>-->
       </el-row>
@@ -262,10 +264,13 @@
         DutyName:[],
         DutyNameText:'',
         checkAll:false,
-        checkArray:[]
+        checkArray:[],
       }
     } ,
     created(){
+      if(this.$route.query.pageNum){
+        this.listQuery.pageNum = this.$route.query.pageNum
+      }
       this.initTable();
       dictionType('0556e14a6dbc49a1bb668421ad570560')
         .then(res=>{
@@ -273,7 +278,6 @@
         })
       dutyFind().then(res=>{
         this.DutyName = res.datas
-      //  console.log(this.DutyName)
       })
     },
     components:{
@@ -435,13 +439,6 @@
             }else{
               userArray.push(item.uId)
               this.AddEditInfo.usersView = userArray.toString()
-              //12.04
-              /*if(!this.checkArray[item]){
-                this.checkArray.push(item)
-                this.AddEditInfo.usersView = this.checkArray.toString()
-              }*/
-
-              //12.04
             }
           });
         } else {
@@ -451,19 +448,25 @@
         }
       },
       //12.04
-      checks(data,checkNode){
-        checkNode.checkedNodes.forEach((item)=>{
-          if(item.selected  === undefined){
-            return
-          }else{
-            //this.array_diff(this.checkArray,checkNode.checkedNodes)
-            this.checkArray.push(item)
-            this.AddEditInfo.usersView = this.checkArray.toString()
-          }
-        })
+      /*checks(data,checkNode){
+        if (checkNode.checkedKeys.length < this.checkArray.length) {
+          this.deleteOid(data.uId)
+        }
       },
-      checkChange(a,b,c){
-        console.log(a,b,c)
+      handleCheckChange(data, checked, indeterminate) {
+        if (checked) {
+          if(data.selected === undefined){
+            return
+          }
+          this.checkArray.push(data.uId)
+        }
+      },
+      deleteOid(a){
+        for (let i = this.checkArray.length - 1; i > -1; i--) {
+          if (this.checkArray[i] === a) {
+            this.checkArray.splice(i, 1)
+          }
+        }
       },
       array_diff(a, b) {
         for (var i = 0; i < b.length; i++) {
@@ -475,7 +478,7 @@
           }
         }
         return a;
-      },
+      },*/
       //选择用户
       userRole(DutyNameText){
         this.RoleDialogVisible = true
@@ -548,10 +551,10 @@
 
       //字段管理
       handleFileds(index, row){
-        this.$router.push({name:'FormFields',query: {form_id: row.uId}})
+        this.$router.push({name:'FormFields',query: {form_id: row.uId,pageNum:this.listQuery.pageNum}})
       },
       handleFlow (index, row){
-        this.$router.push({name:'qdFlow',query: {form_id: row.uId}})
+        this.$router.push({name:'qdFlow',query: {form_id: row.uId,pageNum:this.listQuery.pageNum}})
       },
       parseJson(arr){
         var key = 'children'
