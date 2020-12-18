@@ -7,7 +7,8 @@ const app = {
       withoutAnimation: false
     },
     device: 'desktop',
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium',
+    slideName:''
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -29,6 +30,9 @@ const app = {
     SET_SIZE: (state, size) => {
       state.size = size
       Cookies.set('size', size)
+    },
+    SET_SLIDE_NAME:(state,className)=>{
+      state.slideName = className
     }
   },
   actions: {
@@ -43,6 +47,9 @@ const app = {
     },
     SetSize({ commit }, size) {
       commit('SET_SIZE', size)
+    },
+    ClickName({commit},className){
+      commit('SET_SLIDE_NAME',className)
     }
   }
 }

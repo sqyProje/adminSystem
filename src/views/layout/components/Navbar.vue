@@ -10,6 +10,15 @@
           <size-select id="size-select" class="right-menu-item hover-effect"></size-select>
         </el-tooltip>-->
       </template>
+      <el-dropdown  @command="slideNames" class="right-menu-item"  trigger="click">
+        <a class="el-dropdown-link">
+        切换颜色<i class="el-icon-arrow-down el-icon--right"></i>
+      </a>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command = ''>默认</el-dropdown-item>
+          <el-dropdown-item command = 'sidebar-green'>绿色</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" :src="avatar">
@@ -38,13 +47,13 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { toggleClass } from '@/utils/index'
+  import { toggleClass,addClass,removeClass } from '@/utils/index'
   import Breadcrumb from '@/components/Breadcrumb'
   import Hamburger from '@/components/Hamburger'
   import Screenfull from '@/components/Screenfull'
   import SizeSelect from '@/components/SizeSelect'
   import Search from '@/components/HeaderSearch'
-
+  import variables from '@/styles/variables.scss'
   export default {
     components: {
       Breadcrumb,
@@ -58,8 +67,10 @@
         'sidebar',
         'avatar',
         'name',
-        'device'
-      ])
+        'device',
+        'slideName'
+      ]),
+
     },
     methods: {
       activeColor() {
@@ -72,6 +83,9 @@
         this.$store.dispatch('LogOut').then(() => {
           location.reload() // 为了重新实例化vue-router对象 避免bug
         })
+      },
+      slideNames(value){
+        this.$store.dispatch('ClickName',{className:value})
       }
     },
   }
@@ -121,7 +135,7 @@
         display: inline-block;
         padding: 0 8px;
         height: 100%;
-        font-size: 18px;
+        font-size: 16px;
         color: #5a5e66;
         vertical-align: text-bottom;
 

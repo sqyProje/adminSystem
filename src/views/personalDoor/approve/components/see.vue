@@ -18,13 +18,16 @@
             {{imgTitle}}
           </td>
           <td  class="fieldValues">
-            <el-image
-            v-for="item in imgArray"
-            :key="item"
-            style="width: 100px; height: 100px;margin-top: 10px;"
-            :src="item"
-            :preview-src-list="imgArray"
-          ></el-image>
+           <div v-if="imgArray.length>0">
+             <el-image
+               v-for="item in imgArray"
+               :key="item"
+               :src="item"
+               :preview-src-list="imgArray"
+               fit="fill"
+               style="height:100px;width:100px;overflow: visible;margin: 10px 5px 0 ;"
+             ></el-image>
+           </div>
           </td>
         </tr>
         <tr v-show="fileTitle.length>0">
@@ -171,7 +174,11 @@
         response.datas.tableFieldValueModels.forEach((item,index)=>{
           if(item.fieldType ===150){
             this.imgTitle = item.fieldName
-            this.imgArray= item.fieldValues.split(',')
+            if(item.fieldValues.length==0){
+              this.imgArray = []
+            }else{
+              this.imgArray= item.fieldValues.split(',')
+            }
           }else if(item.fieldType === 160){
             this.fileTitle = item.fieldName
            let Href  = decodeURIComponent(item.fieldValues)

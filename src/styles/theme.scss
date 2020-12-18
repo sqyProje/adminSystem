@@ -1,0 +1,45 @@
+#app{
+  ///2020.12.17新增
+  .sidebar-green{
+    .sidebar-container{
+      background-color: #01505C;
+      .el-submenu__title,.submenu-title-noDropdown{
+        background-color: #01505C !important;
+        color: #ffffff!important;
+        }
+        .submenu-title-noDropdown,
+        .el-submenu__title {
+          &:hover {
+            background-color: #047B8E !important;
+          }
+        }
+
+        .is-active>.el-submenu__title {
+          color: #fff !important;
+        }
+
+        & .nest-menu .el-submenu>.el-submenu__title,
+        & .el-submenu .el-menu-item {
+          min-width: $sideBarWidth !important;
+          background-color: #01505C !important;
+          color: #ffffff!important;
+
+          &:hover {
+            background-color: #047B8E !important;
+          }
+        }
+      .el-menu-item.is-active{
+        color: #ffffff!important;
+      ////  padding-left: 55px !important;
+        background-color: #047B8E !important;
+      ////  border-left:5px solid #0FB6D1;
+      }
+    }
+    .footer{
+      background-color: #01505C;
+    }
+    .sidebar-logo-container{
+      background-color: #4ab7bd;
+    }
+  }
+}

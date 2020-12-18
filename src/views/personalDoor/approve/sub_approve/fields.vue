@@ -7,7 +7,8 @@
       ref="dynamicValidateForm"
       label-width="150px"
       class="demo-dynamic"
-      size="mini">
+      size="mini"
+     >
       <div  v-for="(domain, index) in dynamicValidateForm.domains" :key="domain.uId">
         <el-form-item
           v-if="domain.fieldtype===10"
@@ -38,7 +39,6 @@
         >
           <el-input type="number" :min="0" :step="0.01" v-model="domain.fieldValue"  :placeholder="domain.valimessage"></el-input>
         </el-form-item>
-
         <el-form-item
           v-if="domain.fieldtype===50"
           :label="domain.fieldname"
@@ -55,6 +55,54 @@
             style="width: 100%"
           >
           </el-date-picker>
+        </el-form-item>
+        <!--开始时间结束时间53，54，天数55-->
+        <el-form-item
+          v-if="domain.fieldtype===53"
+          :label="domain.fieldname"
+          :prop="'domains.' + index + '.fieldValue'"
+          :rules="domain.ismust ?{
+          required: true, message: domain.fieldname+'必填项', trigger: 'blur'
+        }:[]"
+        ><!--天-->
+          <el-date-picker
+            v-model="domain.fieldValue"
+            type="date"
+            value-format="yyyy-MM-dd"
+            :placeholder="domain.fieldname"
+            style="width: 100%"
+            :picker-options="pickerOptionsStart"
+            @change="changeEnd"
+            :clearable="false"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item
+          v-if="domain.fieldtype===54"
+          :label="domain.fieldname"
+          :prop="'domains.' + index + '.fieldValue'"
+          :rules="domain.ismust ?{
+          required: true, message: domain.fieldname+'必填项', trigger: 'blur'
+        }:[]"
+
+        ><!--天-->
+          <el-date-picker
+            v-model="domain.fieldValue"
+            type="date"
+            value-format="yyyy-MM-dd"
+            :placeholder="domain.fieldname"
+            style="width: 100%"
+            :picker-options="pickerOptionsEnd"
+            @change="changeStart"
+            :clearable="false"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item
+          v-if="domain.fieldtype===55"
+          :label="domain.fieldname"
+        >
+          <el-input v-model="days"  :placeholder="domain.valimessage" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item
           v-if="domain.fieldtype===60"
@@ -98,12 +146,6 @@
             inactive-color="#ff4949">
           </el-switch>
         </el-form-item>
-        <!--单选框-->
-        <!--          v-for="(firstItem,firstIndex) in OnlyDataMany"
-                  :key="firstIndex"
-
-        && domain.listId===firstItem.dId
--->
         <el-form-item
           v-for="(firstItem,firstIndex) in OnlyDataMany"
           :key="firstIndex"
@@ -323,6 +365,7 @@
         rulesInfo: {
           UserId: [{required: true, trigger: 'blur', message: '请选择用户'}],
         },
+
         submitFlag:false,
         ProcessData:[],
         approveId:'',//重复提交时用到
@@ -336,31 +379,40 @@
         total: null, // 获取总数据量
         pageCount: null, // 获取总页数
         selectOne:[],
-        selectMany:[]
+        selectMany:[],
+        startDay:'',
+        endDay:'',
+        pickerOptionsStart : {
+          disabledDate: (time) => {
+            if(this.endDay){
+              return time.getTime() > new Date(this.endDay).getTime()
+            }
+          }
+        },
+        pickerOptionsEnd : {
+          disabledDate: (time) => {
+            if(this.startDay) {
+              return time.getTime() < new Date(this.startDay).getTime() - 86400000
+            }
+          }
+        }
       }
     },
     components:{
       multiUploadImg,multiUploadFile
     },
-    directives: {
-      'el-select-loadmore': {
-        bind(el, binding) {
-          // 获取element-ui定义好的scroll盒子
-          const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap');
-          SELECTWRAP_DOM.addEventListener('scroll', function () {
-            /**
-             * scrollHeight 获取元素内容高度(只读)
-             * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-             * clientHeight 读取元素的可见高度(只读)
-             * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
-             * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
-             */
-            const condition = this.scrollHeight - this.scrollTop <= this.clientHeight;
-            if (condition) {
-              binding.value();
-            }
-          });
+    computed:{
+      days(){
+        if(this.endDay===''){
+          return
         }
+        if(this.startDay===''){
+          return
+        }
+        if(this.endDay===''&& this.startDay===''){
+          return
+        }
+        return this.DateDiff(this.endDay,this.startDay)
       }
     },
     created(){
@@ -371,13 +423,11 @@
             if(item.isdrop===1){//单选
               dictionTypePer(item.listId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
                 this.OnlyDataMany.push({ItemData:res.datas,dId:item.listId,isdrop:item.isdrop})
-
               })
             }
             if(item.isdrop===2){//多选
               dictionTypePer(item.listId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
                 this.ManyData.push({ItemData:res.datas,dId:item.listId,isdrop:item.isdrop})
-
               })
             }
             this.dynamicValidateForm.domains.push({
@@ -397,7 +447,6 @@
               })
             }
           })
-
         })
       if(this.$route.query.form_id && this.$route.query.u_id){
         GetMyInfo(this.$route.query.u_id)
@@ -426,6 +475,21 @@
 
     },
     methods:{
+      changeStart (value){
+        this.startDay = value
+      },
+      changeEnd (value){
+        this.endDay = value
+      },
+      DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
+        var  aDate,  oDate1,  oDate2,  iDays
+        aDate  =  sDate1.split("-")
+        oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])    //转换为12-18-2006格式
+        aDate  =  sDate2.split("-")
+        oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
+        iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24 + 1)    //把相差的毫秒数转换为天数
+        return  iDays
+      },
       FilePreview(value){ //文件
         this.fileIdsArray.push(value)
         this.dynamicValidateForm.domains.forEach((item,index)=>{
@@ -450,7 +514,6 @@
         this.dynamicValidateForm.domains.forEach((item,index)=>{
           if(item.fieldtype === 150){
             item.fieldValue = this.picIdsArray.toString()
-          //  console.log(item.fieldValue)
           }
         })
       },
@@ -485,10 +548,17 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          data.tableFieldSubModels.push({
-            tableFieldId:item.uId,
-            tableFieldValue:item.fieldValue.toString()
-          })
+          if(item.fieldtype === 55){
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:this.days
+            })
+          }else {
+            data.tableFieldSubModels.push({
+              tableFieldId: item.uId,
+              tableFieldValue: item.fieldValue.toString()
+            })
+          }
         })
         //console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
@@ -559,10 +629,18 @@
           tableFieldSubModels:[]
         }
         this.dynamicValidateForm.domains.forEach((item,index)=>{
-          data.tableFieldSubModels.push({
-            tableFieldId:item.uId,
-            tableFieldValue:item.fieldValue.toString()
-          })
+          if(item.fieldtype === 55){
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:this.days
+            })
+          }else{
+            data.tableFieldSubModels.push({
+              tableFieldId:item.uId,
+              tableFieldValue:item.fieldValue.toString()
+            })
+          }
+
         })
         if(this.AddEditInfo.UserId.length>0){
           if(this.$route.query.u_id){

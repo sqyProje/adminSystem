@@ -1,28 +1,28 @@
 <template>
   <div  class="app-wrapper" :class="classObj"><!-- -->
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container"></sidebar>
-    <div :class="{hasTagsView:needTagsView}"  class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar></navbar>
-        <tags-view  v-if="needTagsView"/>
-      </div>
-      <app-main></app-main>
-      <right-panel v-if="showSettings">
-        <settings />
-      </right-panel>
-      <person-date v-if="dateInfo"></person-date>
-      <div class="footer">
-         河南健康奇点网络科技有限公司 | 地址：河南省郑州市郑东新区木华广场3号楼A座601室 | 电话：0371-88917172 | 豫ICP备19022191号-1
-        &copy;   {{getFullYear}}<a href="http://hnjkqd.com/" target="_blank" style="color: #00a0e9">hnjkqd.com</a>版权所有
+    <div :class="slideNames.className">
+      <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+      <sidebar class="sidebar-container"></sidebar>
+      <div :class="{hasTagsView:needTagsView}"  class="main-container">
+        <div :class="{'fixed-header':fixedHeader}">
+          <navbar></navbar>
+          <tags-view  v-if="needTagsView"/>
+        </div>
+        <app-main></app-main>
+        <right-panel v-if="showSettings">
+          <settings />
+        </right-panel>
+        <person-date v-if="dateInfo"></person-date>
+        <Footer></Footer>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import RightPanel from '@/components/RightPanel'
-import { Navbar, Sidebar, AppMain, TagsView, Settings, PersonDate} from './components'
+import { Navbar, Sidebar, AppMain, TagsView, Settings, PersonDate,Footer} from './components'
 //import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -34,7 +34,8 @@ export default {
     TagsView,
     RightPanel,
     Settings,
-    PersonDate
+    PersonDate,
+    Footer
   },
  // mixins: [ResizeMixin],
   computed: {
@@ -56,17 +57,17 @@ export default {
     dateInfo(){
       return this.$store.state.user.dateInfo.bool
     },
+    slideNames(){
+      return this.$store.state.app.slideName
+    },
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        mobile: this.device === 'mobile',
       }
     },
-    getFullYear(){
-      let myDate= new Date()
-      return myDate.getFullYear()
-    }
+
   }
 }
 </script>
@@ -101,17 +102,5 @@ export default {
     z-index:9;
     width: calc(100% - #{$sideBarWidth});
     transition: width 0.28s
-  }
-  .footer{
-    width: calc(100% - 210px);
-    height: 30px;
-    line-height:30px;
-    font-size: 13px;
-    text-align: center;
-    color: #868686;
-    background-color:#304156;
-    position: fixed;
-    bottom: 0;
-    z-index:100001;
   }
 </style>

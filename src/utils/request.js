@@ -29,13 +29,14 @@ service.interceptors.response.use(
       store.commit('SET_TOKEN', response.headers.authorization)
       localStorage.setItem('loginToken',response.headers.authorization)
     }
-    if(response.status !== 200){
+    if(res.status !== 0){
       Message({
         message: res.msg,
         type: 'error',
         duration: 3 * 1000
       })
-      return Promise.reject('error')
+
+      return new Promise(() => {})
     }else if(response.data.type === 'application/vnd.ms-excel'){
       return response
     }else{

@@ -10,6 +10,8 @@
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :on-success = 'handleSuccess'
+      :on-change = "handleChange"
+      :on-progress="handleProcess"
       list-type="picture-card"
       :limit="1000"
       :on-exceed="handleExceed"
@@ -66,6 +68,7 @@
     },
     methods: {
       beforeAvatarUpload(file){
+      //  console.log('之前')
         const isJPG = file.type === 'image/jpeg';
         const isPNG = file.type === 'image/png';
         const isLt1M = file.size / 1024 / 1024 < 1;
@@ -78,7 +81,14 @@
           return isLt1M;
         }
       },
+      handleChange(file,fileList){
+        //  console.log('改变')
+      },
+      handleProcess(event,file,fileList){
+      //  console.log('上传进度')
+      },
       handleSuccess(response, file, fileList) {
+      //  console.log('成功')
         this.fileList.push({url: response.datas})
         this.$emit('imgUrl',response.datas)
       },
@@ -89,7 +99,6 @@
             multiUrl = multiUrl + value.url + ','
           })
           this.fileList = fileList
-
           this.$message.warning('删除成功');
           this.$emit('delUrl', file.url)
         }

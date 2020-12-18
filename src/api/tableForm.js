@@ -291,5 +291,24 @@ export function GetFlowUserDrop(params) {
   return request({
     url: '/tableForm/userTree',
     method: 'get',
+    params:{
+      dutyNme:params
+    }
+  })
+}
+
+export function dutyFind() {
+  return request({
+    url: 'duty/find',
+    method: 'get',
+  })
+}
+export function copyTableField(params) {
+  return request({
+    url: 'tableField/field',
+    method: 'post',
+    params:{
+      tableFormId:params
+    }
   })
 }

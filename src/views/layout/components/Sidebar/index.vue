@@ -2,7 +2,9 @@
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
+     <!---->
       <el-menu
+        class = 'leftMenu'
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
