@@ -1,0 +1,84 @@
+/*审批过程*/
+.approvalProcess{
+  color: #000;
+  font-size: 14px;
+  margin-left:20px;
+  margin-right:0px;
+  margin-top:10px;
+  width: 800px;
+  overflow: hidden;
+}
+.processing_content_detail{
+  margin-left: 10px;
+  display:inline-block;
+  background-color: #f9f9f9;
+  float:left;
+  width:100%;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.processing_content_detail div{
+  margin-bottom: 3px;
+}
+.step-row{
+  width:100%;
+  margin-bottom:12px;
+  margin-top:12px;
+}
+.lastDetail{
+  width:90%!important;
+}
+/*审批过程*/
+
+
+/*打印 查看详情*/
+.progress-container{
+  width: 900px;
+  margin: 20px auto 50px;
+}
+.progress-container h2{
+  text-align: center;
+}
+.clearfix span{
+  margin:15px 0;
+}
+.progress-table {
+  width: 900px;
+  border-top: 1px solid #999999;
+
+}
+.progress-table td{
+  border-right:1px solid #999999;
+  border-bottom:1px solid #999999;
+}
+.progress-table td{
+  min-height: 38px;
+  line-height: 38px;
+  color: #595959;
+  word-break: break-all;
+}
+.fieldName{
+  width: 200px;
+  text-align: right;
+  padding-right: 10px;
+  border-right:none;
+  border-left: 1px solid #999999;
+}
+.fieldValues{
+  text-indent: 20px;
+}
+.fieldName span{
+  display:block;
+  width:150px;
+  text-align: center;
+}
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+/*
+打印
+*/

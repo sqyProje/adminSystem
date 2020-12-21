@@ -56,14 +56,14 @@
         </template>
       </el-table-column>
       <el-table-column label="发起人" prop="startUserName" align="center"></el-table-column>
-      <el-table-column label="表单名称" prop="approveName" align="center"></el-table-column>
+      <el-table-column label="表单名称" prop="name" align="center"></el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          <div v-html=" $options.filters.formatState(scope.row.approveStatus)"></div>
+          <div v-html=" $options.filters.formatState(scope.row.approvestatus)"></div>
         </template>
       </el-table-column>
-      <el-table-column label="审批创建时间" prop="approveCreateDate" align="center"></el-table-column>
-      <el-table-column label="审批结束时间" prop="approveEndDate" align="center"></el-table-column>
+      <el-table-column label="审批创建时间" prop="createdate" align="center"></el-table-column>
+      <el-table-column label="审批结束时间" prop="enddate" align="center"></el-table-column>
       <!--<el-table-column label="审批人" prop="approveUserName" align="center"></el-table-column>-->
       <el-table-column label="操作" fixed="right"  width="400" align="center">
         <template slot-scope="scope">
@@ -177,14 +177,14 @@
         this.initTable();
       },
       handleSeek(row) {
-        this.$router.push({name:'see',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'relevance_approve'}})
+        this.$router.push({name:'see',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'relevance_approve'}})
       },
-      HandleWorkFlow(row){
+      /*HandleWorkFlow(row){
         this.$router.push({name:'workflow',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'relevance_approve'}})
       },
       HandlePrint(row){
         this.$router.push({name:'print',query: {u_id: row.approveId,pageNum:this.listQuery.pageNum, formName:'relevance_approve'}})
-      }
+      }*/
     }
   }
 

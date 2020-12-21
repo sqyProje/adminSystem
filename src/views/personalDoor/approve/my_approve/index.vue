@@ -90,6 +90,11 @@
               type="danger"
               v-if="scope.row.approvestatus !=10 && scope.row.approvestatus !=60 && scope.row.approvestatus !=90"
               @click="HandleRepeal(scope.row)">撤销</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              v-if="scope.row.approvestatus == 90"
+              @click="HandlePrint(scope.row)">打印</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -208,6 +213,9 @@
       },
       HandleSubmitRepeat(row){
         this.$router.push({name:'sub_approve_fields',query: {u_id: row.uId,form_id: row.tableFromId,form_name:row.name}})
+      },
+      HandlePrint(row){
+        this.$router.push({name:'print',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
       }
     }
   }

@@ -579,6 +579,7 @@
       },
       childFnInfo(payload){
         this.listQuery.departId = payload.uId
+        this.listQuery.pageNum = 1
         this.initTable(this.listQuery);
       },
       /*导出*/

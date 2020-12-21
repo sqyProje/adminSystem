@@ -1,6 +1,5 @@
 <template>
     <div class="app-container">
-
       <el-row>
         <search-tree
           :toChildId="listQuery.parentId"
@@ -313,6 +312,7 @@
         return data.name.indexOf(value) !== -1;
       },
       onSearchList() {
+      ///  this.listQuery.pageNum=1,
         this.initTable()
       },
       initTable() {
@@ -518,6 +518,7 @@
       },
       childFnInfo(payload){
         this.listQuery.departid = payload.uId
+        this.listQuery.pageNum = 1
         this.initTable(this.listQuery);
       }
     }

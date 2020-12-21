@@ -324,6 +324,7 @@
       },
       childFnInfo(payload){
         this.listQuery.parentId = payload.uId
+        this.listQuery.pageNum = 1
         this.initTable(this.listQuery);
       }
     }

@@ -23,28 +23,21 @@
             </td>
             <td style="display: block">
               <table class='progress-man' cellspacing="0" cellpadding="0" >
-                <tr v-for="(itemchild,index) in items.approveStepCourseModels" class="ddtss">
+                <tr v-for="(itemchild,index) in items.approveStepCourseModels" :key="index">
                   <td>
-                  <span style="display: block;width: 100%;">
-                    {{itemchild.courseUserName}}
-                    <span v-if="itemchild.courseStatus=='' "></span>
-                    <span v-else-if=" itemchild.courseStatus !=80 && itemchild.courseStatus != 85 ">({{itemchild.courseStatus | formatState}})</span>
-                    {{itemchild.courseSketch}}
-                   &nbsp;&nbsp;&nbsp;&nbsp;
-                    <el-image
-                      v-if="itemchild.picsignatureUrl.length != 0"
-                      style="
-                        width: 100px; height: 30px;
-                        vertical-align: middle;
-                        text-align:center;margin-right: 10px;  "
-                      :src=itemchild.picsignatureUrl
-                      fit="fill">
-                        <div slot="error" class="image-slot">
-                          <el-image :src=logo></el-image>
-                        </div>
-                    </el-image>
-                    <span style="float: right;margin-right: 40px!important;">{{itemchild.approveDate}}</span>
-                  </span>
+                    <span  v-if="itemchild.picsignatureUrl.length!==0"
+                           style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
+                    >
+                      <img
+                        v-if="itemchild.picsignatureUrl.length!==0"
+                        style="width:100%"
+                        :src=itemchild.picsignatureUrl
+                      >
+                    </span>
+                    <span v-else >{{itemchild.courseUserName}}</span>
+                     &nbsp;&nbsp;
+                    {{itemchild.courseStatus | formatState}}
+                    <span class="right"  style="margin-right: 40px">{{itemchild.approveDate}}</span>
                   </td>
                 </tr>
               </table>
@@ -213,6 +206,8 @@
   }
   .progress-man td span{
     margin-left: 20px;
+    word-wrap:break-word;
+    word-break:normal;
   }
   .left{
     float: left;

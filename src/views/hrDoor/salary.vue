@@ -365,6 +365,7 @@
         }else{
           this.listQuery.departName = payload.Name
         }
+        this.listQuery.pageNum = 1
         this.initTable(this.listQuery);
       },
       handleEdit(row){

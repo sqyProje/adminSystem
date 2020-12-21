@@ -129,7 +129,7 @@
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
         >
-          <el-input type='textarea' v-model="domain.fieldValue"  :placeholder="domain.valimessage"></el-input>
+          <el-input type='textarea' v-model="domain.fieldValue"  rows="4" :placeholder="domain.valimessage"></el-input>
         </el-form-item>
         <!--是否-->
         <el-form-item

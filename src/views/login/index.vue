@@ -324,8 +324,8 @@
         }
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            this.loading = true;
-            this.$store.dispatch('Login', loginFormMd).then(() => {
+           //this.loading = true;
+            this.$store.dispatch('Login', loginFormMd).then((res) => {
               this.loading = false;
               setCookie("username",this.loginForm.username,15);
               setCookie("password",this.loginForm.password,15);

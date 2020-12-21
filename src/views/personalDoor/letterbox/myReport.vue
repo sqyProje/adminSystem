@@ -6,10 +6,10 @@
           <el-input v-model="listQuery.title" placeholder="信件关键字"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSearchList" size="mini">查询</el-button>
+          <el-button type="primary" @click="onSearchList" size="small">查询</el-button>
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
         </el-form-item>
-        <el-button type="primary" size="mini" @click="newanonletters" plain icon="el-icon-plus">去汇报</el-button>
+        <el-button type="primary" size="small" @click="newanonletters" plain icon="el-icon-plus">去汇报</el-button>
         <el-link type="danger" size="mini" v-if="tuoqian.bool==true">已经拖欠{{tuoqian.days}}天!请及时进行工作汇报</el-link>
       </el-form>
     </div>

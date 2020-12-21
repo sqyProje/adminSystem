@@ -10,15 +10,15 @@
           <size-select id="size-select" class="right-menu-item hover-effect"></size-select>
         </el-tooltip>-->
       </template>
-      <el-dropdown  @command="slideNames" class="right-menu-item"  trigger="click">
+      <!--<el-dropdown  @command="slideNames" class="right-menu-item"  trigger="click">
         <a class="el-dropdown-link">
-        切换颜色<i class="el-icon-arrow-down el-icon--right"></i>
+        切换颜色<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
       </a>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command = ''>默认</el-dropdown-item>
           <el-dropdown-item command = 'sidebar-green'>绿色</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" :src="avatar">
