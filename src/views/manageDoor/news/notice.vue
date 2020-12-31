@@ -138,7 +138,7 @@
         </el-form-item>
         <el-form-item label ='选择用户' prop="users">
           <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
-          <el-input type="hidden" v-model="AddEditInfo.users" style="height: 0;"></el-input>
+          <el-input type="hidden" v-model="AddEditInfo.users" style="width:0;height: 0;"></el-input>
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="8">
@@ -483,7 +483,7 @@
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]
         this.roleData = []
-          console.log(this.userIds)
+        //  console.log(this.userIds)
       },
       RoleCanleDialog(){
         this.RoleDialogVisible = false

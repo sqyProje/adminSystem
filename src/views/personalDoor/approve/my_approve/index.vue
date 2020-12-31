@@ -27,6 +27,11 @@
             size="small">
             重置
           </el-button>
+          <el-button
+            type="success"
+            size="small"
+            @click="handleAll">
+            批量打印</el-button>
         </el-form-item>
       </el-form>
       <el-table
@@ -34,7 +39,13 @@
         :data="tableData"
         v-loading="listLoading"
         size  = "small"  max-height="600"
+        default-expand-all
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column type="expand" label="摘要" align="center">
           <template slot-scope="scope">
             <div
@@ -116,7 +127,7 @@
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
   import {enumeration} from '@/api/basic'
-  import {InitMyList,repeal} from '@/api/approve'
+  import {InitMyList,repeal,PrintAll} from '@/api/approve'
   const defaultListQuery = {
     name: '',
     contentKey:'',
@@ -130,7 +141,8 @@
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
-        approveStatusData:[]
+        approveStatusData:[],
+        selectedData:[],
       }
     } ,
     beforeCreate(){
@@ -196,13 +208,19 @@
         this.initTable();
       },
       handleSeek(row) {
-        this.$router.push({name:'see',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
+        this.$router.push({
+          name: 'see',
+          query: {u_id: row.uId, pageNum: this.listQuery.pageNum, formName: 'my_approve'}
+        })
       },
-      HandleWorkFlow(row){
-        this.$router.push({name:'workflow',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
+      HandleWorkFlow(row) {
+        this.$router.push({
+          name: 'workflow',
+          query: {u_id: row.uId, pageNum: this.listQuery.pageNum, formName: 'my_approve'}
+        })
       },
-      HandleRepeal(row){
-        repeal(row.uId).then(res=>{
+      HandleRepeal(row) {
+        repeal(row.uId).then(res => {
           this.initTable()
           Message({
             message: res.msg,
@@ -211,11 +229,78 @@
           })
         })
       },
-      HandleSubmitRepeat(row){
-        this.$router.push({name:'sub_approve_fields',query: {u_id: row.uId,form_id: row.tableFromId,form_name:row.name}})
+      HandleSubmitRepeat(row) {
+        this.$router.push({
+          name: 'sub_approve_fields',
+          query: {u_id: row.uId, form_id: row.tableFromId, form_name: row.name}
+        })
       },
-      HandlePrint(row){
-        this.$router.push({name:'print',query: {u_id: row.uId,pageNum:this.listQuery.pageNum, formName:'my_approve'}})
+      HandlePrint(row) {
+        this.$router.push({
+          name: 'print',
+          query: {u_id: row.uId, pageNum: this.listQuery.pageNum, formName: 'my_approve'}
+        })
+      },
+      handleSelectionChange(data) {
+        this.selectedData = data;
+      },
+      handleAll() {
+        let dataSelect = this.selectedData;
+        let ids = ''
+        dataSelect.forEach((value, keys) => {
+          ids += value.uId + ','
+        })
+        let selectStr = ids.substring(0, ids.length - 1)
+        PrintAll(selectStr).then(response => {
+          let fileData = response.datas.tableFormTableFieldContentModel
+          let workData = response.datas.approveStepCourseParentModels
+          let otherInfo = {
+            name: fileData.name,
+            approveId: fileData.approveId,
+            departName: fileData.departName,
+            checkDate: fileData.checkDate,
+            checkRealName: fileData.checkRealName,
+          }
+          let ProcessData =[]
+          fileData.tableFieldValueModels.forEach((item, index) => {
+            if (item.fieldType != 150 && item.fieldType != 160) {
+               ProcessData.push(item)
+            }
+          })
+          let printContTop = '';
+          let printContMiddle = '';
+          let printHead = `
+            <html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><link rel='stylesheet' type='text/css' href='static/print.css'></head><body>
+            <div class="printContainer">
+            <h3>${otherInfo.name}</h3>
+            <div class='clearfix'>
+              <span class='left'>部门名称：${otherInfo.departName}</span>
+              <span class='right'>审批编号：${otherInfo.approveId}</span>
+            </div>
+            <table class='progress-table two-table' cellspacing='0' cellpadding='0'>`;
+          ProcessData.forEach((item, keys) => {
+            printContTop += `<tr><td class='fieldName'>${item.fieldName}</td><td  class="fieldValues">${item.fieldValues}</td></tr>`;
+          })
+          workData.forEach((items, keys) => {
+            printContMiddle += `<tr><td class="fieldName">${ items.courseName}</td><td style="display: block" class="fieldValues"><div>`;
+              items.approveStepCourseModels.forEach((itemchild, index)=>{
+                printContMiddle+=`
+                <span class="left">${itemchild.courseUserName}</span>
+                <span class="signPic" ${itemchild.courseUserPic.length>0 ?'class="signHide"':''}><img  src="${itemchild.courseUserPic}"></span>
+                <span class="right" style="margin-right: 40px">${itemchild.approveDate!==null ? itemchild.approveDate: ''}</span>`
+          })
+            printContMiddle+=`</div></td></td></tr>`
+          })
+          let pageNextStr = `<div style="page-break-after: always;"></div>`;
+          let last = `</table><div class="clearfix">
+              <span class="left">查看人：${otherInfo.checkRealName}</span>
+              <span class="right">查看日期：${otherInfo.checkDate}</span>
+              </div></div>${pageNextStr}</div></body></html>`;
+          let newContent = printHead + printContTop + printContMiddle + last;
+          /*window.print();
+            this.$router.go(0)*/
+          document.body.innerHTML = newContent;
+        })
       }
     }
   }

@@ -27,6 +27,6 @@ export default {
     background-color:#304156;
     position: fixed;
     bottom: 0;
-    z-index:100001;
+    z-index:1001;
   }
 </style>

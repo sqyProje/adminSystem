@@ -24,13 +24,10 @@
                       <span>{{child.courseUserName}}</span>
                       <span v-if="child.courseStatus =='' "></span>
                       <span v-else-if="child.courseStatus !=80 && child.courseStatus != 85 ">({{child.courseStatus | formatState}})</span>
-                      <!--<span v-if="child.courseStatus == ''"></span>
-                      <span v-else-if="child.courseStatus!=0">({{child.courseStatus | formatState}})</span>-->
-                      &nbsp;&nbsp;&nbsp;&nbsp;
-                      <span v-show="child.approveDate">审批时间：{{child.approveDate}}</span>
+                      <span v-show="child.approveDate">{{child.picPaths.length>0 ? '办理' : '审批'}}时间：{{child.approveDate}}</span>
                     </div>
                     <div v-if="!item.bool && child.courseSketch.length >0" >批注：<span style="color:#219AFF">{{child.courseSketch}}</span></div>
-                    <div class="demo-image__error" v-if="child.picPaths.length>0">图片：
+                    <div class="demo-image__error" v-if="child.picPaths[0]!=='' && child.picPaths.length>0">图片：
                       <el-image
                         style="width: 100px; height: 100px;vertical-align: middle"
                         v-for="(items,keys) in child.picPaths"

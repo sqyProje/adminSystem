@@ -25,6 +25,11 @@
               v-if="hasPerm('station:add')"
               @click="handleAdd">
               添加</el-button>
+            <!--<el-button
+              type="success"
+              size="small"
+              @click="handleAll">
+              批量打印</el-button>-->
           </el-form-item>
         </el-col>
       </el-form>
@@ -35,6 +40,7 @@
         row-key="uId"
         :tree-props="{children:'childMenu',hasChildren:'hasChildren'}"
         size  = "small"  max-height="600"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column
           type="selection"
@@ -118,7 +124,12 @@
           <el-button size="small" type="primary" @click="UpdateUser">确 定</el-button>
         </span>
     </el-dialog>
+    <!--startprint-->
 
+    <div id="subOutputRank-print">
+
+    </div>
+    <!--endprint-->
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -154,7 +165,8 @@
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           sketch:[{required: true, trigger: 'blur', message: '请输入岗位职责'}],
           sort: [{ required: true,trigger: 'blur',message: '排序应为数字'}],
-        }
+        },
+        selectedData:[]
       }
     } ,
     created(){
@@ -269,10 +281,30 @@
         this.dialogVisible = false
         this.$refs.AddEditInfo.resetFields();
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+      },
+      handleSelectionChange(data) {
+        this.selectedData = data;
+      },
+      handleAll(){
+        let dataSelect = this.selectedData;
+        let printCont= ''
+        let printHead = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"
+          +"<link rel='stylesheet' type='text/css' href='static/print.css'></head><body>";
+        dataSelect.forEach((value,keys)=>{
+          let pageNextStr = '<div style="page-break-after: always;"></div>';
+          printCont +='<div class="name">'+value.name+'</div>'+pageNextStr+'</body></html>';
+          let newContent = printHead+ printCont;
+          document.body.innerHTML = newContent;
+          window.print();
+          this.$router.go(0)
+        })
       }
     }
   }
 
 </script>
+<style scoped lang="scss">
+
+</style>
 
 

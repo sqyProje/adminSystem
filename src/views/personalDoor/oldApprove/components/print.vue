@@ -16,10 +16,10 @@
             <td  class="fieldValues">{{first.courseUserName}}</td>
           </tr>
           <tr v-for="item in ProcessData">
-            <td class="fieldName">
+            <td class="fieldName" v-show="item.fieldValues.indexOf('未填写') == -1">
               {{item.fieldName}}
             </td>
-            <td  class="fieldValues">{{item.fieldValues=="未填写" ? '': item.fieldValues  }}</td>
+            <td  class="fieldValues" v-show="item.fieldValues.indexOf('未填写') == -1">{{item.fieldValues}}</td>
           </tr>
           <tr >
             <td class="fieldName" :rowspan="workData.length">审批流程</td>

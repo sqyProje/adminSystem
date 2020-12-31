@@ -108,16 +108,19 @@
         v-model="filterText"
         clearable>
       </el-input>
-      <el-tree
-        :data="roleData"
-        show-checkbox
-        node-key="uId"
-        ref="roleData"
-        :default-expanded-keys="resourceCheckedKey"
-        :default-checked-keys="resourceCheckedKey"
-        :filter-node-method="filterNode"
-        :props="defaultProps">
-      </el-tree>
+      <el-row>
+        <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <el-tree
+          :data="roleData"
+          show-checkbox
+          node-key="uId"
+          ref="roleData"
+          :default-expanded-keys="resourceCheckedKey"
+          :default-checked-keys="resourceCheckedKey"
+          :filter-node-method="filterNode"
+          :props="defaultProps">
+        </el-tree>
+      </el-row>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenu">确 定</el-button>
@@ -158,7 +161,8 @@
           children: 'childMenu',
           label: 'name'
         },
-        filterText:''
+        filterText:'',
+        checkAll:false
       }
     } ,
     created(){
@@ -278,8 +282,16 @@
             this.roleInfo = response.datas
           })
       },
+      handleCheckAllChange(){
+        if (this.checkAll) {
+          this.$refs.roleData.setCheckedNodes(this.roleData);
+        } else {
+          this.$refs.roleData.setCheckedKeys([]);
+        }
+      },
       handleRoleMenu(row){
         this.RoleDialogVisible = true
+        this.checkAll = false
         this.filterText = ''
         this.roleId = row.uId
         AppRole(row.uId).then(response=>{

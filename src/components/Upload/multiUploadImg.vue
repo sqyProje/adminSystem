@@ -21,7 +21,7 @@
     </el-upload>
     <el-dialog
       :visible.sync="picDialogVisible"
-      width="25%"
+      width="90%"
       append-to-body
     >
       <img width="100%" :src="dialogImageUrl" alt="">

@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const originalPush = Router.prototype.push
+/*const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
-}
+}*/
 
 Vue.use(Router)
 
@@ -174,6 +174,61 @@ export const asyncRouterMap = [
             component:()=>import('@/views/personalDoor/approve/relevance_approve'),
             meta:{title:'抄送我的',noCache: true}
           }
+        ]
+      },
+      {
+        path: 'old_approve',
+        component: () => import('@/views/personalDoor/oldApprove/index'),
+        redirect: '/personalDoor/oldApprove/old_myApprove',
+        name:'old_approve',
+        meta:{title:'旧版审批'},
+        children:[
+          {
+            path:'old_myApprove',
+            name:'old_myApprove',
+            component:()=>import('@/views/personalDoor/oldApprove/old_myApprove'),
+            meta:{title:'我的审批',noCache: true}
+          },
+          {
+            path:'old_myWaitApprove',
+            name:'old_waitApprove',
+            component:()=>import('@/views/personalDoor/oldApprove/old_myWaitApprove'),
+            meta:{title:'待我审批',noCache: true}
+          },
+          {
+            path:'old_myComputedApprove',
+            name:'old_finishApprove',
+            component:()=>import('@/views/personalDoor/oldApprove/old_myComputedApprove'),
+            meta:{title:'我已审批',noCache: true}
+          },
+          {
+            path: 'see',
+            name: 'oldsee',
+            component: () => import('@/views/personalDoor/oldApprove/components/see'),
+            meta: {title: '查看'},
+            hidden: true
+          },
+          {
+            path: 'print',
+            name: 'oldprint',
+            component: () => import('@/views/personalDoor/oldApprove/components/print'),
+            meta: {title: '打印'},
+            hidden: true
+          },
+          {
+            path: 'workflow',
+            name: 'oldworkflow',
+            component: () => import('@/views/personalDoor/oldApprove/components/workflow'),
+            meta: {title: '审批过程'},
+            hidden: true
+          },
+          {
+            path: 'flowInfo',
+            name: 'oldflowInfo',
+            component: () => import('@/views/personalDoor/oldApprove/components/flowInfo'),
+            meta: {title: '审批'},
+            hidden: true
+          },
         ]
       },
       {

@@ -5,6 +5,7 @@
       :data="tableData"
       v-loading="listLoading"
       size  = "small"  max-height="600"
+      default-expand-all
     >
       <el-table-column type="expand" label="摘要" align="center">
         <template slot-scope="scope">
@@ -87,6 +88,7 @@
         listQuery: Object.assign({}, defaultListQuery),
         tableData:[],
         total: null,
+        listLoading:true
       }
     } ,
     beforeCreate(){
@@ -120,9 +122,11 @@
         this.initTable()
       },
       initTable() {
-        this.listLoading = true
         InitOldWaitList(this.listQuery).then(response => {
           this.listLoading = false
+          if(response.status !== 0){
+            return
+          }
           this.tableData = response.datas.list
           this.total = response.datas.total
         })

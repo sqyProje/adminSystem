@@ -35,8 +35,7 @@ service.interceptors.response.use(
         type: 'error',
         duration: 3 * 1000
       })
-
-      return new Promise(() => {})
+      return new Promise(() => {}) //response.data
     }else if(response.data.type === 'application/vnd.ms-excel'){
       return response
     }else{
@@ -55,10 +54,9 @@ service.interceptors.response.use(
           type: 'error',
           duration: 3 * 1000
         })
-        return Promise.reject('error')
+        return response.data //Promise.reject('error')
       }else{
         return response.data
-
       }
     }
   },

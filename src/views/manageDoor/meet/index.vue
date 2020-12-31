@@ -159,9 +159,9 @@
         <el-form-item label ='简介'>
           <el-input type="textarea" v-model="AddEditInfo.sketch"></el-input>
         </el-form-item>
-        <el-form-item label ='选择用户' prop="userString">
-          <el-button size="small" v-on:click.native="userRole" type="primary">选择用户</el-button>
-          <el-input type="hidden" v-model="AddEditInfo.userString"></el-input>
+        <el-form-item label ='选择用户' prop="userString"><!-- prop="userString"-->
+          <el-button size="small"  v-on:click.native="userRole" type="primary">选择用户</el-button>
+          <el-input type="hidden" v-model="AddEditInfo.userString" style="width: 0;height: 0"></el-input>
         </el-form-item>
         <el-row :gutter="10">
           <el-col :span="8">
@@ -239,16 +239,19 @@
         v-model="filterText"
         clearable>
       </el-input>
-      <el-tree
-        :data="roleData"
-        show-checkbox
-        node-key="id"
-        ref="roleData"
-        :default-expanded-keys="resourceCheckedKey"
-        :default-checked-keys="resourceCheckedKey"
-        :filter-node-method="filterNode"
-        :props="defaultProps">
-      </el-tree>
+      <el-row>
+        <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <el-tree
+          :data="roleData"
+          show-checkbox
+          node-key="id"
+          ref="roleData"
+          :default-expanded-keys="resourceCheckedKey"
+          :default-checked-keys="resourceCheckedKey"
+          :filter-node-method="filterNode"
+          :props="defaultProps">
+        </el-tree>
+      </el-row>
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="RoleCanleDialog">取 消</el-button>
           <el-button size="small" type="primary" @click="UpdateRoleMenu"  v-show="checkFlag">确 定</el-button>
@@ -308,7 +311,7 @@
           startdate:[{required: true, trigger: 'blur', message: '请选择开始时间'}],
           enddate:[{required: true, trigger: 'blur', message: '请选择结束时间'}],
           typename:[{required: true, trigger: 'blur', message: '请输入分类名称'}],
-          userString:[{required: true, trigger: 'blur', message: '请选择用户'}]
+          userString:[{required: true, trigger: ['change','blur'],validator:this.approval, message: '请选择用户'}]
         },
         RoleDialogVisible:false,
         rcFlag:true,
@@ -335,7 +338,8 @@
           }
         },
         checkFlag:true,
-        filterText:''
+        filterText:'',
+        checkAll:false
       }
 
     } ,
@@ -361,6 +365,15 @@
       filterNode(value, data) {
         if (!value) return true;
         return data.name.indexOf(value) !== -1;
+      },
+      async approval() {
+        if(this.AddEditInfo.userString.length===0){
+          Message({
+            message: response.msg,
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
       },
       onSearchList() {
         this.initTable()
@@ -394,10 +407,15 @@
         this.AddEditInfo.isstick=0
         this.AddEditInfo.state=0
         this.checkFlag = true
+        this.checkAll = false
       },
       handleEdit(row) {
         this.dialogTitle = '编辑'
         this.checkFlag = true
+        this.roleData = []
+        this.resourceCheckedKey = []
+        this.userIds = []
+        this.checkAll = false
         GetMeet(row.uId).then(response=>{
           if(response.status==0){
             this.dialogVisible = !this.dialogVisible
@@ -407,6 +425,28 @@
                }else{
                this.rcFlag = true
              }
+            GetMeetDrop(this.AddEditInfo.uId).then(response=>{
+              response.datas.forEach((res,key)=>{
+                this.roleData.push({id:key,name:res.name,children:[]})
+                res.meeting_depart_userModels.forEach((depart,dkey)=>{
+                  this.roleData[key].children.push({id:depart.uId,name:depart.name,children:[]})
+                  depart.children.forEach((departuser,three)=>{
+                    this.roleData[key].children[dkey].children.push({id:departuser.userId,name:departuser.realName,selected:departuser.selected})
+                  })
+                })
+                res.children.forEach((child)=>{
+                  this.roleData[key].children.push({id:child.userId,name:child.realName,selected:child.selected,children:[]})
+                })
+              })
+              this.$nextTick(()=>{
+                this.findAllChildren(this.roleData, this.resourceCheckedKey)
+                let checkedKeys = this.resourceCheckedKey
+                this.userIds = checkedKeys
+                this.AddEditInfo.userString = this.userIds.toString()
+                this.AddEditInfo.userIds = this.userIds
+              })
+
+            })
           }else{
             Message({
               message: response.msg,
@@ -415,6 +455,7 @@
             })
           }
         })
+
       },
       handleCheck(row){
         CheckMeet(row.uId).then(res=>{
@@ -424,9 +465,6 @@
         })
       },
       UpdateUser(){
-        this.AddEditInfo.userString = this.userIds.toString()
-        this.AddEditInfo.userIds = this.userIds
-      //  console.log(this.$refs.AddEditInfo.validate())
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -442,7 +480,6 @@
                     })
                   }
                 })
-
             } else {
               EditMeet(this.AddEditInfo).then(response => {
                 if (response.status === 0) {
@@ -508,8 +545,28 @@
       newContent(val){
         this.AddEditInfo.content= val
       },
+      handleCheckAllChange(){
+        if (this.checkAll) {
+          this.$refs.roleData.setCheckedNodes(this.roleData);
+          let userArray = [];
+          this.$refs.roleData.getCheckedNodes().forEach((item) => {
+            if(item.selected  === undefined){
+              return
+            }else{
+              userArray.push(item.uId)
+              this.AddEditInfo.userString = userArray.toString()
+            }
+          });
+        } else {
+          this.$refs.roleData.setCheckedKeys([]);
+          this.AddEditInfo.userString = ''
+        }
+      },
       //选择用户
       userRole(){
+        this.roleData = []
+        this.resourceCheckedKey = []
+        this.userIds = []
         this.RoleDialogVisible = true
         this.filterText=''
         GetMeetDrop(this.AddEditInfo.uId).then(response=>{
@@ -524,25 +581,21 @@
             res.children.forEach((child)=>{
               this.roleData[key].children.push({id:child.userId,name:child.realName,selected:child.selected,children:[]})
             })
-
           })
           this.findAllChildren(this.roleData, this.resourceCheckedKey)
           this.$nextTick(()=>{
             this.$refs.roleData.setCheckedKeys(this.resourceCheckedKey)
           })
-
         })
       },
       UpdateRoleMenu(){
         let checkedKeys = this.$refs.roleData.getCheckedKeys();
-        checkedKeys =  checkedKeys.filter((value)=>{
-          return value.length >= 3
-        })
         this.userIds = checkedKeys
-        this.RoleDialogVisible = false
+        this.AddEditInfo.userString = this.userIds.toString()
+        this.AddEditInfo.userIds = this.userIds
         this.resourceCheckedKey=[]
         this.roleData = []
-      //  console.log(this.userIds)
+        this.RoleDialogVisible = false
       },
       RoleCanleDialog(){
         this.RoleDialogVisible = false
@@ -552,15 +605,6 @@
       //遍历选中子节点
       findAllChildren(data,arr){
       //  console.log(data,arr)
-        /*data.forEach((item,index)=>{
-          if(item.children.length!==0){
-            item.children.forEach((child)=>{
-              if(child.selected){
-                arr.push(child.id)
-              }
-            })
-          }
-        })*/
         data.forEach((item,index)=>{
           if(item.children.length!==0){
             item.children.forEach((child)=>{

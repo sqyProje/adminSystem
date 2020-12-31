@@ -10,10 +10,10 @@
         </div>
         <table class="progress-table two-table" cellspacing="0" cellpadding="0" >
           <tr v-for="item in ProcessData">
-            <td class="fieldName">
+            <td class="fieldName" v-show="item.fieldValues.trim().length>0">
               {{item.fieldName}}
             </td>
-            <td  class="fieldValues">{{item.fieldValues}}</td>
+            <td  class="fieldValues" v-show="item.fieldValues.trim().length>0">{{item.fieldValues}}</td>
           </tr>
         </table>
         <table class='progress-table ' cellspacing="0" cellpadding="0"><!-- style="border-left:1px solid #e1e1e1 "-->
@@ -30,7 +30,7 @@
                     >
                       <img
                         v-if="itemchild.picsignatureUrl.length!==0"
-                        style="width:100%"
+                        style="width:100%;height: 30px;"
                         :src=itemchild.picsignatureUrl
                       >
                     </span>

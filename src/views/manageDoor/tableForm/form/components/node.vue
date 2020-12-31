@@ -127,8 +127,9 @@
                 {{item.name}}</el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label='审批人'  prop="userid" v-show="userFlag">
-            <el-select v-model="AddEditInfo.userid" filterable placeholder="审批人" style="width: 100%;">
+          <el-form-item :label='AddEditInfo.approvenodetype==40?"抄送人":"审批人"'  prop="userid" v-show="userFlag">
+            <el-select v-model="AddEditInfo.userid" :multiple='AddEditInfo.approvenodetype==40?true:false'
+              filterable :placeholder='AddEditInfo.approvenodetype==40?"抄送人":"审批人"' style="width: 100%;">
               <el-option
                 v-for="item in userDropData"
                 :label="item.realname"
@@ -302,11 +303,16 @@
           }else if(this.AddEditInfo.approvenodetype===1){
             this.userFlag=false
             this.approveFlag=false
+          }else if(this.AddEditInfo.approvenodetype === 40){
+            this.approveFlag=false
+            this.userFlag=true
+            this.AddEditInfo.userid = this.AddEditInfo.userid.split(',')
           }
 
         })
       },
       UpdateUser(){
+        this.AddEditInfo.userid = this.AddEditInfo.userid.toString()
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
             if (this.dialogTitle === '添加') {
@@ -399,9 +405,14 @@
           this.approveFlag=true
           this.userFlag=false
           this.AddEditInfo.userid=''
-        }else if(value===1){
+        }else if(value===1 ){
           this.approveFlag=false
           this.userFlag=false
+          this.AddEditInfo.approveroleid=''
+          this.AddEditInfo.userid=''
+        }else if(value===40){
+          this.approveFlag=false
+          this.userFlag=true
           this.AddEditInfo.approveroleid=''
           this.AddEditInfo.userid=''
         }

@@ -70,6 +70,10 @@
             >表单字段</el-button>
             <el-button
               size="mini"
+              type="info"
+              @click="handleCopy(scope.row)">复制</el-button>
+            <el-button
+              size="mini"
               type="success"
               v-if="hasPerm('form:edit')"
               @click="handleEdit(scope.row)">编辑</el-button>
@@ -78,10 +82,6 @@
               type="danger"
               v-if="hasPerm('form:deletes')"
               @click="handleDelete(scope.row)">删除</el-button>
-            <el-button
-              size="mini"
-              type="info"
-              @click="handleCopy(scope.row)">复制</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -131,7 +131,8 @@
               {{item.name}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label ='用户树' prop="usersView">
+        <el-form-item label ='用户树'>
+          <!--prop="usersView"-->
           <el-input type='hidden' v-model="AddEditInfo.usersView" style="width: 0;height: 0;"></el-input>
           <el-button size="small" v-on:click.native="userRole('')" type="primary">选择用户</el-button>
         </el-form-item>
@@ -250,7 +251,7 @@
         rulesInfo: {
           name: [{ required: true,trigger: 'blur',message: '请输入名称'}],
           approvetypename:[{required: true, trigger: 'blur', message: '请选择所属分类'}],
-          usersView:[{ required: true,trigger: 'blur',message: '请选择用户'}]
+        //  usersView:[{ required: true,trigger: 'blur',message: '请选择用户'}]
         },
         dictionTypeData:[],
         RoleDialogVisible:false,
@@ -524,7 +525,7 @@
           }
         });
         checkedKeys = select_box;
-        console.log(checkedKeys)
+      //  console.log(checkedKeys)
         this.AddEditInfo.usersView = checkedKeys.toString()
         this.RoleDialogVisible = false
         this.resourceCheckedKey=[]

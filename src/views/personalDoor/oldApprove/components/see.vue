@@ -7,20 +7,18 @@
       </div>-->
       <table class="progress-table" cellspacing="0" cellpadding="0" >
         <tr v-for="item in ProcessData">
-          <td class="fieldName">
+          <td class="fieldName" v-show="item.fieldValues.indexOf('未填写') == -1">
             {{item.fieldName}}
           </td>
-          <td  class="fieldValues">{{item.fieldValues}}</td>
+          <td  class="fieldValues" v-show="item.fieldValues.indexOf('未填写') == -1">{{item.fieldValues}}</td>
         </tr>
-        <tr v-show="imgTitle.length>0">
-          <td class="fieldName">
-            {{imgTitle}}
-          </td>
+        <tr v-if="imgArray.length>0">
+          <td class="fieldName">图片</td>
           <td  class="fieldValues">
            <div v-if="imgArray.length>0">
              <el-image
-               v-for="item in imgArray"
-               :key="item"
+               v-for="(item,key) in imgArray"
+               :key="key"
                :src="item"
                :preview-src-list="imgArray"
                fit="fill"
@@ -29,9 +27,9 @@
            </div>
           </td>
         </tr>
-        <tr v-show="fileTitle.length>0">
+        <tr v-show="fileHref.length>0">
           <td class="fieldName">
-            {{fileTitle}}
+            文件
           </td>
           <td class="fieldValues">
             <div v-for="(item,key) in fileHref" :key="key" style="height: 26px;line-height: 26px">
@@ -151,23 +149,12 @@
           checkDate:formInfo.createDate,
           checkRealName:formInfo.userRealName,
         }
-        formInfo.fieldValueModels.forEach((item,index)=>{
-          if(item.fieldType ===150){
-            this.imgTitle = item.fieldName
-            if(item.fieldValues.length==0){
-              this.imgArray = []
-            }else{
-              this.imgArray= item.fieldValues.split(',')
-            }
-          }else if(item.fieldType === 160){
-            this.fileTitle = item.fieldName
-           let Href  = decodeURIComponent(item.fieldValues)
-            this.fileHref=Href.split(',')
-          }else{
-            this.ProcessData.push(item)
-          }
+        formInfo.picturesUrls.forEach(items=>{
+          this.imgArray .push(this.baseURLS+'/'+items)
         })
-        this.workData= response.datas.approveCourses
+        this.fileHref =formInfo.filesUrls ?formInfo.filesUrls:[]
+        this.ProcessData = formInfo.fieldValueModels
+        this.workData = response.datas.approveCourses
       })
     },
     methods:{

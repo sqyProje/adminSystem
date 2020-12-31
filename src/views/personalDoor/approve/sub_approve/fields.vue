@@ -36,8 +36,8 @@
           :rules="domain.ismust ? {
           required: true, message: domain.fieldname+'必填项', trigger: 'blur'
         }:[]"
-        >
-          <el-input type="number" :min="0" :step="0.01" v-model="domain.fieldValue"  :placeholder="domain.valimessage"></el-input>
+        ><!-- @blur="limitInput($event,domain.fieldValue)"-->
+          <el-input type="number" :min="0" :step="0.01" v-model="domain.fieldValue" :placeholder="domain.valimessage" @blur="limitInput(index,domain.fieldValue)"></el-input>
         </el-form-item>
         <el-form-item
           v-if="domain.fieldtype===50"
@@ -72,7 +72,7 @@
             :placeholder="domain.fieldname"
             style="width: 100%"
             :picker-options="pickerOptionsStart"
-            @change="changeEnd"
+            @change="changeStart"
             :clearable="false"
           >
           </el-date-picker>
@@ -93,7 +93,7 @@
             :placeholder="domain.fieldname"
             style="width: 100%"
             :picker-options="pickerOptionsEnd"
-            @change="changeStart"
+            @change="changeEnd"
             :clearable="false"
           >
           </el-date-picker>
@@ -137,14 +137,10 @@
           :label="domain.fieldname"
           :prop="'domains.' + index + '.fieldValue'"
           :rules="domain.ismust ?{
-          required: true, message: domain.fieldname+'必填项', trigger: 'blur'
+          required: true, message: domain.fieldname+'必选项', trigger: 'blur'
         }:[]"
         >
-          <el-switch
-            v-model="domain.fieldValue"
-            active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
+          <el-checkbox v-model="domain.fieldValue">{{domain.valimessage}}</el-checkbox>
         </el-form-item>
         <el-form-item
           v-for="(firstItem,firstIndex) in OnlyDataMany"
@@ -164,7 +160,7 @@
             style="width: 100%"
             popper-class="selectJob"
             :filter-method="dataFilter"
-          ><!-- v-el-select-loadmore="loadmore"-->
+          >
             <el-option
               v-for="item in selectOne"
               :key="item.name"
@@ -392,10 +388,11 @@
         pickerOptionsEnd : {
           disabledDate: (time) => {
             if(this.startDay) {
-              return time.getTime() < new Date(this.startDay).getTime() - 86400000
+              return time.getTime() < new Date(this.startDay).getTime() - 8.64e7
             }
           }
-        }
+        },
+      //  days:''
       }
     },
     components:{
@@ -459,6 +456,10 @@
               }else if(item.fieldType === 160){
                 let Href  = decodeURIComponent(item.fieldValues)
                 this.fileIdsArray=Href.split(',')
+              }else if(item.fieldType === 53){
+                this.startDay = item.fieldValues
+              }else if(item.fieldType === 54){
+                this.endDay = item.fieldValues
               }
             })
           }).then(()=>{
@@ -474,84 +475,90 @@
       }
 
     },
-    methods:{
-      changeStart (value){
+    methods: {
+      changeStart(value) {
         this.startDay = value
       },
-      changeEnd (value){
+      changeEnd(value) {
         this.endDay = value
       },
-      DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
-        var  aDate,  oDate1,  oDate2,  iDays
-        aDate  =  sDate1.split("-")
-        oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])    //转换为12-18-2006格式
-        aDate  =  sDate2.split("-")
-        oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
-        iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24 + 1)    //把相差的毫秒数转换为天数
-        return  iDays
+      DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2006-12-18格式
+        var aDate, oDate1, oDate2, iDays
+        aDate = sDate1.split("-")
+        oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2006格式
+        aDate = sDate2.split("-")
+        oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+        iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24 + 1)    //把相差的毫秒数转换为天数
+        return iDays
       },
-      FilePreview(value){ //文件
+      FilePreview(value) { //文件
         this.fileIdsArray.push(value)
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 160){
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 160) {
             item.fieldValue = this.fileIdsArray.toString()
           }
         })
       },
-      delFilePreview(value){
-        this.fileIdsArray= this.fileIdsArray.filter((x)=>{
-          return x !==value
+      delFilePreview(value) {
+        this.fileIdsArray = this.fileIdsArray.filter((x) => {
+          return x !== value
         })
         //console.log(this.fileIdsArray)
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 160){
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 160) {
             item.fieldValue = this.fileIdsArray.toString()
           }
         })
       },
-      picPreview(value){ //图片
+      picPreview(value) { //图片
         this.picIdsArray.push(value)
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 150){
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 150) {
             item.fieldValue = this.picIdsArray.toString()
           }
         })
       },
-      delUrlPreview(value){
-        this.picIdsArray= this.picIdsArray.filter((x)=>{
-          return x !==value
+      delUrlPreview(value) {
+        this.picIdsArray = this.picIdsArray.filter((x) => {
+          return x !== value
         })
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 150){
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 150) {
             item.fieldValue = this.picIdsArray.toString()
           }
         })
       },
-      prev(){
-        this.$router.push({name:'sub_approve'})
+      prev() {
+        this.$router.push({name: 'sub_approve'})
       },
 
       //提交审批
       submitForm() {
-        if(this.submitFlag){
+        if (this.submitFlag) {
           Message({
-            message:'请勿重复提交',
+            message: '请勿重复提交',
             type: 'error',
             duration: 3 * 1000
           })
           return
         }
-        this.submitFlag=true
-        const data={
-          approveId:this.approveId,
-          tableFormId:this.$route.query.form_id,
-          tableFieldSubModels:[]
+        this.submitFlag = true
+        const data = {
+          approveId: this.approveId,
+          tableFormId: this.$route.query.form_id,
+          tableFieldSubModels: []
         }
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 55){
+        console.log(this.dynamicValidateForm.domains)
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 55) {
             data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:this.days
+              tableFieldId: item.uId,
+              tableFieldValue: this.days
+            })
+          }else if(item.fieldtype === 80) {
+            data.tableFieldSubModels.push({
+              tableFieldId: item.uId,
+              tableFieldValue: item.fieldValue ? '是/'+item.valimessage:'否/'+item.valimessage
             })
           }else {
             data.tableFieldSubModels.push({
@@ -560,17 +567,16 @@
             })
           }
         })
-        //console.log(data)
         this.$refs.dynamicValidateForm.validate((valid) => {
           if (valid) {
-            GetApproveUser(data).then(response=>{
-              if(response.datas===null){
+            GetApproveUser(data).then(response => {
+              if (response.datas === null) {
                 this.dialogVisible = false
-                if(this.$route.query.u_id){
+                if (this.$route.query.u_id) {
                   subReloadApprove(data).then(res => {
                     if (res.status === 0) {
                       this.dialogVisible = false
-                      this.$router.push({name:'sub_approve'})
+                      this.$router.push({name: 'sub_approve'})
                       Message({
                         message: res.msg,
                         type: 'success',
@@ -578,11 +584,11 @@
                       })
                     }
                   })
-                }else{
+                } else {
                   AddFormInfo(data).then(res => {
                     if (res.status === 0) {
                       this.dialogVisible = false
-                      this.$router.push({name:'sub_approve'})
+                      this.$router.push({name: 'sub_approve'})
                       Message({
                         message: res.msg,
                         type: 'success',
@@ -591,13 +597,10 @@
                     }
                   })
                 }
-
-
-              }else{
+              } else {
                 this.dialogVisible = true
                 this.ApproveUserData = response.datas
               }
-
             })
           } else {
             Message({
@@ -605,45 +608,50 @@
               type: 'error',
               duration: 3 * 1000
             })
-            this.submitFlag=false
+            this.submitFlag = false
             return false;
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        if(this.$refs.fileFile && this.$refs.multiImg){
-          this.$refs.multiImg[0].fileList=[]
-          this.$refs.fileFile[0].fileList=[]
-        }else if(this.$refs.multiImg){
-          this.$refs.multiImg[0].fileList=[]
-        }else if(this.$refs.fileFile){
-          this.$refs.fileFile[0].fileList=[]
+        if (this.$refs.fileFile && this.$refs.multiImg) {
+          this.$refs.multiImg[0].fileList = []
+          this.$refs.fileFile[0].fileList = []
+        } else if (this.$refs.multiImg) {
+          this.$refs.multiImg[0].fileList = []
+        } else if (this.$refs.fileFile) {
+          this.$refs.fileFile[0].fileList = []
         }
       },
-      UpdateUser(){
-        const data={
-          approveId:this.approveId,
-          tableFormId:this.$route.query.form_id,
-          approveUserId:this.AddEditInfo.UserId,
-          tableFieldSubModels:[]
+      UpdateUser() {
+        const data = {
+          approveId: this.approveId,
+          tableFormId: this.$route.query.form_id,
+          approveUserId: this.AddEditInfo.UserId,
+          tableFieldSubModels: []
         }
-        this.dynamicValidateForm.domains.forEach((item,index)=>{
-          if(item.fieldtype === 55){
+        this.dynamicValidateForm.domains.forEach((item, index) => {
+          if (item.fieldtype === 55) {
             data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:this.days
+              tableFieldId: item.uId,
+              tableFieldValue: this.days
             })
-          }else{
+          }if (item.fieldtype === 80) {
             data.tableFieldSubModels.push({
-              tableFieldId:item.uId,
-              tableFieldValue:item.fieldValue.toString()
+              tableFieldId: item.uId,
+              tableFieldValue: item.fieldValue ? '是/'+item.valimessage:'否/'+item.valimessage
+            })
+          } else {
+            data.tableFieldSubModels.push({
+              tableFieldId: item.uId,
+              tableFieldValue: item.fieldValue.toString()
             })
           }
 
         })
-        if(this.AddEditInfo.UserId.length>0){
-          if(this.$route.query.u_id){
+        if (this.AddEditInfo.UserId.length > 0) {
+          if (this.$route.query.u_id) {
             subReloadApprove(data).then(res => {
               if (res.status === 0) {
                 this.dialogVisible = false
@@ -655,7 +663,7 @@
                 })
               }
             })
-          }else {
+          } else {
             AddFormInfo(data).then(res => {
               if (res.status === 0) {
                 this.dialogVisible = false
@@ -668,7 +676,7 @@
               }
             })
           }
-        }else{
+        } else {
           Message({
             message: '请选择审批人',
             type: 'error',
@@ -676,83 +684,100 @@
           })
         }
       },
-      canleDialog(){
+      canleDialog() {
         this.dialogVisible = false
-        this.submitFlag=false
+        this.submitFlag = false
         this.$refs.AddEditInfo.resetFields();
-        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
+        Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key] = '');
       },
-      onlyFocus(value,isdrop){
+      onlyFocus(value, isdrop) {
         this.formData.name = ''
-        this.formData.parentId=value
-        this.isdrop= isdrop
-        this.total=null
-        this.pageCount= null
-        this.formData.pageNum=1
-        if(this.isdrop===1){//单选
-          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-            this.selectOne=res.datas.list
-            this.total= (res.datas.list && res.datas.total)
+        this.formData.parentId = value
+        this.isdrop = isdrop
+        this.total = null
+        this.pageCount = null
+        this.formData.pageNum = 1
+        if (this.isdrop === 1) {//单选
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectOne = res.datas.list
+            this.total = (res.datas.list && res.datas.total)
             this.pageCount = Math.ceil(this.total / 20)
           })
         }
-        if(this.isdrop===2){
-          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-            this.selectMany=res.datas.list
-            this.total= (res.datas.list && res.datas.total)
+        if (this.isdrop === 2) {
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectMany = res.datas.list
+            this.total = (res.datas.list && res.datas.total)
             this.pageCount = Math.ceil(this.total / 20)
           })
         }
 
       },
-      prevePage(){
-        -- this.formData.pageNum;
-        if( this.formData.pageNum< 1){
+      prevePage() {
+        --this.formData.pageNum;
+        if (this.formData.pageNum < 1) {
           this.formData.pageNum = 1
         }
-        if(this.isdrop===1){//单选
-          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-            this.selectOne=res.datas.list
+        if (this.isdrop === 1) {//单选
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectOne = res.datas.list
           })
         }
-        if(this.isdrop===2){
-          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-            this.selectMany=res.datas.list
+        if (this.isdrop === 2) {
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectMany = res.datas.list
           })
         }
       },
-      nextPage(){
-        if(this.formData.pageNum < this.pageCount){
-          ++ this.formData.pageNum
-          if(this.isdrop===1){//单选
-            dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-              this.selectOne=res.datas.list
+      nextPage() {
+        if (this.formData.pageNum < this.pageCount) {
+          ++this.formData.pageNum
+          if (this.isdrop === 1) {//单选
+            dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+              this.selectOne = res.datas.list
             })
           }
-          if(this.isdrop===2){
-            dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-              this.selectMany=res.datas.list
+          if (this.isdrop === 2) {
+            dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+              this.selectMany = res.datas.list
             })
           }
         }
       },
       //自定义搜索
-      dataFilter(value){
-        this.formData.pageNum=1
-        this.formData.pageSize=20
+      dataFilter(value) {
+        console.log(value)
+        this.formData.pageNum = 1
+        this.formData.pageSize = 20
         this.formData.name = value
-        if(this.isdrop===1) {//单选
+        if (this.isdrop === 1) {//单选
           dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
             this.selectOne = res.datas.list
           })
         }
-        if(this.isdrop===2){
-          dictionTypePer(this.formData.parentId,this.formData.name,this.formData.pageNum,this.formData.pageSize).then(res=>{
-            this.selectMany=res.datas.list
+        if (this.isdrop === 2) {
+          dictionTypePer(this.formData.parentId, this.formData.name, this.formData.pageNum, this.formData.pageSize).then(res => {
+            this.selectMany = res.datas.list
           })
         }
-      }
-    }
+      },
+      limitInput(index,value) {
+        var value = Math.round(parseFloat(value) * 100) / 100;
+        var xsd = value.toString().split(".");
+        if (xsd.length == 1) {
+          value = value.toString() + ".00";
+          this.dynamicValidateForm.domains[index].fieldValue = value
+        //  return value;
+        }
+        if (xsd.length > 1) {
+          if (xsd[1].length < 2) {
+            value = value.toString() + "0";
+          }
+          this.dynamicValidateForm.domains[index].fieldValue = value
+        //  return value;
+        }
+      },
+    },
   }
 
 </script>

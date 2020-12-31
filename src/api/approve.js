@@ -48,7 +48,7 @@ export function InitMyList(params) {
 //查看
 export function GetMyInfo(params) {
   return request({
-    url: '/process_approve/check?approveId='+params,
+    url: '/process_approve/re_check?approveId='+params,
     method: 'get'
   })
 }
@@ -143,5 +143,78 @@ export function InitRelevanceList(params) {
     url: '/relevance_approve/list',
     method: 'get',
     params: params
+  })
+}
+//旧版审批相关接口
+export function InitOldMyList(params) {
+  return request({
+    url: '/oldApprove/my_approves',
+    method: 'get',
+    params: params
+  })
+}
+export function InitOldWaitList(params) {
+  return request({
+    url: '/oldApprove/wait_approves',
+    method: 'get',
+    params: params
+  })
+}
+export function InitOldFinishList(params) {
+  return request({
+    url: '/oldApprove/finish_approves',
+    method: 'get',
+    params: params
+  })
+}
+
+export function OldMyApproveDetails(params) {
+  return request({
+    url: '/oldSupApprove/super_myApprove_details',
+    method: 'get',
+    params: {
+      approveId:params
+    }
+  })
+}
+export function OldWaitApproveDetails(params) {
+  return request({
+    url: '/oldSupApprove/super_waitapprove_details',
+    method: 'get',
+    params: {
+      approveStepId:params
+    }
+  })
+}
+
+export function OldUser(params) {
+  return request({
+    url: '/oldApprove/usersByrole',
+    method: 'get',
+    params: {
+      approveRoleId:params
+    }
+  })
+}
+export function OldApprove(params) {
+  return request({
+    url: '/oldSupApprove/super_waitapprove_post',
+    method: 'post',
+    params: {
+      approvestepid:params.approvestepid,
+      approve_startUserid:params.approve_startUserid,
+      approvestatus:params.approvestatus,
+      sketch:params.sketch,
+    }
+  })
+}
+/*批量打印*/
+export function PrintAll(params) {
+  return request({
+    url: '/process_approve/check_flow',
+    method: 'get',
+    params: {
+      approveId:params
+    }
   })
 }

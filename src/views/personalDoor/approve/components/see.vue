@@ -8,17 +8,16 @@
       </div>
       <table class="progress-table" cellspacing="0" cellpadding="0" >
         <tr v-for="item in ProcessData">
-          <td class="fieldName">
+          <td class="fieldName" v-show="item.fieldValues.trim().length>0">
             {{item.fieldName}}
           </td>
-          <td  class="fieldValues">{{item.fieldValues}}</td>
+          <td  class="fieldValues" v-show="item.fieldValues.trim().length>0">{{item.fieldValues}}</td>
         </tr>
-        <tr v-show="imgTitle.length>0">
+        <tr v-show="imgArray.length>0">
           <td class="fieldName">
-            {{imgTitle}}
+            {{imgTitle}}12
           </td>
           <td  class="fieldValues">
-           <div v-if="imgArray.length>0">
              <el-image
                v-for="item in imgArray"
                :key="item"
@@ -27,10 +26,9 @@
                fit="fill"
                style="height:100px;width:100px;overflow: visible;margin: 10px 5px 0 ;"
              ></el-image>
-           </div>
           </td>
         </tr>
-        <tr v-show="fileTitle.length>0">
+        <tr v-show="imgArray.length>0">
           <td class="fieldName">
             {{fileTitle}}
           </td>

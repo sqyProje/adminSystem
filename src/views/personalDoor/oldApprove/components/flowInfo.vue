@@ -6,11 +6,11 @@
         <span class="left">部门名称：{{otherInfo.departName}}</span>
       </div>-->
       <table class="progress-table" cellspacing="0" cellpadding="0" >
-        <tr v-for="item in ProcessData">
-          <td class="fieldName">
+        <tr v-for="item in ProcessData" >
+          <td class="fieldName"  v-show="item.fieldValues.indexOf('未填写') == -1">
             {{item.fieldName}}
           </td>
-          <td  class="fieldValues">{{item.fieldValues}}</td>
+          <td  class="fieldValues"  v-show="item.fieldValues.indexOf('未填写') == -1">{{item.fieldValues}}</td>
         </tr>
         <tr v-show="imgTitle.length>0">
           <td class="fieldName">

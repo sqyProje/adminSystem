@@ -44,7 +44,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.code).then(response => {
           localStorage.setItem("loginToken", response.datas)
-          resolve()
+          resolve(response)
         }).catch(error => {
           reject(error)
         })
