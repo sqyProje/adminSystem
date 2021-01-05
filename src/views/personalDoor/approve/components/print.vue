@@ -8,38 +8,37 @@
           <span class="left">部门名称：{{otherInfo.departName}}</span>
           <span class="right">审批编号：{{otherInfo.approveId}}</span>
         </div>
-        <table class="progress-table two-table" cellspacing="0" cellpadding="0" >
+        <table class="progress-table" cellspacing="0" cellpadding="0" >
           <tr v-for="item in ProcessData">
             <td class="fieldName" v-show="item.fieldValues.trim().length>0">
               {{item.fieldName}}
             </td>
             <td  class="fieldValues" v-show="item.fieldValues.trim().length>0">{{item.fieldValues}}</td>
           </tr>
-        </table>
-        <table class='progress-table ' cellspacing="0" cellpadding="0"><!-- style="border-left:1px solid #e1e1e1 "-->
           <tr v-for="(items,keys) in workData">
-            <td class="fieldName" :style="keys==0? 'border-top:none':''">
+            <td class="fieldName">
               {{items.courseName}}
             </td>
             <td style="display: block">
               <table class='progress-man' cellspacing="0" cellpadding="0" >
-                <tr v-for="(itemchild,index) in items.approveStepCourseModels" :key="index">
-                  <td>
-                    <span  v-if="itemchild.picsignatureUrl.length!==0"
-                           style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
-                    >
-                      <img
-                        v-if="itemchild.picsignatureUrl.length!==0"
-                        style="width:100%;height: 30px;"
-                        :src=itemchild.picsignatureUrl
+                <tbody>
+                  <tr v-for="(itemchild,index) in items.approveStepCourseModels" :key="index">
+                    <td>
+                      <span  v-if="itemchild.picsignatureUrl.length!==0"
+                             style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
                       >
-                    </span>
-                    <span v-else >{{itemchild.courseUserName}}</span>
-                     &nbsp;&nbsp;
-                    {{itemchild.courseStatus | formatState}}
-                    <span class="right"  style="margin-right: 40px">{{itemchild.approveDate}}</span>
-                  </td>
-                </tr>
+                        <img
+                          v-if="itemchild.picsignatureUrl.length!==0"
+                          style="width:100%;height: 30px;"
+                          :src=itemchild.picsignatureUrl
+                        >
+                      </span>
+                      <span v-else >{{itemchild.courseUserName}}</span>
+                      {{itemchild.courseStatus | formatState}}
+                      <span class="right"  style="margin-right: 40px">{{itemchild.approveDate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>
@@ -48,13 +47,12 @@
           <span class="left">查看人：{{otherInfo.checkRealName}}</span>
           <span class="right">查看日期：{{otherInfo.checkDate}}</span>
         </div>
-
       </div>
       <!--endprint-->
     </div>
     <div style="text-align: center;">
       <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
-      <el-button style="margin-top: 12px;" type="warning" size="medium" @click="print">打印</el-button>
+      <el-button style="margin-top: 12px;" type="primary" size="medium" @click="print">打印</el-button>
     </div>
   </div>
 </template>
@@ -143,76 +141,8 @@
 </script>
 
 <style rel="stylesheet/stylus" scoped>
-  .progress-container{
-    width: 800px;
-    margin: 20px auto 50px;
-  }
+  @import "index.css";
   .progress-container h2{
     text-align: center;
-  }
-  .clearfix span{
-    margin:15px 0;
-  }
-  .progress-table {
-    width: 800px;
-  }
-  .two-table{
-    border-top:1px solid #999999;
-  }
-  .progress-table td{
-    border-right:1px solid #999999;
-    border-bottom:1px solid #999999;
-  }
-  .progress-table td{
-    min-height: 38px;
-    line-height: 38px;
-    color: #595959;
-    word-break: break-all;
-  }
-  .fieldName{
-    width: 200px;
-    text-align: right;
-    padding-right: 10px;
-    border-right:none;
-    border-left: 1px solid #999999;
-  }
-
-  .fieldValues{
-    text-indent: 20px;
-  }
-  .fieldName span{
-    display:block;
-    width:150px;
-    text-align: center;
-  }
-  .progress-man{
-    display: block;
-  }
-  .progress-man tbody{
-    width:100%;
-    display: block;
-  }
-  .progress-man tr{
-    width:100%;
-    display: block;
-  }
-
-  .progress-man td{
-    width:100%;
-    display: block;
-    border-left:none;
-    border-bottom:none;
-    border-right: none;
-  }
-  .progress-man td span{
-    margin-left: 20px;
-    word-wrap:break-word;
-    word-break:normal;
-  }
-  .left{
-    float: left;
-  }
-  .right{
-    float: right;
   }
 </style>

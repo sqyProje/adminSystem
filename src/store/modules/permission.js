@@ -29,7 +29,6 @@ function jsonsdd(jsontree) {
 function hasPermission(menus, route) {
   if (route.name) {
     let currMenu = getMenu(route.name,jsonsdd(menus));
-  //  let currMenu = getMenu(route.name, menus);
     if (currMenu != null) {
       //设置菜单的标题、图标和可见性
       if (currMenu.name != null && currMenu.name !== '') {

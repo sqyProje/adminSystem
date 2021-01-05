@@ -1,7 +1,7 @@
 <template>
   <div class="app-container" shadow="never">
     <div class="progress-container">
-      <h3>{{otherInfo.departName}}</h3>
+      <h2>{{otherInfo.departName}}</h2>
       <!--<div class="clearfix">
         <span class="left">部门名称：{{otherInfo.departName}}</span>
       </div>-->
@@ -42,7 +42,7 @@
         <span class="left">申请人：{{otherInfo.checkRealName}}</span>
         <span class="right">创建日期：{{otherInfo.checkDate}}</span>
       </div>
-      <h3 v-show="reasonInfo.length>0"> 拒绝原因</h3>
+      <h2 v-show="reasonInfo.length>0"> 拒绝原因</h2>
       <table class="progress-table" cellspacing="0" cellpadding="0" v-show="reasonInfo.length>0">
         <tr>
           <td class="fieldName">拒绝原因</td>
@@ -55,7 +55,7 @@
           <td  class="fieldValues">{{item.approveUser}}</td>
         </tr>
       </table>
-      <h3> 审批流程</h3>
+      <h2> 审批流程</h2>
       <table class='progress-table' cellspacing="0" cellpadding="0" >
         <tr v-for="item in workData">
           <td class="fieldName">

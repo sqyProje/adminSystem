@@ -1,7 +1,7 @@
 <template>
   <div class="app-container" shadow="never">
     <div class="progress-container">
-      <h3>{{otherInfo.name}}</h3>
+      <h2>{{otherInfo.name}}</h2>
       <div class="clearfix">
         <span class="left">部门名称：{{otherInfo.departName}}</span>
         <span class="right">审批编号：{{otherInfo.approveId}}</span>
@@ -43,7 +43,7 @@
         <span class="left">查看人：{{otherInfo.checkRealName}}</span>
         <span class="right">查看日期：{{otherInfo.checkDate}}</span>
       </div>
-      <h3 v-show="reasonInfo.length>0"> 拒绝原因</h3>
+      <h2 v-show="reasonInfo.length>0"> 拒绝原因</h2>
       <table class="progress-table" cellspacing="0" cellpadding="0" v-show="reasonInfo.length>0">
         <tr>
           <td class="fieldName">拒绝原因</td>
@@ -56,7 +56,7 @@
           <td  class="fieldValues">{{item.approveUser}}</td>
         </tr>
       </table>
-      <h3> 审批流程</h3>
+      <h2> 审批流程</h2>
       <table class='progress-table' cellspacing="0" cellpadding="0" >
         <tr v-for="item in workData">
           <td class="fieldName">
@@ -199,63 +199,5 @@
 </script>
 
 <style rel="stylesheet/stylus">
-  .progress-container{
-    width: 800px;
-    margin: 20px auto 50px;
-  }
-  .progress-container h3{
-    text-align: left;
-  }
-  .clearfix span{
-    margin:15px 0;
-  }
-  .progress-table {
-    width: 800px;
-
-    border-left:1px solid #e1e1e1;
-    border-bottom:1px solid #e1e1e1;
-  }
-  .progress-table td{
-    min-height: 38px;
-    line-height: 38px;
-    color: #595959;
-    word-break: break-all;
-  }
-  .fieldName{
-    width: 200px;
-    text-align: right;
-    padding-right: 10px;
-    border-top:1px solid #e1e1e1;
-    border-right:1px solid #e1e1e1;
-  }
-  .fieldValues{
-    text-indent: 20px;
-    border-top:1px solid #e1e1e1;
-    border-right:1px solid #e1e1e1;
-  }
-  .fieldName span{
-    display:block;
-    width:150px;
-    text-align: center;
-  }
-  .progress-man{
-    border-right:1px solid #e1e1e1;
-    display: block;
-  }
-  .progress-man tr{
-    display: block;
-    border-top: 1px solid #e1e1e1;
-  }
-  .progress-man td{
-    display: block;
-  }
-  .progress-man td span{
-    margin-left: 20px;
-  }
-  .left{
-    float: left;
-  }
-  .right{
-    float: right;
-  }
+ @import "index.css";
 </style>

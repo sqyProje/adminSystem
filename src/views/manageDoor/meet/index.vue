@@ -80,6 +80,10 @@
               @click="handleCheck(scope.row)">查看</el-button>
             <el-button
               size="mini"
+              type="info"
+              @click="handleHost(scope.row)">主持</el-button>
+            <el-button
+              size="mini"
               type="success"
               v-if="hasPerm('meeting:edit')"
               @click="handleEdit(scope.row)">编辑</el-button>
@@ -257,12 +261,78 @@
           <el-button size="small" type="primary" @click="UpdateRoleMenu"  v-show="checkFlag">确 定</el-button>
         </span>
     </el-dialog>
+    <el-dialog
+      :title="HostTitle"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="HostVisible"
+      width="50%">
+      <el-form
+        :inline="false"
+        size="mini"
+        :model="HostInfo"
+        label-width="100px"
+        ref="AddEditInfo"
+        :rules ="HostRulesInfo"
+      >
+        <el-form-item label="主持人">
+          <el-select
+            v-model="HostInfo.compere"
+            placeholder="请选择主持人"
+            filterable
+            style="width: 100%;"
+            @change="compereChange">
+              <el-option
+                v-for="item in HostData"
+                :label="item.realname"
+                :value="item.uId"
+                :key = "item.uId"
+              >{{item.realname}}</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="审核人">
+          <el-select
+            v-model="HostInfo.approveMan"
+            placeholder="请选择审核人"
+            filterable
+            @change="ManChange"
+            style="width: 100%;">
+              <el-option
+                v-for="item in HostData"
+                :label="item.realname"
+                :value="item.uId"
+                :key = "item.uId"
+              >{{item.realname}}</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="最终审批人">
+          <el-select
+            v-model="HostInfo.approveEndMan"
+            placeholder="请选择最终审批人"
+            filterable
+            @change="EndChange"
+            style="width: 100%;">
+              <el-option
+                v-for="item in HostData"
+                :label="item.realname"
+                :value="item.uId"
+                :key = "item.uId"
+              >{{item.realname}}</el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" type="" @click="HostDialog">取 消</el-button>
+        <el-button size="small" type="primary" @click="UpdateHost" v-text="HostFlag ? '添 加' : '编 辑'"></el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
   import {dictionType} from '@/api/basic'
-  import {MeetList,MeetAdd,GetMeet,EditMeet,CheckMeet,DeleteMeet,GetMeetDrop,GetRoomDrop} from '@/api/news-metting'
+  import {MeetList,MeetAdd,GetMeet,EditMeet,CheckMeet,DeleteMeet,GetMeetDrop,GetRoomDrop,HostAdd,GetHost,EditHost} from '@/api/news-metting'
+  import {userDrop} from '@/api/menu-pers'
   import singleUpload from '@/components/Upload/singleImg'
   import Editor from '@/components/Tinymce/Editor'
   const defaultListQuery = {
@@ -339,7 +409,18 @@
         },
         checkFlag:true,
         filterText:'',
-        checkAll:false
+        checkAll:false,
+        HostTitle:'',
+        HostVisible:false,
+        HostFlag:false,
+        HostInfo:{
+          uId:'',
+          compere:'',
+          approveMan:'',
+          approveEndMan:''
+        },
+        HostRulesInfo:{},
+        HostData:[]
       }
 
     } ,
@@ -354,7 +435,9 @@
       dictionType('6d3739b3c10c4baeb4a700aa4c3f7f9e').then(response => {
         this.TypeNameData = response.datas
       })
-
+      userDrop().then(response=>{
+        this.HostData = response.datas
+      })
     },
     watch: {
       filterText(val) {
@@ -623,6 +706,92 @@
       picFun(data){
         this.AddEditInfo.picPath = data
       },
+      handleHost(row){
+        this.HostVisible = !this.HostVisible
+        Object.keys(this.HostInfo).forEach(key => this.HostInfo[key]= '');
+        this.HostInfo.uId = row.uId
+        GetHost(this.HostInfo.uId).then(res=>{
+          const datas = res.datas
+          if(datas === null){
+            this.HostFlag = true
+            this.HostTitle = '添加'
+          }else{
+            this.HostFlag = false
+            this.HostTitle = '编辑'
+            this.HostInfo = datas
+          }
+        })
+      },
+      HostDialog(){
+        this.HostVisible = !this.HostVisible
+      },
+      UpdateHost(){
+        if(this.HostFlag){
+          HostAdd(this.HostInfo).then(res=>{
+            if(res.status==0){
+              Message({
+                message: res.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }else{
+              Message({
+                message: res.msg,
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
+          })
+          this.HostVisible = !this.HostVisible
+        }else{
+          EditHost(this.HostInfo).then(res=>{
+            if(res.status==0){
+              Message({
+                message: res.msg,
+                type: 'success',
+                duration: 3 * 1000
+              })
+            }else{
+              Message({
+                message: res.msg,
+                type: 'error',
+                duration: 3 * 1000
+              })
+            }
+          })
+          this.HostVisible = !this.HostVisible
+        }
+      },
+      compereChange(value){
+        if(value == this.HostInfo.approveMan || value == this.HostInfo.approveEndMan){
+          Message({
+            message: '请不要重复选择一个人',
+            type: 'error',
+            duration: 3 * 1000
+          })
+          this.HostInfo.compere=''
+        }
+      },
+      ManChange(value){
+        if(value == this.HostInfo.compere || value == this.HostInfo.approveEndMan){
+          Message({
+            message: '请不要重复选择一个人',
+            type: 'error',
+            duration: 3 * 1000
+          })
+          this.HostInfo.approveMan=''
+        }
+      },
+      EndChange(value){
+        if(value == this.HostInfo.compere || value == this.HostInfo.approveMan){
+          Message({
+            message: '请不要重复选择一个人',
+            type: 'error',
+            duration: 3 * 1000
+          })
+          this.HostInfo.approveEndMan=''
+        }
+      }
     }
   }
 

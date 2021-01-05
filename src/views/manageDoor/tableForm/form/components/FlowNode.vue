@@ -47,7 +47,6 @@
       <div id="tooltip" class="hidden">
         <p><strong>提示:</strong></p>
         <p><span id="tooltip_value"></span></p>
-        <p><span id="tooltip_value2"></span></p>
       </div>
       <svg  width="100%" height="400" id="demosvg">
         <g />
@@ -158,7 +157,6 @@
         }).then(()=> {
           FlowLineAll(qdFlowId).then(res => {
             this.edges = res.datas
-
           }).then(() => {
             var g = new dagreD3.graphlib.Graph().setGraph({});
             g.setGraph({
@@ -178,11 +176,8 @@
                 userName:item.userName,
                 qdflownodeName:item.qdflownodeName,
                 approveroleName:item.approveroleName,
-                //节点形状
                 shape: item.shape,
-                //节点样式
                 style: "fill:#fff;stroke:#000",
-                //节点标签样式
                 labelStyle: "fill:#000",
                 id: item.uId,
                 width: 100,
@@ -209,14 +204,12 @@
                 svgGroup.attr("transform", d3.event.transform);
               });
             svg.call(zoom);
-
             //实现Tip
             const tip = d3Tip()
               .attr('class', 'd3-tip')
               .offset([-10, 0])
               .html(c => c);
             svg.call(tip);
-
             //鼠标悬停节点事件
             svgGroup.selectAll("g.node").on('mouseover', function (v) {
             //  console.log(g.node(v))
@@ -227,7 +220,6 @@
                   "<br>流程类型：" + g.node(v).qdflownodeName+
                 "<br>审批人："+g.node(v).userName+
                 "<br>审批角色："+g.node(v).approveroleName)
-
               //显示提示条
               d3.select("#tooltip").classed("hidden", false);
             });
@@ -235,6 +227,15 @@
               //显示提示信息方案一：隐藏提示条
               d3.select("#tooltip").classed("hidden", true);
             })
+            //点击
+            let code;
+            svgGroup.selectAll("g.node").on("click", e => {
+              //点击事件
+              code = this.nodes.filter(item => {
+                return item.uId == e;
+              });
+              console.log(code);
+            });
           })
         })
       },
@@ -250,12 +251,10 @@
   svg {
     font-size: 14px;
   }
-
   .node rect {
     stroke: #606266;
     fill: #fff;
   }
-
   .edgePath path {
     stroke: #606266;
     fill: #333;
@@ -272,16 +271,12 @@
     -moz-border-radius: 10px;
     border-radius: 10px;
     font-size: 12px;
-    -webkit-box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4);
-    -moz-box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4);
-    box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
     pointer-events: none;
   }
-
   #tooltip.hidden {
     display: none;
   }
-
   #tooltip p {
     margin: 0;
     font-family: sans-serif;

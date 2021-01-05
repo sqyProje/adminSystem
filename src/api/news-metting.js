@@ -242,3 +242,24 @@ export function DeleteReport(params) {
     method: 'post'
   })
 }
+//主持
+export function HostAdd(params) {
+  return request({
+    url: '/meeting_summary/add',
+    method: 'post',
+    data: params
+  })
+}
+export function GetHost(params) {
+  return request({
+    url: '/meeting_summary/edit?uId='+params,
+    method: 'get',
+  })
+}
+export function EditHost(params) {
+  return request({
+    url: '/meeting_summary/edit',
+    method: 'post',
+    data: params
+  })
+}

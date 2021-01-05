@@ -50,7 +50,7 @@
     </div>
     <div style="text-align: center;">
       <el-button style="margin-top: 12px;" type="warning" size="medium" @click="prev">返回</el-button>
-      <el-button style="margin-top: 12px;" type="warning" size="medium" @click="print">打印</el-button>
+      <el-button style="margin-top: 12px;" type="primary" size="medium" @click="print">打印</el-button>
     </div>
   </div>
 </template>
@@ -150,5 +150,8 @@
   @import "index.css";
   .nones{
     border-bottom: none !important;
+  }
+  .progress-container h2{
+    text-align: center;
   }
 </style>
