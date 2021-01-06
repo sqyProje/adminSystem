@@ -9,7 +9,7 @@
           <el-button type="primary" @click="onSubmit" size="small">查询</el-button>
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
           <el-button type="warning" v-if="meetFlag" size="small" @click="handleOpen">
-            列表
+            我的会议纪要
           </el-button>
         </el-form-item>
       </el-form>

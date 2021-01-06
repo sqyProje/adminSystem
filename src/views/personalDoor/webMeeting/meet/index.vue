@@ -5,6 +5,12 @@
         <el-form-item>
           <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
+        <el-form-item label ='开始时间'>
+          <el-date-picker type="datetime" v-model="listQuery.startDate" value-format="yyyy-MM-dd HH:mm" :picker-options="startDateLimit" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label ='结束时间'>
+          <el-date-picker type="datetime" v-model="listQuery.endDate" value-format="yyyy-MM-dd HH:mm" :picker-options="endDateLimit" style="width: 100%;"></el-date-picker>
+        </el-form-item>    
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="small">查询</el-button>
           <el-button
@@ -34,8 +40,8 @@
         <el-table-column label="发起人" prop="compereName"></el-table-column>
         <el-table-column label="审核人" prop="approveManName"></el-table-column>
         <el-table-column label="复核人" prop="approveEndManName"></el-table-column>
-        <el-table-column label="创建时间" prop="meeting_CreateDate"></el-table-column>
-        <el-table-column label="更新时间" prop="meeting_EndDate"></el-table-column>
+        <el-table-column label="开始时间" prop="meeting_CreateDate"></el-table-column>
+        <el-table-column label="结束时间" prop="meeting_EndDate"></el-table-column>
         <el-table-column label="操作" fixed="right"  width="260">
           <template slot-scope="scope">
             <el-button
@@ -145,7 +151,23 @@
         rulesInfo: {
           summary: [{ required: true,trigger: 'blur',message: '请输入会议纪要'}],
         },
-        selectedData:[]
+        selectedData:[],
+        startDateLimit: {
+          disabledDate: (time) => {
+            let endTime = defaultListQuery.endDate;
+            if (endTime) {
+              return time.getTime() > new Date(endTime).getTime();
+            }
+          }
+        },
+        endDateLimit: {
+          disabledDate: (time) => {
+            let beginTime = defaultListQuery.startDate;
+            if (beginTime) {
+              return time.getTime() < new Date(beginTime).getTime();  //开始和结束可以选择同一天  - 8.64e7
+            }
+          }
+        },
       }
     } ,
     created(){
