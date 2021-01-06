@@ -8,6 +8,9 @@
         <el-form-item>
           <el-button type="primary" @click="onSubmit" size="small">查询</el-button>
           <el-button type="warning" @click="handleResetSearch()" size="small">重置</el-button>
+          <el-button type="warning" v-if="meetFlag" size="small" @click="handleOpen">
+            列表
+          </el-button>
         </el-form-item>
       </el-form>
       <!-- 会议信息 -->
@@ -54,8 +57,7 @@
 </template>
 <script type="text/ecmascript-6">
 import { Message, MessageBox } from "element-ui";
-
-import { MylistMemories } from "@/api/personalDoor";
+import { MylistMemories,HostList} from "@/api/personalDoor";
 const defaultListQuery = {
   title: "",
   pageNum: 1,
@@ -67,9 +69,15 @@ export default {
       listQuery: Object.assign({}, defaultListQuery),
       tableData: [],
       total: null,
+      meetFlag:false
     };
   },
   created() {
+    HostList({pageNum:1,pageSize:10}).then(res=>{
+      if(res.datas.list.length>0){
+      this.meetFlag = true
+      }
+    })
     this.initTable();
   },
   methods: {
@@ -78,7 +86,6 @@ export default {
     },
     initTable() {
       this.listLoading = true;
-
       MylistMemories(this.listQuery)
         .then((response) => {
           this.listLoading = false;
@@ -99,10 +106,13 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.pageNum = val;
       this.initTable();
-    },
+    }, 
     handleClick(row) {
       this.$router.push({ name: "AboutICCCAS", query: { uId: row.uId } });
     },
+    handleOpen(){
+      this.$router.push({ name: "meethost"});
+    }
   },
 };
 </script>

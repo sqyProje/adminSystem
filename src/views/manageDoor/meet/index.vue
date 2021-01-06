@@ -63,7 +63,6 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="publishdate"></el-table-column>
         <el-table-column label="创建时间" prop="createdate"></el-table-column>
-        <el-table-column label="更新时间" prop="updatedate"></el-table-column>
         <el-table-column label="会议类型" prop="type" width="100">
           <template slot-scope="scope">
             <el-button size="mini" round  plain class='label-btn' :type="scope.row.type ? 'success' : 'warning'">
@@ -71,7 +70,7 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right"  width="290">
+        <el-table-column label="操作" fixed="right"  width="320">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -81,7 +80,7 @@
             <el-button
               size="mini"
               type="info"
-              @click="handleHost(scope.row)">主持</el-button>
+              @click="handleHost(scope.row)">会议纪要</el-button>
             <el-button
               size="mini"
               type="success"
@@ -275,10 +274,10 @@
         ref="AddEditInfo"
         :rules ="HostRulesInfo"
       >
-        <el-form-item label="主持人">
+        <el-form-item label="发起人">
           <el-select
             v-model="HostInfo.compere"
-            placeholder="请选择主持人"
+            placeholder="请选择发起人"
             filterable
             style="width: 100%;"
             @change="compereChange">
@@ -305,10 +304,10 @@
               >{{item.realname}}</el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="最终审批人">
+        <el-form-item label="复核人">
           <el-select
             v-model="HostInfo.approveEndMan"
-            placeholder="请选择最终审批人"
+            placeholder="请选择复核人"
             filterable
             @change="EndChange"
             style="width: 100%;">
@@ -707,7 +706,6 @@
         this.AddEditInfo.picPath = data
       },
       handleHost(row){
-        this.HostVisible = !this.HostVisible
         Object.keys(this.HostInfo).forEach(key => this.HostInfo[key]= '');
         this.HostInfo.uId = row.uId
         GetHost(this.HostInfo.uId).then(res=>{
@@ -720,6 +718,8 @@
             this.HostTitle = '编辑'
             this.HostInfo = datas
           }
+        this.HostVisible = !this.HostVisible
+
         })
       },
       HostDialog(){

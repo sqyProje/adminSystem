@@ -184,4 +184,30 @@ export function AnonymousLetterPool(params){
     params: params
   })
 }
-
+//主持会议列表
+export function HostList(params){
+  return request({
+    url: '/meeting_summary/list',
+    method: 'get',
+    params: params
+  })
+}
+export function HostAdd(param) {
+  return request({
+    url: '/meeting_summary/summary',
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    data:qs.stringify({
+      uId:param.uId,
+      summary:param.summary
+    })
+  })
+}
+export function HostEdit(param) {
+  return request({
+    url: '/meeting_summary/details?uId='+param,
+    method: 'get',
+  })
+}

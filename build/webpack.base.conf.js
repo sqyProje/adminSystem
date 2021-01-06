@@ -3,7 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+//const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -31,7 +31,7 @@ module.exports = {
   },
   plugins: [
     // 为模块提供中间缓存，缓存路径是：node_modules/.cache/hard-source
-    new HardSourceWebpackPlugin(),
+   // new HardSourceWebpackPlugin(),
   ],
   module: {
     rules: [

@@ -259,6 +259,13 @@ export const asyncRouterMap = [
             meta:{title:'我的会议',noCache: true}
           },
           {
+            path:'meet',
+            name:'meethost',
+            component:()=>import('@/views/personalDoor/webMeeting/meet'),
+            meta:{title:'会议纪要'},
+            hidden: true
+          },
+          {
             path: 'waitmeetting',
             name: 'webMyWaitMeeting',
             component: () => import('@/views/personalDoor/webMeeting/waitmeetting'),
