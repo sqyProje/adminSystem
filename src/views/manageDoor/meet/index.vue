@@ -147,7 +147,7 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label ='开始时间'  prop="startdate">
-              <el-date-picker type="datetime" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd HH:mm" :picker-options="startDateLimit"style="width: 100%;"></el-date-picker>
+              <el-date-picker type="datetime" v-model="AddEditInfo.startdate" value-format="yyyy-MM-dd HH:mm" :picker-options="startDateLimit" style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
