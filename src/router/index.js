@@ -582,6 +582,13 @@ export const asyncRouterMap = [
             component: () => import('@/views/manageDoor/meet/index'),
             meta: {title: '会议管理', noCache: true}
           },
+          {
+            path:'meetCode',
+            name:'meetCode',
+            component:()=>import('@/views/manageDoor/meet/code'),
+            meta:{title:'二维码信息'},
+            hidden: true
+          },
         ]
       },
       {

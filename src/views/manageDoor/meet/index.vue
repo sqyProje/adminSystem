@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
         <el-table-column label="发布时间" prop="publishdate"></el-table-column>
-        <el-table-column label="创建时间" prop="createdate"></el-table-column>
+        <!--<el-table-column label="创建时间" prop="createdate"></el-table-column> -->
         <el-table-column label="会议类型" prop="type" width="100">
           <template slot-scope="scope">
             <el-button size="mini" round  plain class='label-btn' :type="scope.row.type ? 'success' : 'warning'">
@@ -70,7 +70,7 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right"  width="320">
+        <el-table-column label="操作" fixed="right"  width="400">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -81,6 +81,11 @@
               size="mini"
               type="info"
               @click="handleHost(scope.row)">会议纪要</el-button>
+              <el-button
+              size="mini"
+              type="warning"
+              v-if="new Date(scope.row.startdate.replace('-','/')) < new Date(scope.row.enddate.replace('-','/'))"
+              @click="handleCode(scope.row)">二维码</el-button>
             <el-button
               size="mini"
               type="success"
@@ -394,15 +399,18 @@
           disabledDate: (time) => {
             let endTime = this.AddEditInfo.enddate;
             if (endTime) {
-              return time.getTime() > new Date(endTime).getTime();
+              //return time.getTime() > new Date(endTime).getTime();
+              return time.getTime() < Date.now()-8.64e7 || time.getTime() > endTime;
             }
+              return time.getTime() < Date.now()-8.64e7;
           }
         },
         endDateLimit: {
           disabledDate: (time) => {
             let beginTime = this.AddEditInfo.startdate;
             if (beginTime) {
-              return time.getTime() < new Date(beginTime).getTime();  //开始和结束可以选择同一天  - 8.64e7
+            //  return time.getTime() < new Date(beginTime).getTime();  //开始和结束可以选择同一天  - 8.64e7
+              return time.getTime() < Date.now()-8.64e7 || time.getTime() < beginTime;
             }
           }
         },
@@ -419,7 +427,7 @@
           approveEndMan:''
         },
         HostRulesInfo:{},
-        HostData:[]
+        HostData:[],
       }
 
     } ,
@@ -791,10 +799,13 @@
           })
           this.HostInfo.approveEndMan=''
         }
-      }
+      },
+      handleCode(row){
+        // let routeUrl = this.$router.resolve({name:'meetCode',query:{uId:row.uId,startdate:row.startdate,enddate:row.enddate,title:row.title}})
+        // window.open(routeUrl .href, '_blank');
+        //   },
+        this.$router.push({name:'meetCode',query:{uId:row.uId,startdate:row.startdate,enddate:row.enddate,title:row.title}})
     }
   }
-
+  }
 </script>
-
-

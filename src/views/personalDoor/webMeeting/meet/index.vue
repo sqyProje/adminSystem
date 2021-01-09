@@ -6,10 +6,10 @@
           <el-input v-model="listQuery.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item label ='开始时间'>
-          <el-date-picker type="datetime" v-model="listQuery.startDate" value-format="yyyy-MM-dd HH:mm" :picker-options="startDateLimit" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="listQuery.startDate" value-format="yyyy-MM-dd" :picker-options="startDateLimit" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label ='结束时间'>
-          <el-date-picker type="datetime" v-model="listQuery.endDate" value-format="yyyy-MM-dd HH:mm" :picker-options="endDateLimit" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" v-model="listQuery.endDate" value-format="yyyy-MM-dd" :picker-options="endDateLimit" style="width: 100%;"></el-date-picker>
         </el-form-item>    
         <el-form-item>
           <el-button type="primary" @click="onSearchList" size="small">查询</el-button>
@@ -86,13 +86,13 @@
       >
         <el-row  v-if="dialogTitle!=='添加'">
           <el-form-item label ='会议标题'>
-           <el-input v-model="AddEditInfo.title"></el-input>
+           <el-input v-model="AddEditInfo.title" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label ='会议类型'>
-            <el-input v-model="AddEditInfo.typeName"></el-input>
+            <el-input v-model="AddEditInfo.typeName" :disabled="true"></el-input>
           </el-form-item> 
           <el-form-item label ='创建时间'>
-            <el-input v-model="AddEditInfo.createDate"></el-input>
+            <el-input v-model="AddEditInfo.createDate" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label ='审批流程'>
             <el-timeline>
@@ -120,13 +120,14 @@
       <span slot="footer" class="dialog-footer">
           <el-button size="small" type="" @click="canleDialog">{{dialogTitle=='添加'?'取 消':'关 闭'}}</el-button>
           <el-button size="small" type="primary" @click="UpdateUser" v-if="dialogTitle=='添加'">确 定</el-button>
+          <el-button size="small" type="primary" @click="UpdateSubmit" v-if="submitFlag">重新提交</el-button>
         </span>
     </el-dialog>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {Message,MessageBox} from 'element-ui'
-  import {HostList,HostAdd,HostEdit} from '@/api/personalDoor'
+  import {HostList,HostAdd,HostEdit,HostRmAdd} from '@/api/personalDoor'
   import Editor from '@/components/Tinymce/Editor'
   const defaultListQuery = {
     title: '',
@@ -151,7 +152,7 @@
         rulesInfo: {
           summary: [{ required: true,trigger: 'blur',message: '请输入会议纪要'}],
         },
-        selectedData:[],
+        submitFlag:false,
         startDateLimit: {
           disabledDate: (time) => {
             let endTime = defaultListQuery.endDate;
@@ -204,30 +205,37 @@
         Object.keys(this.AddEditInfo).forEach(key => this.AddEditInfo[key]= '');
         this.AddEditInfo.uId=row.uId
         this.dialogTitle = '添加'
-	  },
-	  handleEdit(row){
-       this.dialogTitle = '详情'
-      this.dialogVisible = !this.dialogVisible
-      HostEdit(row.uId).then(res=>{
-        this.AddEditInfo= res.datas
-      })  
-	  },
+      },
+      handleEdit(row){
+        this.dialogTitle = '详情'
+        this.submitFlag = false
+        this.dialogVisible = !this.dialogVisible
+        HostEdit(row.uId).then(res=>{
+          this.AddEditInfo= res.datas
+          this.AddEditInfo.meetingApproveModels.forEach((item)=>{
+            if(item.submit === 2){
+              this.submitFlag = true
+              return
+            }
+          })
+          console.log(this.submitFlag)
+        })  
+      },
       UpdateUser(){
         this.$refs.AddEditInfo.validate(valid => {
           if (valid) {
-			HostAdd(this.AddEditInfo)
-				.then(response => {
-				this.dialogVisible = false
-				if (response.status === 0) {
-					this.initTable();
-					Message({
-					message: response.msg,
-					type: 'success',
-					duration: 3 * 1000
-					})
-				}
-				})
-
+            HostAdd(this.AddEditInfo)
+            .then(response => {
+            this.dialogVisible = false
+            if (response.status === 0) {
+              this.initTable();
+              Message({
+              message: response.msg,
+              type: 'success',
+              duration: 3 * 1000
+              })
+            }
+            })
           }else{
             Message({
               message: '参数验证不合法',
@@ -237,7 +245,30 @@
           }
         })
       },
-      
+     UpdateSubmit(){
+        this.$refs.AddEditInfo.validate(valid => {
+          if (valid) {
+            HostRmAdd(this.AddEditInfo)
+            .then(response => {
+            this.dialogVisible = false
+            if (response.status === 0) {
+              this.initTable();
+              Message({
+              message: response.msg,
+              type: 'success',
+              duration: 3 * 1000
+              })
+            }
+            })
+          }else{
+            Message({
+              message: '参数验证不合法',
+              type: 'error',
+              duration: 3 * 1000
+            })
+          }
+        })
+      }, 
       canleDialog(){
         this.dialogVisible = false
       },

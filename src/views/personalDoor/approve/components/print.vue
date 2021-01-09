@@ -9,23 +9,50 @@
           <span class="right">审批编号：{{otherInfo.approveId}}</span>
         </div>
         <table class="progress-table" cellspacing="0" cellpadding="0" >
-          <tr v-for="item in ProcessData">
+          <tr  v-for="(item,key) in firstManData" :key="key+'hh'">
+            <td class="fieldName">
+              {{item.courseName}}
+            </td>
+            <td style="display: block">
+              <table class='progress-man' cellspacing="0" cellpadding="0" >
+                <tbody>
+                  <tr v-for="(itemchild,index) in item.approveStepCourseModels" :key="index">
+                    <td>
+                      <span  v-if="itemchild.picsignatureUrl.length!==0"
+                            style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
+                      >
+                        <img
+                          v-if="itemchild.picsignatureUrl.length!==0"
+                          style="width:100%;height: 30px;"
+                          :src=itemchild.picsignatureUrl
+                        >
+                      </span>
+                      <span v-else >{{itemchild.courseUserName}}</span>
+                      {{itemchild.courseStatus | formatState}}
+                      <span class="right"  style="margin-right: 40px">{{itemchild.approveDate}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr v-for="(item,ids) in ProcessData" :key="ids+'hhh'" >
             <td class="fieldName" v-show="item.fieldValues.trim().length>0">
               {{item.fieldName}}
             </td>
             <td  class="fieldValues" v-show="item.fieldValues.trim().length>0">{{item.fieldValues}}</td>
           </tr>
-          <tr v-for="(items,keys) in workData">
+          <tr  v-for="(item,keys) in otherManData" :key="keys+'h'">
             <td class="fieldName">
-              {{items.courseName}}
+              {{item.courseName}}
             </td>
             <td style="display: block">
               <table class='progress-man' cellspacing="0" cellpadding="0" >
                 <tbody>
-                  <tr v-for="(itemchild,index) in items.approveStepCourseModels" :key="index">
+                  <tr v-for="(itemchild,index) in item.approveStepCourseModels" :key="index">
                     <td>
                       <span  v-if="itemchild.picsignatureUrl.length!==0"
-                             style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
+                            style="width: 100px; height: 30px;vertical-align: middle;display:inline-block "
                       >
                         <img
                           v-if="itemchild.picsignatureUrl.length!==0"
@@ -122,6 +149,23 @@
           }
         })
       })
+    },
+    computed:{
+      firstManData(){
+        return this.workData.filter((item,keys)=>{
+          if(keys==0){
+            return item
+          }
+        })
+      },
+      otherManData(){
+        return this.workData.filter((item,keys)=>{
+          if(keys != 0){
+            return item
+          }
+        })
+      }
+
     },
     methods:{
       prev(){

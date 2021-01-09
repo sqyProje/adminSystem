@@ -14,6 +14,7 @@
       :before-upload="beforeAvatarUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
+      :on-error	="handleError"
       :on-exceed="handleExceed"
       :on-preview="handlePreview">
       <i class="el-icon-plus"></i>
@@ -29,6 +30,7 @@
 </template>
 <script>
   import {DeleteFileUrl} from '@/api/basic'
+  import store from '../../store'
   export default {
     name: 'singleUpload',
     data(){
@@ -130,10 +132,22 @@
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，请删除后重新上传`);
       },
       handleUploadSuccess(res, file) {
+        this.$message.warning(res.datas.msg);
         this.fileList=[{name: file.name, url: res.datas}];
         this.hideUpload = this.fileList.length >= this.limitCount;
         this.hideUpload = true
         this.$emit('input', res.datas)
+      },
+      handleError(err){
+        this.$msgbox.alert('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
+          confirmButtonText: '重新登录',
+          type: 'warning',
+          callback:action=>{
+            store.dispatch('FedLogOut').then(() => {
+              location.reload()// 为了重新实例化vue-router对象 避免bug
+            })
+          }
+        })
       }
     }
   }

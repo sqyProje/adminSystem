@@ -10,6 +10,7 @@
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :on-success = 'handleSuccess'
+      :on-error	="handleError"
       :on-change = "handleChange"
       :on-progress="handleProcess"
       list-type="picture-card"
@@ -29,7 +30,7 @@
   </div>
 </template>
 <script>
-
+import store from '../../store'
   export default {
     name: 'multiUpload',
     props: {
@@ -89,8 +90,20 @@
       },
       handleSuccess(response, file, fileList) {
       //  console.log('成功')
+        this.$message.warning(res.datas.msg);
         this.fileList.push({url: response.datas})
         this.$emit('imgUrl',response.datas)
+      },
+      handleError(err){
+        this.$msgbox.alert('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
+          confirmButtonText: '重新登录',
+          type: 'warning',
+          callback:action=>{
+            store.dispatch('FedLogOut').then(() => {
+              location.reload()// 为了重新实例化vue-router对象 避免bug
+            })
+          }
+        })
       },
       handleRemove(file, fileList) {
         if (file && file.status==="success") {

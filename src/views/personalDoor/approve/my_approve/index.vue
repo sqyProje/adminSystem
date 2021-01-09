@@ -27,11 +27,11 @@
             size="small">
             重置
           </el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             size="small"
             @click="handleAll">
-            批量打印</el-button>
+            批量打印</el-button> -->
         </el-form-item>
       </el-form>
       <el-table

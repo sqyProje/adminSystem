@@ -205,9 +205,23 @@ export function HostAdd(param) {
     })
   })
 }
+export function HostRmAdd(param) {
+  return request({
+    url: '/meeting_summary/reSummary',
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    data:qs.stringify({
+      uId:param.uId,
+      summary:param.summary
+    })
+  })
+}
 export function HostEdit(param) {
   return request({
     url: '/meeting_summary/details?uId='+param,
     method: 'get',
   })
 }
+

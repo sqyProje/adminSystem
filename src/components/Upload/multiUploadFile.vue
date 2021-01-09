@@ -8,6 +8,7 @@
       :headers = "headers"
       :on-exceed="handleExceed"
       :on-success="handleSuccess"
+      :on-error	="handleError"
       :on-remove="handleRemove"
       :before-upload="beforeUploadFile"
       :file-list="fileList">
@@ -18,6 +19,7 @@
 </template>
 <script>
   import {DeleteFileUrl} from '@/api/basic'
+  import store from '../../store'
   export default {
     name: 'multiUpload',
     props: {
@@ -65,6 +67,17 @@
         this.fileList.push({name: response.datas.fileName,url: response.datas.filePath})
         this.$emit('file-url',decodeURIComponent(response.datas.filePath))
         this.$message.success('文件上传成功');
+      },
+      handleError(err){
+        this.$msgbox.alert('登录信息过期，请重新登录', '确定登出', {//error.response.data.msg
+          confirmButtonText: '重新登录',
+          type: 'warning',
+          callback:action=>{
+            store.dispatch('FedLogOut').then(() => {
+              location.reload()// 为了重新实例化vue-router对象 避免bug
+            })
+          }
+        })
       },
       // 上传文件之前的钩子, 参数为上传的文件,若返回 false 或者返回 Promise 且被 reject，则停止上传
       beforeUploadFile(file) {
